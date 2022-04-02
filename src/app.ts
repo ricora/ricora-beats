@@ -1,4 +1,5 @@
 import * as Phaser from "phaser"
+import { Scenes } from './scene'
 
 class MyScene extends Phaser.Scene {
     constructor() {
@@ -19,7 +20,7 @@ const config: Phaser.Types.Core.GameConfig = {
     width: 1280,
     height: 720,
     parent: "game-app",
-    scene: MyScene
+    scene: Scenes
 }
 
 new Phaser.Game(config)
