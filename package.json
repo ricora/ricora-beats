@@ -18,6 +18,7 @@
     "webpack-dev-server": "^4.8.1"
   },
   "dependencies": {
+    "axios": "^0.26.1",
     "bms": "github:bemusic/bms-js"
   }
 }
