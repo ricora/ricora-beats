@@ -11,7 +11,9 @@ module.exports = {
         extensions: [".ts", ".js"]
     },
     devServer: {
-        contentBase: path.join(__dirname, "dist")
+        static: {
+            directory: path.join(__dirname, "dist")
+        }
     },
     module: {
         rules: [{
