@@ -30,4 +30,8 @@ export class Chart {
     public secondsToBeat(sec: number): number {
         return this.timing.secondsToBeat(sec)
     }
+
+    public beatToBPM(beat: number): number {
+        return this.timing.bpmAtBeat(beat)
+    }
 }

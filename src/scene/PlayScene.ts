@@ -116,7 +116,7 @@ export class PlayScene extends Phaser.Scene {
                 }\nSub Title:${this.chart.info.subtitle}\nArtist:${this.chart.info.artist
                 }\nSub Artist:${this.chart.info.subartist}\nDifficulty:${this.chart.info.difficulty
                 }\nLevei:${this.chart.info.level}\n\nSec:${this.playingSec
-                }\nBeat:${this.beat.toFixed(2)}\nCombo:${this.chartPlayer.combo
+                }\nBeat:${this.beat.toFixed(2)}\nBPM:${this.chart.beatToBPM(this.beat).toFixed(2)}\nCombo:${this.chartPlayer.combo
                 }\nMax Combo:${this.chartPlayer.maxCombo}\nLatest Judge:${this.chartPlayer.latestJudgeIndex
                 }\nJudges:${this.chartPlayer.judges}`
             )
