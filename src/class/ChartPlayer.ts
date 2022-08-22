@@ -16,6 +16,8 @@ export class ChartPlayer {
 
     public latestJudgeIndex = -1
 
+    public lastBeat: number = 4
+
     public judgeRanges: number[] = [25, 50, 75, 100, 150]
 
     public combo: number = 0
@@ -117,11 +119,13 @@ export class ChartPlayer {
                 this.bgmLane.push(note)
             } else if (0 <= noteIndex && noteIndex <= 7) {
                 this.lanes[noteIndex].push(note)
+                this.lastBeat = Math.max(this.lastBeat, beat)
             }
         }
         for (const laneIndex of Array(7).keys()) {
             this.lanes[laneIndex].sort((a, b) => a.beat - b.beat)
         }
+        this.lastBeat += 4
     }
 
     public update(
@@ -269,5 +273,8 @@ export class ChartPlayer {
                 return
             }
         }
+    }
+    public hasFinished(beat:number):boolean {
+        return beat > this.lastBeat
     }
 }

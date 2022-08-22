@@ -118,7 +118,7 @@ export class PlayScene extends Phaser.Scene {
                 }\nLevei:${this.chart.info.level}\n\nSec:${this.playingSec
                 }\nBeat:${this.beat.toFixed(2)}\nBPM:${this.chart.beatToBPM(this.beat).toFixed(2)}\nCombo:${this.chartPlayer.combo
                 }\nMax Combo:${this.chartPlayer.maxCombo}\nLatest Judge:${this.chartPlayer.latestJudgeIndex
-                }\nJudges:${this.chartPlayer.judges}`
+                }\nJudges:${this.chartPlayer.judges}\nFinished?:${this.chartPlayer.hasFinished(this.beat)}`
             )
 
             this.chartPlayer.update(
