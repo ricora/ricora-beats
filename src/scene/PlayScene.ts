@@ -22,7 +22,7 @@ export class PlayScene extends Phaser.Scene {
     private playingSec: number
     private beat: number
 
-    private noteSpeed: number = 470
+    private noteSpeed: number = 100
 
     private keys: Phaser.Input.Keyboard.Key[]
 
@@ -72,6 +72,8 @@ export class PlayScene extends Phaser.Scene {
                 const bmsSource = response.data
                 this.chart = new Chart(bmsSource)
                 this.chartPlayer = new ChartPlayer(this, this.chart)
+
+                this.noteSpeed = 75000 / this.chart.beatToBPM(0)
 
                 this.keySoundPlayer = new KeySoundPlayer(this.chart)
                 this.keySoundPlayer.loadKeySounds(this, url)
