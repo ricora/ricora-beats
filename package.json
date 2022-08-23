@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "axios": "^0.26.1",
-    "bms": "github:bemusic/bms-js"
+    "bms": "github:bemusic/bms-js",
+    "lil-gui": "^0.17.0"
   }
 }
