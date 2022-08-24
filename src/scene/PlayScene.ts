@@ -4,8 +4,9 @@ import axios, { AxiosResponse, AxiosError } from "axios"
 import { Chart } from "../class/Chart"
 import { ChartPlayer } from "../class/ChartPlayer"
 import { KeySoundPlayer } from "../class/KeySoundPlayer"
-
+import { DebugGUI } from "../class/DebugGUI"
 export class PlayScene extends Phaser.Scene {
+    private debugGUI: DebugGUI
     private chart: Chart
     private chartPlayer: ChartPlayer
 
@@ -36,6 +37,8 @@ export class PlayScene extends Phaser.Scene {
     }
 
     init() {
+        this.debugGUI = new DebugGUI(this)
+
         this.loadEndTime = undefined
 
         this.hasLoaded = false
@@ -64,6 +67,11 @@ export class PlayScene extends Phaser.Scene {
         )
     }
     preload() {
+
+
+    }
+
+    create() {
         const urlParams = new URLSearchParams(document.location.search.substring(1))
         const url = urlParams.get("chart") as string
         axios
@@ -82,9 +90,6 @@ export class PlayScene extends Phaser.Scene {
             .catch((error: AxiosError) => {
                 console.log(error)
             })
-    }
-
-    create() {
         const { width, height } = this.game.canvas
 
         this.add.text(0, 0, "play scene")
@@ -97,7 +102,7 @@ export class PlayScene extends Phaser.Scene {
             useHandCursor: true,
         })
         zone.on("pointerdown", () => {
-            this.scene.start("title")
+            //this.scene.start("title")
         })
     }
     update(time: number, dt: number) {
@@ -114,7 +119,7 @@ export class PlayScene extends Phaser.Scene {
                 (new Date().getTime() - this.loadEndTime.getTime()) / 1000
             this.beat = this.chart.secondsToBeat(this.playingSec)
             this.debugText.setText(
-                `Genre:${this.chart.info.genre}\nTitle:${this.chart.info.title
+                `FPS:${(1000/dt).toFixed(2)}\n\nGenre:${this.chart.info.genre}\nTitle:${this.chart.info.title
                 }\nSub Title:${this.chart.info.subtitle}\nArtist:${this.chart.info.artist
                 }\nSub Artist:${this.chart.info.subartist}\nDifficulty:${this.chart.info.difficulty
                 }\nLevei:${this.chart.info.level}\n\nSec:${this.playingSec
