@@ -15,6 +15,8 @@ export class ChartPlayer {
     public judges = new Array<number>(5).fill(0)
 
     public latestJudgeIndex = -1
+    public latestJudgeSec = -1
+    public latestJudgeDiff = 0
 
     public lastBeat: number = 4
 
@@ -97,7 +99,14 @@ export class ChartPlayer {
                 const band = new Band(
                     beatEndLongNote[noteIndex],
                     beat,
-                    scene.add.rectangle(300 + 100 * noteIndex, 0, 100, 0, 0x888888, 128)
+                    scene.add.rectangle(
+                        319 + 106.8 * noteIndex,
+                        0,
+                        106.8,
+                        0,
+                        0x888888,
+                        128
+                    )
                 )
 
                 this.longNoteBands[noteIndex].push(band)
@@ -108,7 +117,7 @@ export class ChartPlayer {
                 beat,
                 bms.Timing.fromBMSChart(chart.bmsChart).beatToSeconds(beat),
                 noteValue,
-                scene.add.rectangle(300 + 100 * noteIndex, 0, 100, 50, noteColor),
+                scene.add.rectangle(319 + 106.8 * noteIndex, 0, 106.8, 50, noteColor),
                 isBGM,
                 false,
                 isLongNoteStart,
@@ -125,6 +134,7 @@ export class ChartPlayer {
         for (const laneIndex of Array(7).keys()) {
             this.lanes[laneIndex].sort((a, b) => a.beat - b.beat)
         }
+        this.bgmLane.sort((a, b) => a.beat - b.beat)
         this.lastBeat += 4
     }
 
@@ -136,9 +146,13 @@ export class ChartPlayer {
         keySoundPlayer: KeySoundPlayer
     ) {
         for (const note of this.bgmLane) {
-            if (!note.isJudged && note.sec < playingSec) {
-                note.isJudged = true
-                keySoundPlayer.playKeySound(scene, note.value.toString())
+            if (note.sec < playingSec) {
+                if (!note.isJudged) {
+                    note.isJudged = true
+                    keySoundPlayer.playKeySound(scene, note.value.toString())
+                }
+            } else {
+                break
             }
         }
 
@@ -150,14 +164,14 @@ export class ChartPlayer {
                     0
                 )
                 band.rectangle.y =
-                    600 +
+                    551 +
                     (beat - band.startBeat) * noteSpeed -
                     (band.endBeat - band.startBeat) * noteSpeed
-                band.rectangle.y = 600 + Math.min((beat - band.endBeat) * noteSpeed, 0)
+                band.rectangle.y = 551 + Math.min((beat - band.endBeat) * noteSpeed, 0)
             }
 
             for (const [noteIndex, note] of this.lanes[laneIndex].entries()) {
-                note.rectangle.y = 600 + Math.min((beat - note.beat) * noteSpeed, 0)
+                note.rectangle.y = 551 + Math.min((beat - note.beat) * noteSpeed, 0)
                 if (
                     !note.isJudged &&
                     ((!note.isLongEnd &&
@@ -178,6 +192,8 @@ export class ChartPlayer {
                     this.judges[judgeIndex]++
 
                     this.latestJudgeIndex = judgeIndex
+                    this.latestJudgeSec = playingSec
+                    this.latestJudgeDiff = -this.judgeRanges.slice(-1)[0]
 
                     if (note.isLongStart) {
                         this.lanes[laneIndex][noteIndex + 1].isJudged = true
@@ -204,7 +220,7 @@ export class ChartPlayer {
 
     public judgeKeyDown = (
         scene: Phaser.Scene,
-        sec: number,
+        playingSec: number,
         laneIndex: number,
         keySoundPlayer: KeySoundPlayer
     ) => {
@@ -213,8 +229,8 @@ export class ChartPlayer {
                 if (
                     !note.isJudged &&
                     !note.isLongEnd &&
-                    note.sec - judgeRange / 1000 <= sec &&
-                    sec <= note.sec + judgeRange / 1000
+                    note.sec - judgeRange / 1000 <= playingSec &&
+                    playingSec <= note.sec + judgeRange / 1000
                 ) {
                     note.isJudged = true
                     note.rectangle.visible = false
@@ -227,6 +243,8 @@ export class ChartPlayer {
                     }
 
                     this.latestJudgeIndex = judgeIndex
+                    this.latestJudgeSec = playingSec
+                    this.latestJudgeDiff = note.sec - playingSec
                     keySoundPlayer.playKeySound(scene, note.value.toString())
 
                     if (note.isLongStart) {
@@ -239,7 +257,7 @@ export class ChartPlayer {
         }
     }
 
-    public judgeKeyHold = (sec: number, laneIndex: number) => {
+    public judgeKeyHold = (playingSec: number, laneIndex: number) => {
         this.isHolds[laneIndex] = false
         for (const note of this.lanes[laneIndex]) {
             if (!note.isJudged && note.isLongEnd) {
@@ -248,8 +266,8 @@ export class ChartPlayer {
                 let judgeIndex: number = this.judgeRanges.length - 1
                 for (const [i, judgeRange] of this.judgeRanges.entries()) {
                     if (
-                        note.sec - judgeRange / 1000 <= sec &&
-                        sec <= note.sec + judgeRange / 1000
+                        note.sec - judgeRange / 1000 <= playingSec &&
+                        playingSec <= note.sec + judgeRange / 1000
                     ) {
                         judgeIndex = i
                         break
@@ -264,6 +282,8 @@ export class ChartPlayer {
                     this.combo = 0
                 }
                 this.latestJudgeIndex = judgeIndex
+                this.latestJudgeSec = playingSec
+                this.latestJudgeDiff = note.sec - playingSec
                 for (const band of this.longNoteBands[laneIndex]) {
                     if (band.endBeat == note.beat) {
                         band.rectangle.visible = false
@@ -274,7 +294,7 @@ export class ChartPlayer {
             }
         }
     }
-    public hasFinished(beat:number):boolean {
+    public hasFinished(beat: number): boolean {
         return beat > this.lastBeat
     }
 }
