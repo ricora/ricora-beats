@@ -41,8 +41,14 @@ export class PlayScene extends Phaser.Scene {
     private judgeText: Phaser.GameObjects.Image
     private judgeFSText: Phaser.GameObjects.Image
 
+    private keyFlashes: Phaser.GameObjects.Image[]
+
     private comboTween: Phaser.Tweens.Tween
     private judgeTween: Phaser.Tweens.Tween
+
+    private keyFlashTweens: Phaser.Tweens.Tween[]
+
+    private holdParticleEmitters: Phaser.GameObjects.Particles.ParticleEmitter[]
 
     constructor() {
         super("play")
@@ -98,7 +104,7 @@ export class PlayScene extends Phaser.Scene {
             .shader("background", width / 2, height / 2, 1280, 720)
             .setDepth(-10)
         this.backgroundMask = this.add
-            .rectangle(width / 2, height / 2, 1280, 720, 0x000000, 230)
+            .rectangle(width / 2, height / 2, 760, 720, 0x000000, 70)
             .setDepth(-9)
 
         this.laneBackground = this.add
@@ -113,8 +119,14 @@ export class PlayScene extends Phaser.Scene {
         this.laneBackgroundLight.setDisplaySize(1280, 720).setDepth(-2)
         this.load.start()
 
-        this.judgeText = this.add.image(width / 2, 420, "judge-0").setVisible(false).setDepth(8)
-        this.judgeFSText = this.add.image(width/2, 350, "judge-fast").setVisible(false).setDepth(8)
+        this.judgeText = this.add
+            .image(width / 2, 420, "judge-0")
+            .setVisible(false)
+            .setDepth(8)
+        this.judgeFSText = this.add
+            .image(width / 2, 350, "judge-fast")
+            .setVisible(false)
+            .setDepth(8)
 
         this.judgeTween = this.tweens.add({
             targets: this.judgeText,
@@ -122,34 +134,19 @@ export class PlayScene extends Phaser.Scene {
             scale: {
                 value: 0,
                 duration: 1000,
-                ease: (t: number):number => {
-                    return t <= 0.08 ? 0.5*Math.pow(Math.sin(t * 3 /0.08), 3) : 0;
-                }
+                ease: (t: number): number => {
+                    return t <= 0.08 ? 0.5 * Math.pow(Math.sin((t * 3) / 0.08), 3) : 0
+                },
             },
             alpha: {
                 value: 0,
                 duration: 1000,
-                ease: (t: number):number => {
-                    return 0;
-                }
-            }
+                ease: (t: number): number => {
+                    return 0
+                },
+            },
         })
 
-        this.add.text(0, 0, "play scene")
-        this.debugText = this.add.text(0, 50, `ロード中`)
-
-        //const testText = this.add.text(30, 110, "日本語test", { fontFamily: 'Zen Kaku Gothic New', fontSize: "30px", color: '#f0f0f0'}).setShadow(0, 0, "#080808", 4, false, true).setOrigin(0).setDepth(10)
-
-        this.titleText = this.add
-            .text(640, 180, "", {
-                fontFamily: "Zen Kaku Gothic New",
-                fontSize: "30px",
-                color: "#f0f0f0",
-            })
-            .setShadow(0, 0, "#080808", 4, false, true)
-            .setOrigin(0.5)
-            .setDepth(-3)
-            .setAlpha(1.0)
         this.comboText = this.add
             .text(1150, 130, "", {
                 fontFamily: "Bungee",
@@ -170,10 +167,67 @@ export class PlayScene extends Phaser.Scene {
             paused: false,
         })
 
-        const zone = this.add.zone(width / 2, height / 2, width, height)
-        zone.setInteractive({
-            useHandCursor: true,
-        })
+        //const ttt = this.add.image(440,551,"key-flash").setOrigin(0.5, 1).setDisplaySize(1067/7,400)
+
+        this.keyFlashTweens = []
+        this.holdParticleEmitters = []
+        const particle = this.add.particles("particle")
+
+        for (const laneIndex of Array(7).keys()) {
+            this.keyFlashTweens.push(
+                this.tweens.add({
+                    targets: this.add
+                        .image(319 + 106.8 * laneIndex, 720, "key-flash")
+                        .setOrigin(0.5, 1)
+                        .setDisplaySize(900 / 7, 720)
+                        .setDepth(-2)
+                        .setAlpha(1),
+                    scaleX: { value: 0, duration: 80, ease: "Linear" },
+                    ease: "Quintic.Out",
+                    paused: false,
+                })
+            )
+            this.holdParticleEmitters.push(
+                particle.createEmitter({
+                    x: 319 - 53.4 + 106.8 * laneIndex,
+                    y: 551,
+                    angle: { min: 265, max: 275 },
+                    speed: 400,
+                    emitZone: {
+                        type: "random",
+                        source: new Phaser.Geom.Rectangle(0, 0, 100, 1),
+                        quantity: 48,
+                        yoyo: false,
+                    },
+                    gravityY: -200,
+                    scale: { start: 0.2, end: 0 },
+                    lifespan: { min: 100, max: 250 },
+                    quantity: 1,
+                    blendMode: "ADD",
+                    on: false,
+                })
+            )
+        }
+
+        this.add.text(0, 0, "play scene")
+        this.debugText = this.add.text(0, 50, `ロード中`)
+
+        this.titleText = this.add
+            .text(640, 180, "", {
+                fontFamily: "Zen Kaku Gothic New",
+                fontSize: "30px",
+                color: "#f0f0f0",
+            })
+            .setShadow(0, 0, "#080808", 4, false, true)
+            .setOrigin(0.5)
+            .setDepth(-3)
+            .setAlpha(1.0)
+
+        const zone = this.add
+            .zone(width / 2, height / 2, width, height)
+            .setInteractive({
+                useHandCursor: true,
+            })
         zone.on("pointerdown", () => {
             //this.scene.start("title")
         })
@@ -198,25 +252,24 @@ export class PlayScene extends Phaser.Scene {
         )
 
         if (this.hasLoaded && this.loadEndTime !== undefined) {
-            // draw combo
-            if (this.comboText.text !== `${this.chartPlayer.combo}`) {
-
-            }
             this.comboText.setShadowBlur(
                 12 + 8 * (-this.beat - Math.floor(1 - this.beat))
             )
 
-            // draw judge
             if (this.latestJudgeSec !== this.chartPlayer.latestJudgeSec) {
+                // draw combo
                 this.comboText.setText(`${this.chartPlayer.combo}`)
                 this.comboTween.restart()
+                // draw judge
                 this.latestJudgeSec = this.chartPlayer.latestJudgeSec
                 this.judgeText.setTexture(`judge-${this.chartPlayer.latestJudgeIndex}`)
                 this.judgeText.setVisible(true)
                 this.judgeTween.restart()
                 //this.judgeText.setAlpha(1)
                 if (this.chartPlayer.latestJudgeIndex !== 0) {
-                    this.judgeFSText.setTexture(`judge-${this.chartPlayer.latestJudgeDiff > 0 ? "fast" : "slow"}`)
+                    this.judgeFSText.setTexture(
+                        `judge-${this.chartPlayer.latestJudgeDiff > 0 ? "fast" : "slow"}`
+                    )
                     this.judgeFSText.setVisible(true)
                 } else {
                     this.judgeFSText.setVisible(false)
@@ -236,15 +289,52 @@ export class PlayScene extends Phaser.Scene {
                 this.keySoundPlayer
             )
 
+            for (const laneIndex of Array(7).keys()) {
+                if (this.keys[laneIndex].isDown) {
+                    this.keyFlashTweens[laneIndex].restart()
+                }
+            }
+
             // key down
             for (const laneIndex of Array(7).keys()) {
                 if (Phaser.Input.Keyboard.JustDown(this.keys[laneIndex])) {
-                    this.chartPlayer.judgeKeyDown(
-                        this,
-                        this.playingSec,
-                        laneIndex,
-                        this.keySoundPlayer
-                    )
+                    if (
+                        this.chartPlayer.judgeKeyDown(
+                            this,
+                            this.playingSec,
+                            laneIndex,
+                            this.keySoundPlayer
+                        )
+                    ) {
+                        if (this.chartPlayer.latestJudgeIndex <= 2) {
+                            this.tweens.add({
+                                targets: this.add
+                                    .image(319 + 106.8 * laneIndex, 551, "bomb-2")
+                                    .setDisplaySize(256, 256)
+                                    .setAlpha(0.5),
+                                alpha: { value: 0, duration: 280, ease: "Linear" },
+                                scale: { value: 0.7, duration: 280, ease: "Linear" },
+                                angle: { value: 30, duration: 280, ease: "Linear" },
+                                paused: false,
+                            })
+                            this.tweens.add({
+                                targets: this.add
+                                    .image(319 + 106.8 * laneIndex, 551, "bomb-3")
+                                    .setDisplaySize(162, 162),
+                                alpha: { value: 0, duration: 120, ease: "Linear" },
+                                scale: { value: 0.4, duration: 100, ease: "Quintic.Out" },
+                                paused: false,
+                            })
+                            this.tweens.add({
+                                targets: this.add
+                                    .image(319 + 106.8 * laneIndex, 551, "bomb-1")
+                                    .setDisplaySize(196, 196),
+                                alpha: { value: 0, duration: 120, ease: "Linear" },
+                                scale: { value: 0.5, duration: 120, ease: "Linear" },
+                                paused: false,
+                            })
+                        }
+                    }
                 }
             }
 
@@ -256,7 +346,10 @@ export class PlayScene extends Phaser.Scene {
                 ) {
                     this.chartPlayer.judgeKeyHold(this.playingSec, laneIndex)
                 }
+                this.holdParticleEmitters[laneIndex].on =
+                    this.chartPlayer.isHolds[laneIndex]
             }
+
             // debug
             this.debugText.setText(
                 `${this.latestJudgeSec}\n\nFPS:${(1000 / dt).toFixed(2)}\n\nGenre:${this.chart.info.genre

@@ -80,6 +80,12 @@ export class ChartPlayer {
             if (parseInt(object.channel) === 1) {
                 isBGM = true
             }
+            let noteImage: string = "note-1"
+            if (noteIndex == 1 || noteIndex == 5) {
+                noteImage = "note-2"
+            } else if (noteIndex == 3) {
+                noteImage = "note-3"
+            }
 
             let noteColor: number = 0xffffff
             if (noteIndex == 1 || noteIndex == 5) {
@@ -99,14 +105,12 @@ export class ChartPlayer {
                 const band = new Band(
                     beatEndLongNote[noteIndex],
                     beat,
-                    scene.add.rectangle(
-                        319 + 106.8 * noteIndex,
-                        0,
-                        106.8,
-                        0,
-                        0x888888,
-                        128
-                    )
+                    scene.add
+                        .image(319 + 106.8 * noteIndex, -100, "note-long")
+                        .setDisplaySize(90, 0)
+                        .setOrigin(0.5, 0)
+                        .setDepth(-1)
+                        .setAlpha(0.9)
                 )
 
                 this.longNoteBands[noteIndex].push(band)
@@ -117,7 +121,11 @@ export class ChartPlayer {
                 beat,
                 bms.Timing.fromBMSChart(chart.bmsChart).beatToSeconds(beat),
                 noteValue,
-                scene.add.rectangle(319 + 106.8 * noteIndex, 0, 106.8, 50, noteColor),
+                scene.add
+                    .image(319 + 106.8 * noteIndex, -100, noteImage)
+                    .setDisplaySize(127.5 - 10, 40)
+                    .setDepth(1)
+                    .setAlpha(Number(!isLongNoteEnd)),
                 isBGM,
                 false,
                 isLongNoteStart,
@@ -158,20 +166,20 @@ export class ChartPlayer {
 
         for (const laneIndex of Array(7).keys()) {
             for (const band of this.longNoteBands[laneIndex]) {
-                band.rectangle.height = Math.max(
+                band.image.displayHeight = Math.max(
                     (band.endBeat - band.startBeat + Math.min(band.startBeat - beat, 0)) *
                     noteSpeed,
                     0
                 )
-                band.rectangle.y =
+                band.image.y =
                     551 +
                     (beat - band.startBeat) * noteSpeed -
                     (band.endBeat - band.startBeat) * noteSpeed
-                band.rectangle.y = 551 + Math.min((beat - band.endBeat) * noteSpeed, 0)
+                band.image.y = 551 + Math.min((beat - band.endBeat) * noteSpeed, 0)
             }
 
             for (const [noteIndex, note] of this.lanes[laneIndex].entries()) {
-                note.rectangle.y = 551 + Math.min((beat - note.beat) * noteSpeed, 0)
+                note.image.y = 551 + Math.min((beat - note.beat) * noteSpeed, 0)
                 if (
                     !note.isJudged &&
                     ((!note.isLongEnd &&
@@ -179,7 +187,7 @@ export class ChartPlayer {
                         (note.isLongEnd && note.sec < playingSec))
                 ) {
                     note.isJudged = true
-                    note.rectangle.visible = false
+                    note.image.visible = false
                     this.isHolds[laneIndex] = false
 
                     let judgeIndex: number
@@ -197,12 +205,12 @@ export class ChartPlayer {
 
                     if (note.isLongStart) {
                         this.lanes[laneIndex][noteIndex + 1].isJudged = true
-                        this.lanes[laneIndex][noteIndex + 1].rectangle.visible = false
+                        this.lanes[laneIndex][noteIndex + 1].image.visible = false
                         this.judges[judgeIndex]++
                         this.combo++
                         for (const band of this.longNoteBands[laneIndex]) {
                             if (band.startBeat == note.beat) {
-                                band.rectangle.visible = false
+                                band.image.visible = false
                                 break
                             }
                         }
@@ -223,7 +231,7 @@ export class ChartPlayer {
         playingSec: number,
         laneIndex: number,
         keySoundPlayer: KeySoundPlayer
-    ) => {
+    ): boolean => {
         for (const note of this.lanes[laneIndex]) {
             for (const [judgeIndex, judgeRange] of this.judgeRanges.entries()) {
                 if (
@@ -233,7 +241,7 @@ export class ChartPlayer {
                     playingSec <= note.sec + judgeRange / 1000
                 ) {
                     note.isJudged = true
-                    note.rectangle.visible = false
+                    note.image.visible = false
                     this.judges[judgeIndex]++
                     if (judgeIndex <= 2) {
                         this.combo++
@@ -251,10 +259,11 @@ export class ChartPlayer {
                         this.isHolds[laneIndex] = true
                     }
 
-                    return
+                    return true
                 }
             }
         }
+        return false
     }
 
     public judgeKeyHold = (playingSec: number, laneIndex: number) => {
@@ -262,7 +271,7 @@ export class ChartPlayer {
         for (const note of this.lanes[laneIndex]) {
             if (!note.isJudged && note.isLongEnd) {
                 note.isJudged = true
-                note.rectangle.visible = false
+                note.image.visible = false
                 let judgeIndex: number = this.judgeRanges.length - 1
                 for (const [i, judgeRange] of this.judgeRanges.entries()) {
                     if (
@@ -286,7 +295,7 @@ export class ChartPlayer {
                 this.latestJudgeDiff = note.sec - playingSec
                 for (const band of this.longNoteBands[laneIndex]) {
                     if (band.endBeat == note.beat) {
-                        band.rectangle.visible = false
+                        band.image.visible = false
                         break
                     }
                 }

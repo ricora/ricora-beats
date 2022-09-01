@@ -3,13 +3,11 @@ import bms from "bms"
 export class Band {
     public startBeat: number
     public endBeat: number
-    public rectangle: Phaser.GameObjects.Rectangle
+    public image: Phaser.GameObjects.Image
 
-    constructor(startBeat: number, endBeat: number, rectangle: Phaser.GameObjects.Rectangle) {
+    constructor(startBeat: number, endBeat: number, image: Phaser.GameObjects.Image) {
         this.startBeat = startBeat
         this.endBeat = endBeat
-        this.rectangle = rectangle
-
-        this.rectangle.depth = -1
+        this.image = image
     }
 }
