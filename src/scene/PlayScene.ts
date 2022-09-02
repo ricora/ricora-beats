@@ -26,6 +26,8 @@ export class PlayScene extends Phaser.Scene {
 
     private latestJudgeSec: number
 
+    private isTouching: boolean[]
+
     private noteSpeed: number = 100
 
     private keys: Phaser.Input.Keyboard.Key[]
@@ -50,6 +52,8 @@ export class PlayScene extends Phaser.Scene {
 
     private holdParticleEmitters: Phaser.GameObjects.Particles.ParticleEmitter[]
 
+    private inputZones: Phaser.GameObjects.Zone[]
+
     constructor() {
         super("play")
     }
@@ -64,6 +68,8 @@ export class PlayScene extends Phaser.Scene {
 
         this.latestJudgeSec = -1
 
+        this.isTouching = new Array<boolean>(7).fill(false)
+
         this.keys = [
             this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
             this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D),
@@ -73,6 +79,8 @@ export class PlayScene extends Phaser.Scene {
             this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K),
             this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L),
         ]
+
+        this.input.addPointer(9)
     }
     preload() { }
 
@@ -209,6 +217,22 @@ export class PlayScene extends Phaser.Scene {
             )
         }
 
+        this.inputZones = []
+        for (const laneIndex of Array(7).keys()) {
+            this.inputZones.push(
+                this.add
+                    .zone(319 + 106.8 * laneIndex, 720, 106.8, 720)
+                    .setInteractive()
+                    .setOrigin(0.5, 1)
+                    .on("pointerover", () => {
+                        this.isTouching[laneIndex] = true
+                    })
+                    .on("pointerout", () => {
+                        this.isTouching[laneIndex] = false
+                    })
+            )
+        }
+
         this.add.text(0, 0, "play scene")
         this.debugText = this.add.text(0, 50, `ロード中`)
 
@@ -222,15 +246,6 @@ export class PlayScene extends Phaser.Scene {
             .setOrigin(0.5)
             .setDepth(-3)
             .setAlpha(1.0)
-
-        const zone = this.add
-            .zone(width / 2, height / 2, width, height)
-            .setInteractive({
-                useHandCursor: true,
-            })
-        zone.on("pointerdown", () => {
-            //this.scene.start("title")
-        })
 
         this.load.on("progress", (value: number) => {
             //console.log(value)
@@ -290,14 +305,17 @@ export class PlayScene extends Phaser.Scene {
             )
 
             for (const laneIndex of Array(7).keys()) {
-                if (this.keys[laneIndex].isDown) {
+                if (this.keys[laneIndex].isDown || this.isTouching[laneIndex]) {
                     this.keyFlashTweens[laneIndex].restart()
                 }
             }
 
             // key down
             for (const laneIndex of Array(7).keys()) {
-                if (Phaser.Input.Keyboard.JustDown(this.keys[laneIndex])) {
+                if (
+                    Phaser.Input.Keyboard.JustDown(this.keys[laneIndex]) ||
+                    this.isTouching[laneIndex]
+                ) {
                     if (
                         this.chartPlayer.judgeKeyDown(
                             this,
@@ -342,7 +360,8 @@ export class PlayScene extends Phaser.Scene {
             for (const laneIndex of Array(7).keys()) {
                 if (
                     this.chartPlayer.isHolds[laneIndex] &&
-                    !this.keys[laneIndex].isDown
+                    !this.keys[laneIndex].isDown &&
+                    !this.isTouching[laneIndex]
                 ) {
                     this.chartPlayer.judgeKeyHold(this.playingSec, laneIndex)
                 }
@@ -352,7 +371,7 @@ export class PlayScene extends Phaser.Scene {
 
             // debug
             this.debugText.setText(
-                `${this.latestJudgeSec}\n\nFPS:${(1000 / dt).toFixed(2)}\n\nGenre:${this.chart.info.genre
+                `${this.isTouching}\n\nFPS:${(1000 / dt).toFixed(2)}\n\nGenre:${this.chart.info.genre
                 }\nTitle:${this.chart.info.title}\nSub Title:${this.chart.info.subtitle
                 }\nArtist:${this.chart.info.artist}\nSub Artist:${this.chart.info.subartist
                 }\nDifficulty:${this.chart.info.difficulty}\nLevei:${this.chart.info.level
