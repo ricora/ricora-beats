@@ -2,12 +2,14 @@ import { Chart } from "./Chart"
 import { KeySoundPlayer } from "./KeySoundPlayer"
 import { Note } from "./Note"
 import { Band } from "./Band"
+import { Measure } from "./Measure"
 
 import bms from "bms"
 
 export class ChartPlayer {
     public lanes: Note[][] = []
     public bgmLane: Note[] = []
+    public measures: Measure[] = []
     public longNoteBands: Band[][] = new Array()
 
     public isHolds = new Array<boolean>(7).fill(false)
@@ -145,6 +147,16 @@ export class ChartPlayer {
         }
         this.bgmLane.sort((a, b) => a.beat - b.beat)
         this.lastBeat += 4
+
+        //measure
+        for (const measureIndex of Array(1000).keys()) {
+            this.measures.push(
+                new Measure(
+                    chart.bmsChart.timeSignatures.measureToBeat(measureIndex, 0),
+                    scene.add.rectangle(640, -10, 747, 2, 0x999999).setDepth(-3)
+                )
+            )
+        }
     }
 
     public update(
@@ -162,6 +174,12 @@ export class ChartPlayer {
                 }
             } else {
                 break
+            }
+        }
+        for (const measure of this.measures) {
+            measure.rectangle.y = 551 + (beat - measure.beat) * noteSpeed
+            if (measure.rectangle.y >= 551) {
+                measure.rectangle.setVisible(false)
             }
         }
 
