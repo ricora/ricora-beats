@@ -21,6 +21,7 @@ export class ChartPlayer {
     public lastBeat: number = 4
 
     public judgeRanges: number[] = [25, 50, 75, 100, 150]
+    public scoreCoefficients: number[] = [1, 0.9, 0.6, 0.2, 0]
 
     public combo: number = 0
     public maxCombo: number = 0
@@ -305,5 +306,21 @@ export class ChartPlayer {
     }
     public hasFinished(beat: number): boolean {
         return beat > this.lastBeat
+    }
+
+    public get score(): number {
+        let score = 0
+        let maxScore = 0
+        for (const judgeIndex of Array(5).keys()) {
+            maxScore += this.judges[judgeIndex]
+        }
+        for (const judgeIndex of Array(5).keys()) {
+            score += this.judges[judgeIndex] * this.scoreCoefficients[judgeIndex]
+        }
+        if (maxScore === 0) {
+            maxScore = 1
+        }
+
+        return (score / maxScore) * 100
     }
 }

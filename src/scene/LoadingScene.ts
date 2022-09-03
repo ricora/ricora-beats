@@ -27,18 +27,16 @@ export class LoadingScene extends Phaser.Scene {
         this.load.image("bomb-1", "assets/skin/bomb1.png")
         this.load.image("bomb-2", "assets/skin/bomb2.png")
         this.load.image("bomb-3", "assets/skin/bomb3.png")
-        this.load.image('particle', 'assets/skin/particle.png')
+        this.load.image("particle", "assets/skin/particle.png")
 
         this.load.image("key-flash", "./assets/skin/keyflash.png")
+
+        //this.load.image("jacket-test", "./assets/jacket_test.png")
 
         this.load.glsl("background", "./assets/shader/synthwave.frag")
         WebFont.load({
             google: {
-                families: [
-                    "Zen Kaku Gothic New:700",
-                    "Noto Sans Japanese:900,bold",
-                    "Bungee",
-                ],
+                families: ["Noto+Sans+JP:900", "Bungee", "Fredoka+One"],
             },
         })
     }

@@ -38,7 +38,10 @@ export class PlayScene extends Phaser.Scene {
     private laneBackgroundLight: Phaser.GameObjects.Image
 
     private titleText: Phaser.GameObjects.Text
+    private artistText: Phaser.GameObjects.Text
+
     private comboText: Phaser.GameObjects.Text
+    private scoreText: Phaser.GameObjects.Text
 
     private judgeText: Phaser.GameObjects.Image
     private judgeFSText: Phaser.GameObjects.Image
@@ -95,6 +98,7 @@ export class PlayScene extends Phaser.Scene {
                 this.chartPlayer = new ChartPlayer(this, this.chart)
 
                 this.titleText.setText(this.chart.info.title)
+                this.artistText.setText(this.chart.info.artist)
                 this.cameras.main.fadeIn(700)
 
                 this.noteSpeed = 65000 / this.chart.beatToBPM(0)
@@ -156,26 +160,34 @@ export class PlayScene extends Phaser.Scene {
         })
 
         this.comboText = this.add
-            .text(1150, 130, "", {
+            .text(640, 200, "", {
                 fontFamily: "Bungee",
                 fontSize: "120px",
                 color: "#fafafa",
                 align: "center",
             })
-            .setShadow(0, 0, "#fafafa", 12, false, true)
             .setOrigin(0.5)
-            .setDepth(9)
-            .setAlpha(0.7)
+            .setDepth(0)
+            .setAlpha(0.5)
         this.comboTween = this.tweens.add({
             targets: this.comboText,
-            y: 100,
-            alpha: { value: 1, duration: 70, ease: "Quintic.Out" },
+            y: 170,
             ease: "Quintic.Out",
             duration: 70,
             paused: false,
         })
 
-        //const ttt = this.add.image(440,551,"key-flash").setOrigin(0.5, 1).setDisplaySize(1067/7,400)
+        this.scoreText = this.add
+            .text(640, 100, "0.00%", {
+                fontFamily: "Bungee",
+                fontSize: "80px",
+                color: "#888888",
+                align: "center",
+            })
+            .setOrigin(0.5)
+            .setDepth(0)
+            .setAlpha(0.5)
+            .setScale(0.5)
 
         this.keyFlashTweens = []
         this.holdParticleEmitters = []
@@ -233,19 +245,36 @@ export class PlayScene extends Phaser.Scene {
             )
         }
 
-        this.add.text(0, 0, "play scene")
-        this.debugText = this.add.text(0, 50, `ロード中`)
+        this.debugText = this.add.text(0, 250, `ロード中`)
 
         this.titleText = this.add
-            .text(640, 180, "", {
-                fontFamily: "Zen Kaku Gothic New",
-                fontSize: "30px",
+            .text(10, 230, "", {
+                fontFamily: "Noto Sans JP",
+                fontSize: "28px",
                 color: "#f0f0f0",
             })
             .setShadow(0, 0, "#080808", 4, false, true)
-            .setOrigin(0.5)
-            .setDepth(-3)
-            .setAlpha(1.0)
+            .setOrigin(0, 0.5)
+            .setDepth(10)
+            .setScale(0.5)
+
+        this.artistText = this.add
+            .text(10, 250, "", {
+                fontFamily: "Noto Sans JP",
+                fontSize: "20px",
+                color: "#f0f0f0",
+            })
+            .setShadow(0, 0, "#080808", 4, false, true)
+            .setOrigin(0, 0.5)
+            .setDepth(10)
+            .setScale(0.5)
+
+        this.add
+            .rectangle(80, 140, 142, 142, 0xffffff)
+            .setDepth(9)
+            .setOrigin(0.5, 0.5)
+
+        //this.add.image(80,140,"jacket-test").setOrigin(0.5,0.5).setDepth(10).setDisplaySize(140,140)
 
         this.load.on("progress", (value: number) => {
             //console.log(value)
@@ -254,11 +283,6 @@ export class PlayScene extends Phaser.Scene {
         this.load.on("complete", () => {
             this.hasLoaded = true
             this.loadEndTime = new Date()
-
-            this.tweens.add({
-                targets: this.titleText,
-                alpha: { value: 0.2, duration: 1000, ease: "Linear" },
-            })
         })
     }
     update(time: number, dt: number) {
@@ -267,11 +291,10 @@ export class PlayScene extends Phaser.Scene {
         )
 
         if (this.hasLoaded && this.loadEndTime !== undefined) {
-            this.comboText.setShadowBlur(
-                12 + 8 * (-this.beat - Math.floor(1 - this.beat))
-            )
-
             if (this.latestJudgeSec !== this.chartPlayer.latestJudgeSec) {
+                // draw score
+                this.scoreText.setText(`${this.chartPlayer.score.toFixed(2)}%`)
+
                 // draw combo
                 this.comboText.setText(`${this.chartPlayer.combo}`)
                 this.comboTween.restart()
@@ -371,7 +394,7 @@ export class PlayScene extends Phaser.Scene {
 
             // debug
             this.debugText.setText(
-                `${this.isTouching}\n\nFPS:${(1000 / dt).toFixed(2)}\n\nGenre:${this.chart.info.genre
+                `${this.chartPlayer.score}\n\nFPS:${(1000 / dt).toFixed(2)}\n\nGenre:${this.chart.info.genre
                 }\nTitle:${this.chart.info.title}\nSub Title:${this.chart.info.subtitle
                 }\nArtist:${this.chart.info.artist}\nSub Artist:${this.chart.info.subartist
                 }\nDifficulty:${this.chart.info.difficulty}\nLevei:${this.chart.info.level
@@ -379,7 +402,7 @@ export class PlayScene extends Phaser.Scene {
                     2
                 )}\nBPM:${this.chart.beatToBPM(this.beat).toFixed(2)}\nCombo:${this.chartPlayer.combo
                 }\nMax Combo:${this.chartPlayer.maxCombo}\nLatest Judge:${this.chartPlayer.latestJudgeIndex
-                }\nJudges:${this.chartPlayer.judges
+                }\nScore:${this.chartPlayer.score}\nJudges:${this.chartPlayer.judges
                 }\nFinished?:${this.chartPlayer.hasFinished(this.beat)}`
             )
         }
