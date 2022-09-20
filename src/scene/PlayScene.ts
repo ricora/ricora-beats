@@ -36,6 +36,9 @@ export class PlayScene extends Phaser.Scene {
     private backgroundMask: Phaser.GameObjects.Rectangle
     private laneBackground: Phaser.GameObjects.Image
     private laneBackgroundLight: Phaser.GameObjects.Image
+    private laneMainFrame: Phaser.GameObjects.Image
+
+    private judgeBar: Phaser.GameObjects.Image
 
     private titleText: Phaser.GameObjects.Text
     private artistText: Phaser.GameObjects.Text
@@ -56,6 +59,8 @@ export class PlayScene extends Phaser.Scene {
     private holdParticleEmitters: Phaser.GameObjects.Particles.ParticleEmitter[]
 
     private inputZones: Phaser.GameObjects.Zone[]
+
+    private particleYellow: Phaser.GameObjects.Particles.ParticleEmitterManager
 
     constructor() {
         super("play")
@@ -122,21 +127,30 @@ export class PlayScene extends Phaser.Scene {
         this.laneBackground = this.add
             .image(width / 2, height / 2, "frame-back")
             .setDisplaySize(1280, 720)
+            .setDepth(-5)
+
+        this.laneMainFrame = this.add
+            .image(width / 2, height / 2, "frame-main")
+            .setDisplaySize(1280, 720)
             .setDepth(-3)
-        this.laneBackgroundLight = this.add.image(
-            width / 2,
-            height / 2,
-            "frame-light"
-        )
-        this.laneBackgroundLight.setDisplaySize(1280, 720).setDepth(-2)
+        this.laneBackgroundLight = this.add
+            .image(width / 2, height / 2, "frame-light")
+            .setDisplaySize(1280, 720)
+            .setDepth(-2)
+
+        this.judgeBar = this.add
+            .image(width / 2, 640, "judgebar")
+            .setDisplaySize(780, 14)
+            .setDepth(-4)
+
         this.load.start()
 
         this.judgeText = this.add
-            .image(width / 2, 420, "judge-0")
+            .image(width / 2, 500, "judge-0")
             .setVisible(false)
             .setDepth(8)
         this.judgeFSText = this.add
-            .image(width / 2, 350, "judge-fast")
+            .image(width / 2, 290, "judge-fast")
             .setVisible(false)
             .setDepth(8)
 
@@ -160,7 +174,7 @@ export class PlayScene extends Phaser.Scene {
         })
 
         this.comboText = this.add
-            .text(640, 200, "", {
+            .text(640, 180, "", {
                 fontFamily: "Bungee",
                 fontSize: "120px",
                 color: "#fafafa",
@@ -171,10 +185,16 @@ export class PlayScene extends Phaser.Scene {
             .setAlpha(0.5)
         this.comboTween = this.tweens.add({
             targets: this.comboText,
-            y: 170,
+            y: 180,
             ease: "Quintic.Out",
             duration: 70,
             paused: false,
+            onStart: () => {
+                this.comboText.setY(210)
+            },
+            onComplete: () => {
+                this.comboText.setY(180)
+            },
         })
 
         this.scoreText = this.add
@@ -191,7 +211,7 @@ export class PlayScene extends Phaser.Scene {
 
         this.keyFlashTweens = []
         this.holdParticleEmitters = []
-        const particle = this.add.particles("particle")
+        this.particleYellow = this.add.particles("particle-yellow")
 
         for (const laneIndex of Array(7).keys()) {
             this.keyFlashTweens.push(
@@ -208,9 +228,9 @@ export class PlayScene extends Phaser.Scene {
                 })
             )
             this.holdParticleEmitters.push(
-                particle.createEmitter({
+                this.particleYellow.createEmitter({
                     x: 319 - 53.4 + 106.8 * laneIndex,
-                    y: 551,
+                    y: 640,
                     angle: { min: 265, max: 275 },
                     speed: 400,
                     emitZone: {
@@ -221,8 +241,8 @@ export class PlayScene extends Phaser.Scene {
                     },
                     gravityY: -200,
                     scale: { start: 0.2, end: 0 },
-                    lifespan: { min: 100, max: 250 },
-                    quantity: 1,
+                    lifespan: { min: 100, max: 350 },
+                    quantity: 1.5,
                     blendMode: "ADD",
                     on: false,
                 })
@@ -348,32 +368,7 @@ export class PlayScene extends Phaser.Scene {
                         )
                     ) {
                         if (this.chartPlayer.latestJudgeIndex <= 2) {
-                            this.tweens.add({
-                                targets: this.add
-                                    .image(319 + 106.8 * laneIndex, 551, "bomb-2")
-                                    .setDisplaySize(256, 256)
-                                    .setAlpha(0.5),
-                                alpha: { value: 0, duration: 280, ease: "Linear" },
-                                scale: { value: 0.7, duration: 280, ease: "Linear" },
-                                angle: { value: 30, duration: 280, ease: "Linear" },
-                                paused: false,
-                            })
-                            this.tweens.add({
-                                targets: this.add
-                                    .image(319 + 106.8 * laneIndex, 551, "bomb-3")
-                                    .setDisplaySize(162, 162),
-                                alpha: { value: 0, duration: 120, ease: "Linear" },
-                                scale: { value: 0.4, duration: 100, ease: "Quintic.Out" },
-                                paused: false,
-                            })
-                            this.tweens.add({
-                                targets: this.add
-                                    .image(319 + 106.8 * laneIndex, 551, "bomb-1")
-                                    .setDisplaySize(196, 196),
-                                alpha: { value: 0, duration: 120, ease: "Linear" },
-                                scale: { value: 0.5, duration: 120, ease: "Linear" },
-                                paused: false,
-                            })
+                            this.addBomb(laneIndex)
                         }
                     }
                 }
@@ -390,11 +385,14 @@ export class PlayScene extends Phaser.Scene {
                 }
                 this.holdParticleEmitters[laneIndex].on =
                     this.chartPlayer.isHolds[laneIndex]
+                if (this.chartPlayer.isHolds[laneIndex] && time % 130 <= 17) {
+                    this.addBomb(laneIndex)
+                }
             }
 
             // debug
             this.debugText.setText(
-                `${this.chartPlayer.score}\n\nFPS:${(1000 / dt).toFixed(2)}\n\nGenre:${this.chart.info.genre
+                `${time}\n\nFPS:${(1000 / dt).toFixed(2)}\n\nGenre:${this.chart.info.genre
                 }\nTitle:${this.chart.info.title}\nSub Title:${this.chart.info.subtitle
                 }\nArtist:${this.chart.info.artist}\nSub Artist:${this.chart.info.subartist
                 }\nDifficulty:${this.chart.info.difficulty}\nLevei:${this.chart.info.level
@@ -406,5 +404,33 @@ export class PlayScene extends Phaser.Scene {
                 }\nFinished?:${this.chartPlayer.hasFinished(this.beat)}`
             )
         }
+    }
+    private addBomb(laneIndex: number) {
+        this.tweens.add({
+            targets: this.add
+                .image(319 + 106.8 * laneIndex, 640, "bomb-2")
+                .setDisplaySize(256, 256)
+                .setAlpha(0.5),
+            alpha: { value: 0, duration: 280, ease: "Linear" },
+            scale: { value: 0.9, duration: 280, ease: "Linear" },
+            angle: { value: 30, duration: 280, ease: "Linear" },
+            paused: false,
+        })
+        this.tweens.add({
+            targets: this.add
+                .image(319 + 106.8 * laneIndex, 640, "bomb-3")
+                .setDisplaySize(180, 180),
+            alpha: { value: 0, duration: 140, ease: "Linear" },
+            scale: { value: 0.4, duration: 110, ease: "Quintic.Out" },
+            paused: false,
+        })
+        this.tweens.add({
+            targets: this.add
+                .image(319 + 106.8 * laneIndex, 640, "bomb-1")
+                .setDisplaySize(196, 196),
+            alpha: { value: 0, duration: 120, ease: "Linear" },
+            scale: { value: 0.7, duration: 120, ease: "Linear" },
+            paused: false,
+        })
     }
 }

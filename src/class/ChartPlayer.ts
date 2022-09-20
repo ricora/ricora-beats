@@ -109,11 +109,11 @@ export class ChartPlayer {
                     beatEndLongNote[noteIndex],
                     beat,
                     scene.add
-                        .image(319 + 106.8 * noteIndex, -100, "note-long")
-                        .setDisplaySize(90, 0)
+                        .image(319 + 106.8 * noteIndex, -100, `long${noteImage}`)
+                        .setDisplaySize(117.5, 0)
                         .setOrigin(0.5, 0)
                         .setDepth(-1)
-                        .setAlpha(0.9)
+                        .setAlpha(1)
                 )
 
                 this.longNoteBands[noteIndex].push(band)
@@ -177,8 +177,8 @@ export class ChartPlayer {
             }
         }
         for (const measure of this.measures) {
-            measure.rectangle.y = 551 + (beat - measure.beat) * noteSpeed
-            if (measure.rectangle.y >= 551) {
+            measure.rectangle.y = 640 + (beat - measure.beat) * noteSpeed
+            if (measure.rectangle.y >= 640) {
                 measure.rectangle.setVisible(false)
             }
         }
@@ -191,14 +191,14 @@ export class ChartPlayer {
                     0
                 )
                 band.image.y =
-                    551 +
+                    640 +
                     (beat - band.startBeat) * noteSpeed -
                     (band.endBeat - band.startBeat) * noteSpeed
-                band.image.y = 551 + Math.min((beat - band.endBeat) * noteSpeed, 0)
+                band.image.y = 640 + Math.min((beat - band.endBeat) * noteSpeed, 0)
             }
 
             for (const [noteIndex, note] of this.lanes[laneIndex].entries()) {
-                note.image.y = 551 + Math.min((beat - note.beat) * noteSpeed, 0)
+                note.image.y = 640 + Math.min((beat - note.beat) * noteSpeed, 0)
                 if (
                     !note.isJudged &&
                     ((!note.isLongEnd &&

@@ -7,13 +7,17 @@ export class LoadingScene extends Phaser.Scene {
 
     preload() {
         this.load.image("frame-back", "./assets/skin/frame_back.png")
+        this.load.image("frame-main", "./assets/skin/frame_main.png")
         this.load.image("frame-light", "./assets/skin/frame_light.png")
+        this.load.image("judgebar", "./assets/skin/judgebar.png")
 
         this.load.image("note-1", "./assets/skin/note1.png")
         this.load.image("note-2", "./assets/skin/note2.png")
         this.load.image("note-3", "./assets/skin/note3.png")
 
-        this.load.image("note-long", "./assets/skin/longnote.png")
+        this.load.image("longnote-1", "./assets/skin/longnote1.png")
+        this.load.image("longnote-2", "./assets/skin/longnote2.png")
+        this.load.image("longnote-3", "./assets/skin/longnote3.png")
 
         this.load.image("judge-0", "./assets/skin/judge_0.png")
         this.load.image("judge-1", "./assets/skin/judge_1.png")
@@ -27,7 +31,9 @@ export class LoadingScene extends Phaser.Scene {
         this.load.image("bomb-1", "assets/skin/bomb1.png")
         this.load.image("bomb-2", "assets/skin/bomb2.png")
         this.load.image("bomb-3", "assets/skin/bomb3.png")
+
         this.load.image("particle", "assets/skin/particle.png")
+        this.load.image("particle-yellow", "assets/skin/particle_yellow.png")
 
         this.load.image("key-flash", "./assets/skin/keyflash.png")
 
