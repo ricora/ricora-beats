@@ -37,6 +37,7 @@ export class PlayScene extends Phaser.Scene {
     private laneBackground: Phaser.GameObjects.Image
     private laneBackgroundLight: Phaser.GameObjects.Image
     private laneMainFrame: Phaser.GameObjects.Image
+    private laneMainFrameLight: Phaser.GameObjects.Image
 
     private judgeBar: Phaser.GameObjects.Image
 
@@ -119,7 +120,7 @@ export class PlayScene extends Phaser.Scene {
 
         this.background = this.add
             .shader("background", width / 2, height / 2, 1280, 720)
-            .setDepth(-10)
+            .setDepth(-10).setVisible(false)
         this.backgroundMask = this.add
             .rectangle(width / 2, height / 2, 760, 720, 0x000000, 70)
             .setDepth(-9)
@@ -128,13 +129,16 @@ export class PlayScene extends Phaser.Scene {
             .image(width / 2, height / 2, "frame-back")
             .setDisplaySize(1280, 720)
             .setDepth(-5)
-
+        this.laneBackgroundLight = this.add
+            .image(width / 2, height / 2, "frame-back-light-yellow")
+            .setDisplaySize(1280, 720)
+            .setDepth(-4)
         this.laneMainFrame = this.add
             .image(width / 2, height / 2, "frame-main")
             .setDisplaySize(1280, 720)
             .setDepth(-3)
-        this.laneBackgroundLight = this.add
-            .image(width / 2, height / 2, "frame-light")
+        this.laneMainFrameLight = this.add
+            .image(width / 2, height / 2, "frame-main-light")
             .setDisplaySize(1280, 720)
             .setDepth(-2)
 
@@ -306,8 +310,11 @@ export class PlayScene extends Phaser.Scene {
         })
     }
     update(time: number, dt: number) {
+        this.laneMainFrameLight.setAlpha(
+            1 - 0.6 * ((this.beat % 1) % 1)//0.95 + 0.6 * (-this.beat - Math.floor(1 - this.beat))
+        )
         this.laneBackgroundLight.setAlpha(
-            0.95 + 0.6 * (-this.beat - Math.floor(1 - this.beat))
+            0.5 + 0.25 * 0.5 * (Math.sin(1 * Math.PI * this.beat) + 1)
         )
 
         if (this.hasLoaded && this.loadEndTime !== undefined) {
@@ -353,6 +360,16 @@ export class PlayScene extends Phaser.Scene {
                 }
             }
 
+            // change back light
+            if (this.chartPlayer.judges[3] == 0 && this.chartPlayer.judges[4] == 0) {
+                if (this.chartPlayer.judges[1] == 0 && this.chartPlayer.judges[2] == 0) {
+                    this.laneBackgroundLight.setTexture("frame-back-light-yellow")
+                } else {
+                    this.laneBackgroundLight.setTexture("frame-back-light-blue")
+                }
+            } else {
+                this.laneBackgroundLight.setTexture("frame-back-light-green")
+            }
             // key down
             for (const laneIndex of Array(7).keys()) {
                 if (
