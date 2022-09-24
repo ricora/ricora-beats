@@ -120,7 +120,8 @@ export class PlayScene extends Phaser.Scene {
 
         this.background = this.add
             .shader("background", width / 2, height / 2, 1280, 720)
-            .setDepth(-10).setVisible(false)
+            .setDepth(-10)
+            .setVisible(false)
         this.backgroundMask = this.add
             .rectangle(width / 2, height / 2, 760, 720, 0x000000, 70)
             .setDepth(-9)
@@ -312,7 +313,7 @@ export class PlayScene extends Phaser.Scene {
     }
     update(time: number, dt: number) {
         this.laneMainFrameLight.setAlpha(
-            1 - 0.6 * ((this.beat % 1) % 1)//0.95 + 0.6 * (-this.beat - Math.floor(1 - this.beat))
+            1 - 0.6 * ((this.beat % 1) % 1) //0.95 + 0.6 * (-this.beat - Math.floor(1 - this.beat))
         )
         this.laneBackgroundLight.setAlpha(
             0.5 + 0.25 * 0.5 * (Math.sin(1 * Math.PI * this.beat) + 1)
@@ -363,7 +364,10 @@ export class PlayScene extends Phaser.Scene {
 
             // change back light
             if (this.chartPlayer.judges[3] == 0 && this.chartPlayer.judges[4] == 0) {
-                if (this.chartPlayer.judges[1] == 0 && this.chartPlayer.judges[2] == 0) {
+                if (
+                    this.chartPlayer.judges[1] == 0 &&
+                    this.chartPlayer.judges[2] == 0
+                ) {
                     this.laneBackgroundLight.setTexture("frame-back-light-yellow")
                 } else {
                     this.laneBackgroundLight.setTexture("frame-back-light-blue")
@@ -373,9 +377,7 @@ export class PlayScene extends Phaser.Scene {
             }
             // key down
             for (const laneIndex of Array(7).keys()) {
-                if (
-                    Phaser.Input.Keyboard.JustDown(this.keys[laneIndex])
-                ) {
+                if (Phaser.Input.Keyboard.JustDown(this.keys[laneIndex])) {
                     this.judgeKeyDown(laneIndex)
                 }
             }
@@ -412,19 +414,19 @@ export class PlayScene extends Phaser.Scene {
         }
     }
     private judgeKeyDown(laneIndex: number) {
-        if (this.chartPlayer.judgeKeyDown(
-            this,
-            this.playingSec,
-            laneIndex,
-            this.keySoundPlayer
-        )
+        if (
+            this.chartPlayer.judgeKeyDown(
+                this,
+                this.playingSec,
+                laneIndex,
+                this.keySoundPlayer
+            )
         ) {
             if (this.chartPlayer.latestJudgeIndex <= 2) {
                 this.addBomb(laneIndex)
             }
         }
     }
-
 
     private addBomb(laneIndex: number) {
         this.tweens.add({
