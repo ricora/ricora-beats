@@ -262,6 +262,7 @@ export class PlayScene extends Phaser.Scene {
                     .setOrigin(0.5, 1)
                     .on("pointerover", () => {
                         this.isTouching[laneIndex] = true
+                        this.judgeKeyDown(laneIndex)
                     })
                     .on("pointerout", () => {
                         this.isTouching[laneIndex] = false
@@ -373,21 +374,9 @@ export class PlayScene extends Phaser.Scene {
             // key down
             for (const laneIndex of Array(7).keys()) {
                 if (
-                    Phaser.Input.Keyboard.JustDown(this.keys[laneIndex]) ||
-                    this.isTouching[laneIndex]
+                    Phaser.Input.Keyboard.JustDown(this.keys[laneIndex])
                 ) {
-                    if (
-                        this.chartPlayer.judgeKeyDown(
-                            this,
-                            this.playingSec,
-                            laneIndex,
-                            this.keySoundPlayer
-                        )
-                    ) {
-                        if (this.chartPlayer.latestJudgeIndex <= 2) {
-                            this.addBomb(laneIndex)
-                        }
-                    }
+                    this.judgeKeyDown(laneIndex)
                 }
             }
 
@@ -422,6 +411,21 @@ export class PlayScene extends Phaser.Scene {
             )
         }
     }
+    private judgeKeyDown(laneIndex: number) {
+        if (this.chartPlayer.judgeKeyDown(
+            this,
+            this.playingSec,
+            laneIndex,
+            this.keySoundPlayer
+        )
+        ) {
+            if (this.chartPlayer.latestJudgeIndex <= 2) {
+                this.addBomb(laneIndex)
+            }
+        }
+    }
+
+
     private addBomb(laneIndex: number) {
         this.tweens.add({
             targets: this.add
