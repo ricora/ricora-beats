@@ -190,10 +190,6 @@ export class ChartPlayer {
                     noteSpeed,
                     0
                 )
-                band.image.y =
-                    640 +
-                    (beat - band.startBeat) * noteSpeed -
-                    (band.endBeat - band.startBeat) * noteSpeed
                 band.image.y = 640 + Math.min((beat - band.endBeat) * noteSpeed, 0)
             }
 
