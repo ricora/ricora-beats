@@ -46,7 +46,7 @@ export class LoadingScene extends Phaser.Scene {
         this.load.glsl("background", "./assets/shader/synthwave.frag")
         WebFont.load({
             google: {
-                families: ["Noto+Sans+JP:900", "Bungee", "Fredoka+One"],
+                families: ["Noto+Sans+JP:900", "Bungee", "Fredoka+One", "Oswald:700"],
             },
         })
     }
