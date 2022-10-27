@@ -48,6 +48,12 @@ export class LoadingScene extends Phaser.Scene {
 
         //this.load.image("jacket-test", "./assets/jacket_test.png")
 
+        this.load.audio("normal-tap-1", "./assets/sound/se/normal_tap1.wav")
+        this.load.audio("normal-tap-2", "./assets/sound/se/normal_tap2.wav")
+        this.load.audio("normal-tap-3", "./assets/sound/se/normal_tap3.wav")
+        this.load.audio("normal-tap-4", "./assets/sound/se/normal_tap4.wav")
+        this.load.audio("normal-tap-5", "./assets/sound/se/normal_tap4.wav")
+
         this.load.glsl("background", "./assets/shader/synthwave.frag")
         WebFont.load({
             google: {

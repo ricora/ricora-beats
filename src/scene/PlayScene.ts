@@ -65,6 +65,8 @@ export class PlayScene extends Phaser.Scene {
 
     private particleYellow: Phaser.GameObjects.Particles.ParticleEmitterManager
 
+    private normalTapSounds: Phaser.Sound.BaseSound[]
+
     constructor() {
         super("play")
     }
@@ -305,6 +307,11 @@ export class PlayScene extends Phaser.Scene {
 
         //this.add.image(80,140,"jacket-test").setOrigin(0.5,0.5).setDepth(10).setDisplaySize(140,140)
 
+        this.normalTapSounds = []
+        for (const judgeIndex of Array(5).keys()) {
+            this.normalTapSounds.push(this.sound.add(`normal-tap-${judgeIndex + 1}`))
+        }
+
         this.load.on("progress", (value: number) => {
             //console.log(value)
             this.debugText.setText(`${value}`)
@@ -323,7 +330,7 @@ export class PlayScene extends Phaser.Scene {
         )
 
         if (this.hasLoaded && this.loadEndTime !== undefined) {
-            if (this.latestJudgeSec !== this.chartPlayer.latestJudgeSec) {
+            if ((this.latestJudgeSec !== this.chartPlayer.latestJudgeSec) && (this.chartPlayer.latestJudgeSec !== -1)) {
                 // draw score
                 this.scoreText.setText(`${this.chartPlayer.score.toFixed(2)}%`)
 
@@ -336,6 +343,8 @@ export class PlayScene extends Phaser.Scene {
                 this.judgeText.setVisible(true)
                 this.judgeTween.restart()
                 //this.judgeText.setAlpha(1)
+                this.normalTapSounds[this.chartPlayer.latestJudgeIndex].play()
+
                 if (this.chartPlayer.latestJudgeIndex !== 0) {
                     this.judgeFSText.setTexture(
                         `judge-${this.chartPlayer.latestJudgeDiff > 0 ? "fast" : "slow"}`
