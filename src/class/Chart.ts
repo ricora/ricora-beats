@@ -1,6 +1,6 @@
 import bms from "bms"
 
-interface SongInfo {
+export interface SongInfo {
     title: string
     artist: string
     genre: string
