@@ -41,7 +41,6 @@ export class LoadingScene extends Phaser.Scene {
         this.load.image("bomb-2", "assets/skin/bomb2.png")
         this.load.image("bomb-3", "assets/skin/bomb3.png")
 
-        this.load.image("particle", "assets/skin/particle.png")
         this.load.image("particle-yellow", "assets/skin/particle_yellow.png")
 
         this.load.image("key-flash", "./assets/skin/keyflash.png")
