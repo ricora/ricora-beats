@@ -10,7 +10,7 @@ import { PlayResult } from "../class/PlayResult"
 export class PlayScene extends Phaser.Scene {
     private debugGUI: DebugGUI
     private chart: Chart
-    private chartPlayer: ChartPlayer
+    private chartPlayer?: ChartPlayer
 
     private keySoundPlayer: KeySoundPlayer
 
@@ -81,6 +81,8 @@ export class PlayScene extends Phaser.Scene {
         this.hasFadedOut = false
 
         this.latestJudgeSec = -1
+
+        this.chartPlayer = undefined
 
         this.isTouching = new Array<boolean>(7).fill(false)
 
@@ -329,8 +331,15 @@ export class PlayScene extends Phaser.Scene {
             0.5 + 0.25 * 0.5 * (Math.sin(1 * Math.PI * this.beat) + 1)
         )
 
-        if (this.hasLoaded && this.loadEndTime !== undefined) {
-            if ((this.latestJudgeSec !== this.chartPlayer.latestJudgeSec) && (this.chartPlayer.latestJudgeSec !== -1)) {
+        if (
+            this.hasLoaded &&
+            this.loadEndTime !== undefined &&
+            this.chartPlayer !== undefined
+        ) {
+            if (
+                this.latestJudgeSec !== this.chartPlayer.latestJudgeSec &&
+                this.chartPlayer.latestJudgeSec !== undefined
+            ) {
                 // draw score
                 this.scoreText.setText(`${this.chartPlayer.score.toFixed(2)}%`)
 
@@ -391,9 +400,21 @@ export class PlayScene extends Phaser.Scene {
             // finish
             if (this.chartPlayer.hasFinished(this.beat) && !this.hasFadedOut) {
                 this.cameras.main.fadeOut(500)
-                this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-                    this.scene.start("result", { playResult: new PlayResult(this.chart.info, this.chartPlayer.judges, this.chartPlayer.score, Math.max(this.chartPlayer.combo, this.chartPlayer.combo)) })
-                })
+                this.cameras.main.once(
+                    Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
+                    () => {
+                        if (this.chartPlayer !== undefined) {
+                            this.scene.start("result", {
+                                playResult: new PlayResult(
+                                    this.chart.info,
+                                    this.chartPlayer.judges,
+                                    this.chartPlayer.score,
+                                    Math.max(this.chartPlayer.combo, this.chartPlayer.combo)
+                                ),
+                            })
+                        }
+                    }
+                )
                 this.hasFadedOut = true
             }
 
@@ -436,20 +457,21 @@ export class PlayScene extends Phaser.Scene {
         }
     }
     private judgeKeyDown(laneIndex: number) {
-        if (
-            this.chartPlayer.judgeKeyDown(
-                this,
-                this.playingSec,
-                laneIndex,
-                this.keySoundPlayer
-            )
-        ) {
-            if (this.chartPlayer.latestJudgeIndex <= 2) {
-                this.addBomb(laneIndex)
+        if (this.chartPlayer !== undefined) {
+            if (
+                this.chartPlayer.judgeKeyDown(
+                    this,
+                    this.playingSec,
+                    laneIndex,
+                    this.keySoundPlayer
+                )
+            ) {
+                if (this.chartPlayer.latestJudgeIndex <= 2) {
+                    this.addBomb(laneIndex)
+                }
             }
         }
     }
-
     private addBomb(laneIndex: number) {
         this.tweens.add({
             targets: this.add
