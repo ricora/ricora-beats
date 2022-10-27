@@ -6,6 +6,7 @@ import { Chart } from "../class/Chart"
 import { ChartPlayer } from "../class/ChartPlayer"
 import { KeySoundPlayer } from "../class/KeySoundPlayer"
 import { DebugGUI } from "../class/DebugGUI"
+import { PlayResult } from "../class/PlayResult"
 export class PlayScene extends Phaser.Scene {
     private debugGUI: DebugGUI
     private chart: Chart
@@ -16,6 +17,7 @@ export class PlayScene extends Phaser.Scene {
     private loadEndTime?: Date
 
     private hasLoaded: boolean
+    private hasFadedOut: boolean
 
     private debugText: Phaser.GameObjects.Text
 
@@ -68,12 +70,13 @@ export class PlayScene extends Phaser.Scene {
     }
 
     init() {
-        this.cameras.main.fadeOut(0)
         this.debugGUI = new DebugGUI(this)
 
         this.loadEndTime = undefined
 
         this.hasLoaded = false
+
+        this.hasFadedOut = false
 
         this.latestJudgeSec = -1
 
@@ -375,6 +378,16 @@ export class PlayScene extends Phaser.Scene {
             } else {
                 this.laneBackgroundLight.setTexture("frame-back-light-green")
             }
+
+            // finish
+            if (this.chartPlayer.hasFinished(this.beat) && !this.hasFadedOut) {
+                this.cameras.main.fadeOut(500)
+                this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+                    this.scene.start("result", { playResult: new PlayResult(this.chart.info, this.chartPlayer.judges, this.chartPlayer.score, Math.max(this.chartPlayer.combo, this.chartPlayer.combo)) })
+                })
+                this.hasFadedOut = true
+            }
+
             // key down
             for (const laneIndex of Array(7).keys()) {
                 if (Phaser.Input.Keyboard.JustDown(this.keys[laneIndex])) {
