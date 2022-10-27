@@ -16,11 +16,15 @@ export class DebugGUI {
             play: () => {
                 this.changeScene("play")
             },
+            result: () => {
+                this.changeScene("result")
+            },
         }
         const sceneFolder = this.gui.addFolder("Scenes")
         sceneFolder.add(this.params, "title")
         sceneFolder.add(this.params, "select")
         sceneFolder.add(this.params, "play")
+        sceneFolder.add(this.params, "result")
     }
 
     public changeScene(key: string) {
