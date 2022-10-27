@@ -6,8 +6,13 @@ export class LoadingScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image("frame-back", "./assets/skin/frame_back.png")
+        this.load.image("frame-title", "./assets/skin/frame_title.png")
+        this.load.image("frame-detail", "./assets/skin/frame_detail.png")
 
+        this.load.image("icon-music", "./assets/skin/tabler-icons/music.png")
+        this.load.image("icon-user", "./assets/skin/tabler-icons/user.png")
+
+        this.load.image("frame-back", "./assets/skin/frame_back.png")
         this.load.image("frame-back-light-blue", "./assets/skin/frame_back_light_blue.png")
         this.load.image("frame-back-light-yellow", "./assets/skin/frame_back_light_yellow.png")
         this.load.image("frame-back-light-green", "./assets/skin/frame_back_light_green.png")
