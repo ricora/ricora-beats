@@ -17,7 +17,7 @@ export class KeySoundPlayer {
                     encodeURIComponent(
                         url.substring(0, url.lastIndexOf("/") + 1) +
                         soundFileName.substring(0, soundFileName.lastIndexOf(".") + 1) +
-                        "ogg"
+                        "wav"
                     )
                 )
                 this.keySoundSet.add(parseInt(noteValue, 36).toString())
