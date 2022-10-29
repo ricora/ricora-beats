@@ -197,13 +197,12 @@ export class PlayScene extends Phaser.Scene {
             .setAlpha(0.5)
         this.comboTween = this.tweens.add({
             targets: this.comboText,
-            y: 180,
-            ease: "Quintic.Out",
-            duration: 70,
-            paused: false,
-            onStart: () => {
-                this.comboText.setY(210)
+            y: 210,
+            ease: (t: number): number => {
+                return 0 < t && t <= 1 ? 1 - t : 0
             },
+            duration: 100,
+            paused: false,
             onComplete: () => {
                 this.comboText.setY(180)
             },
