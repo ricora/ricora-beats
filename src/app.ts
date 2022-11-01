@@ -1,8 +1,7 @@
 import * as Phaser from "phaser"
-import { Scenes } from './scene'
+import { Scenes } from "./scene"
 
-
-
+import KawaseBlurPipelinePlugin from "phaser3-rex-plugins/plugins/kawaseblurpipeline-plugin"
 
 const config: Phaser.Types.Core.GameConfig = {
     type: Phaser.AUTO,
@@ -10,10 +9,19 @@ const config: Phaser.Types.Core.GameConfig = {
         mode: Phaser.Scale.FIT,
         parent: "game-app",
         width: 1280,
-        height: 720
+        height: 720,
     },
     parent: "game-app",
-    scene: Scenes
+    plugins: {
+        global: [
+            {
+                key: "rexKawaseBlurPipeline",
+                plugin: KawaseBlurPipelinePlugin,
+                start: true,
+            },
+        ],
+    },
+    scene: Scenes,
 }
 
 new Phaser.Game(config)

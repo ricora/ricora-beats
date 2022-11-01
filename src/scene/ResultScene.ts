@@ -24,6 +24,8 @@ export class ResultScene extends Phaser.Scene {
     private line1: Phaser.GameObjects.Rectangle
     private line2: Phaser.GameObjects.Rectangle
 
+    private backgroundCamera: Phaser.Cameras.Scene2D.Camera
+
     constructor() {
         super("result")
     }
@@ -59,11 +61,18 @@ export class ResultScene extends Phaser.Scene {
 
         this.add.text(0, 0, "result scene")
 
-        this.add.shader("background", width / 2, height / 2, 1280, 720).setDepth(-5)
-
+        this.backgroundCamera = this.cameras.add(0, 0, 1280, 720)
+        this.backgroundCamera.setScroll(1280, 720)
+        this.cameras.add(0, 0, 1280, 720, true)
         this.add
-            .rectangle(width / 2, height / 2, 1280, 720, 0x111111, 100)
-            .setDepth(-4)
+            .shader("background", width / 2 + 1280, height / 2 + 720, 1280, 720)
+            .setDepth(-5)
+
+        // @ts-expect-error
+        this.plugins.get("rexKawaseBlurPipeline").add(this.backgroundCamera, {
+            blur: 6,
+            quality: 6,
+        })
 
         this.titleFrame = this.add
             .image(100, 125, "frame-title")
