@@ -128,7 +128,6 @@ export class PlayScene extends Phaser.Scene {
         this.background = this.add
             .shader("background", width / 2, height / 2, 1280, 720)
             .setDepth(-10)
-            .setVisible(false)
         this.backgroundMask = this.add
             .rectangle(width / 2, height / 2, 760, 720, 0x000000, 70)
             .setDepth(-9)
