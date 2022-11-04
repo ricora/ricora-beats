@@ -60,7 +60,7 @@ export class ChartPlayer {
         let beatLatestEndLongNote: number[] = new Array<number>(7).fill(-1)
 
         for (const object of chart.bmsChart.objects._objects) {
-            let noteIndex: number = replacementNormalNote[parseInt(object.channel)]
+            let laneIndex: number = replacementNormalNote[parseInt(object.channel)]
             let noteValue: number = parseInt(object.value, 36)
             let isLongNoteStart: boolean = false
             let isLongNoteEnd: boolean = false
@@ -71,15 +71,15 @@ export class ChartPlayer {
             )
 
             if (parseInt(object.channel) in replacementLongNote) {
-                noteIndex = replacementLongNote[parseInt(object.channel)]
+                laneIndex = replacementLongNote[parseInt(object.channel)]
 
-                if (!isLatestEndLongNote[noteIndex]) {
-                    beatLatestEndLongNote[noteIndex] = beat
+                if (!isLatestEndLongNote[laneIndex]) {
+                    beatLatestEndLongNote[laneIndex] = beat
                     isLongNoteStart = true
                 } else {
                     isLongNoteEnd = true
                 }
-                isLatestEndLongNote[noteIndex] = true
+                isLatestEndLongNote[laneIndex] = true
             }
 
             if (parseInt(object.channel) === 1) {
@@ -97,10 +97,10 @@ export class ChartPlayer {
                 displaySizeX = 117.5
                 displaySizeY = 40
                 visible = !isLongNoteEnd
-                if (noteIndex == 1 || noteIndex == 5) {
+                if (laneIndex == 1 || laneIndex == 5) {
                     noteImage = "note-rectangle-2"
                     longNoteImage = "longnote-2"
-                } else if (noteIndex == 3) {
+                } else if (laneIndex == 3) {
                     noteImage = "note-rectangle-3"
                     longNoteImage = "longnote-3"
                 }
@@ -108,7 +108,7 @@ export class ChartPlayer {
                 if (isLongNoteEnd || isLongNoteStart) {
                     noteImage = "note-circle-3"
                 } else {
-                    if (noteIndex % 2 == 0) {
+                    if (laneIndex % 2 == 0) {
                         noteImage = "note-circle-1"
                     } else {
                         noteImage = "note-circle-2"
@@ -120,35 +120,26 @@ export class ChartPlayer {
                 visible = true
             }
 
-
-            let noteColor: number = 0xffffff
-            if (noteIndex == 1 || noteIndex == 5) {
-                noteColor = 0x2faceb
-            } else if (noteIndex == 3) {
-                noteColor = 0xebb446
-            }
-
             if (
                 isLongNoteEnd &&
-                isLatestEndLongNote[noteIndex] &&
-                beatLatestEndLongNote[noteIndex] != beat
+                isLatestEndLongNote[laneIndex] &&
+                beatLatestEndLongNote[laneIndex] != beat
             ) {
-                noteColor = 0x888888
-                isLatestEndLongNote[noteIndex] = false
+                isLatestEndLongNote[laneIndex] = false
 
                 const band = new Band(
-                    beatLatestEndLongNote[noteIndex],
+                    beatLatestEndLongNote[laneIndex],
                     beat,
                     scene.add
-                        .image(319 + 106.8 * noteIndex, -100, longNoteImage)
+                        .image(319 + 106.8 * laneIndex, -100, longNoteImage)
                         .setDisplaySize(displaySizeX, 0)
                         .setOrigin(0.5, 0)
                         .setDepth(-1)
                         .setAlpha(1)
                 )
 
-                this.longNoteBands[noteIndex].push(band)
-                beatLatestEndLongNote[noteIndex] = -1
+                this.longNoteBands[laneIndex].push(band)
+                beatLatestEndLongNote[laneIndex] = -1
             }
 
             const note: Note = new Note(
@@ -156,7 +147,7 @@ export class ChartPlayer {
                 bms.Timing.fromBMSChart(chart.bmsChart).beatToSeconds(beat),
                 noteValue,
                 scene.add
-                    .image(319 + 106.8 * noteIndex, -100, noteImage)
+                    .image(319 + 106.8 * laneIndex, -100, noteImage)
                     .setDisplaySize(displaySizeX, displaySizeY)
                     .setDepth(1)
                     .setVisible(visible),
@@ -168,8 +159,8 @@ export class ChartPlayer {
 
             if (isBGM) {
                 this.bgmLane.push(note)
-            } else if (0 <= noteIndex && noteIndex <= 7) {
-                this.lanes[noteIndex].push(note)
+            } else if (0 <= laneIndex && laneIndex <= 7) {
+                this.lanes[laneIndex].push(note)
                 this.lastBeat = Math.max(this.lastBeat, beat)
             }
         }
