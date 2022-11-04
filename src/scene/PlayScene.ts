@@ -7,6 +7,7 @@ import { ChartPlayer } from "../class/ChartPlayer"
 import { KeySoundPlayer } from "../class/KeySoundPlayer"
 import { DebugGUI } from "../class/DebugGUI"
 import { PlayResult } from "../class/PlayResult"
+import { PlayConfig } from "../class/PlayConfig"
 export class PlayScene extends Phaser.Scene {
     private debugGUI: DebugGUI
     private chart: Chart
@@ -67,11 +68,13 @@ export class PlayScene extends Phaser.Scene {
 
     private normalTapSounds: Phaser.Sound.BaseSound[]
 
+    private playConfig: PlayConfig
+
     constructor() {
         super("play")
     }
 
-    init() {
+    init(data: any) {
         this.debugGUI = new DebugGUI(this)
 
         this.loadEndTime = undefined
@@ -97,6 +100,13 @@ export class PlayScene extends Phaser.Scene {
         ]
 
         this.input.addPointer(9)
+
+        this.playConfig =
+            data.playConfig ||
+            new PlayConfig({
+                noteSpeed: 6.5,
+                noteType: "rectangle",
+            })
     }
     preload() { }
 
@@ -114,7 +124,8 @@ export class PlayScene extends Phaser.Scene {
                 this.artistText.setText(this.chart.info.artist)
                 this.cameras.main.fadeIn(700)
 
-                this.noteSpeed = 65000 / this.chart.beatToBPM(0)
+                this.noteSpeed =
+                    (this.playConfig.noteSpeed * 10000) / this.chart.beatToBPM(0)
 
                 this.keySoundPlayer = new KeySoundPlayer(this.chart)
                 this.keySoundPlayer.loadKeySounds(this, url)
