@@ -106,6 +106,9 @@ export class PlayScene extends Phaser.Scene {
             new PlayConfig({
                 noteSpeed: 6.5,
                 noteType: "rectangle",
+                title: "title",
+                artist: "artist",
+                difficulty: 4
             })
     }
     preload() { }
@@ -120,8 +123,8 @@ export class PlayScene extends Phaser.Scene {
                 this.chart = new Chart(bmsSource)
                 this.chartPlayer = new ChartPlayer(this, this.chart, this.playConfig)
 
-                this.titleText.setText(this.chart.info.title)
-                this.artistText.setText(this.chart.info.artist)
+                this.titleText.setText(this.playConfig.title)
+                this.artistText.setText(this.playConfig.artist)
                 this.cameras.main.fadeIn(700)
 
                 this.noteSpeed =
@@ -316,6 +319,8 @@ export class PlayScene extends Phaser.Scene {
             .setDepth(9)
             .setOrigin(0.5, 0.5)
 
+        this.add.image(10, 280, `diff-icon-${this.playConfig.difficulty}`).setOrigin(0, 0.5).setDepth(10).setScale(0.7)
+
         //this.add.image(80,140,"jacket-test").setOrigin(0.5,0.5).setDepth(10).setDisplaySize(140,140)
 
         this.normalTapSounds = []
@@ -414,12 +419,12 @@ export class PlayScene extends Phaser.Scene {
                     () => {
                         if (this.chartPlayer !== undefined) {
                             this.scene.start("result", {
-                                playResult: new PlayResult(
-                                    this.chart.info,
-                                    this.chartPlayer.judges,
-                                    this.chartPlayer.score,
-                                    Math.max(this.chartPlayer.combo, this.chartPlayer.combo)
-                                ),
+                                playResult: new PlayResult({
+                                    playConfig: this.playConfig,
+                                    judges: this.chartPlayer.judges,
+                                    score: this.chartPlayer.score,
+                                    maxCombo: Math.max(this.chartPlayer.combo, this.chartPlayer.combo)
+                                }),
                             })
                         }
                     }

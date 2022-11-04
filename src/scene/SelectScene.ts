@@ -40,6 +40,9 @@ export class SelectScene extends Phaser.Scene {
                 playConfig: new PlayConfig({
                     noteSpeed: this.debugParams.noteSpeed,
                     noteType: this.debugParams.noteType,
+                    title: "title",
+                    artist: "artist",
+                    difficulty:2
                 }),
             })
         })

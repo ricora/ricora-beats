@@ -21,6 +21,8 @@ export class ResultScene extends Phaser.Scene {
     private musicIcon: Phaser.GameObjects.Image
     private userIcon: Phaser.GameObjects.Image
 
+    private diffIcon: Phaser.GameObjects.Image
+
     private line1: Phaser.GameObjects.Rectangle
     private line2: Phaser.GameObjects.Rectangle
 
@@ -39,22 +41,18 @@ export class ResultScene extends Phaser.Scene {
         console.log(data.playResult)
         this.playResult =
             data.playResult ||
-            new PlayResult(
-                {
+            new PlayResult({
+                playConfig: {
+                    noteSpeed: 6.5,
+                    noteType: "rectangle",
                     title: "曲名 タイトル aiueo 12345",
                     artist: "アーティスト名 あいうえお アイウエオ aiueo 12345",
-                    genre: "ジャンル名",
-                    bpm: 180,
-                    level: 5,
-                    subtitle: "",
-                    subartist: "",
-                    stagefile: "",
-                    difficulty: 2,
+                    difficulty: 3,
                 },
-                [1000, 200, 30, 4, 5],
-                95.21,
-                1234
-            )
+                judges:[1000, 200, 30, 4, 5],
+                score:95.21,
+                maxCombo:1234
+    })
     }
     create() {
         const { width, height } = this.game.canvas
@@ -97,7 +95,7 @@ export class ResultScene extends Phaser.Scene {
         })
 
         this.titleText = this.add
-            .text(190, 110, this.playResult.songInfo.title, {
+            .text(190, 110, this.playResult.playConfig.title, {
                 fontFamily: "Noto Sans JP",
                 fontSize: "60px",
                 color: "#f0f0f0",
@@ -107,7 +105,7 @@ export class ResultScene extends Phaser.Scene {
             .setAlpha(0)
 
         this.artistText = this.add
-            .text(170, 150, this.playResult.songInfo.artist, {
+            .text(170, 150, this.playResult.playConfig.artist, {
                 fontFamily: "Noto Sans JP",
                 fontSize: "30px",
                 color: "#bbbbbb",
@@ -115,6 +113,8 @@ export class ResultScene extends Phaser.Scene {
             .setOrigin(0, 0.5)
             .setScale(0.5)
             .setAlpha(0)
+
+        this.diffIcon = this.add.image(130,65,`diff-icon-${3}`).setOrigin(0,0.5).setDepth(10).setAlpha(0)
 
         this.musicIcon = this.add
             .image(130, 110, "icon-music")
@@ -237,6 +237,7 @@ export class ResultScene extends Phaser.Scene {
             targets: [
                 this.titleText,
                 this.artistText,
+                this.diffIcon,
                 this.musicIcon,
                 this.userIcon,
                 this.scoreText,
