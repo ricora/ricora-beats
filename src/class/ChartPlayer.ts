@@ -108,11 +108,7 @@ export class ChartPlayer {
                 if (isLongNoteEnd || isLongNoteStart) {
                     noteImage = "note-circle-3"
                 } else {
-                    if (laneIndex % 2 == 0) {
-                        noteImage = "note-circle-1"
-                    } else {
-                        noteImage = "note-circle-2"
-                    }
+                    noteImage = "note-circle-1"
                 }
                 longNoteImage = "longnote-circle"
                 displaySizeX = 100
