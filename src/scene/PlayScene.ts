@@ -118,7 +118,7 @@ export class PlayScene extends Phaser.Scene {
             .then((response: AxiosResponse) => {
                 const bmsSource = response.data
                 this.chart = new Chart(bmsSource)
-                this.chartPlayer = new ChartPlayer(this, this.chart)
+                this.chartPlayer = new ChartPlayer(this, this.chart, this.playConfig)
 
                 this.titleText.setText(this.chart.info.title)
                 this.artistText.setText(this.chart.info.artist)

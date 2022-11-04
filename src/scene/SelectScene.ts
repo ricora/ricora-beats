@@ -11,9 +11,10 @@ export class SelectScene extends Phaser.Scene {
 
         this.gui = new GUI({ title: "Settings" })
         this.gui.domElement.style.setProperty("left", "15px")
-        this.debugParams = { noteSpeed: 0 }
+        this.debugParams = { noteSpeed: 6.5, noteType: "rectangle" }
         const playFolder = this.gui.addFolder("Play Option")
         playFolder.add(this.debugParams, "noteSpeed", 1, 10).name("Note Speed")
+        playFolder.add(this.debugParams, "noteType", ["rectangle", "circle"]).name("Note Type")
         this.gui.hide()
     }
 
@@ -38,7 +39,7 @@ export class SelectScene extends Phaser.Scene {
             this.scene.start("play", {
                 playConfig: new PlayConfig({
                     noteSpeed: this.debugParams.noteSpeed,
-                    noteType: "rectangle",
+                    noteType: this.debugParams.noteType,
                 }),
             })
         })

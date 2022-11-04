@@ -4,6 +4,8 @@ import { Note } from "./Note"
 import { Band } from "./Band"
 import { Measure } from "./Measure"
 
+import { PlayConfig } from "./PlayConfig"
+
 import bms from "bms"
 
 export class ChartPlayer {
@@ -28,7 +30,7 @@ export class ChartPlayer {
     public combo: number = 0
     public maxCombo: number = 0
 
-    constructor(scene: Phaser.Scene, chart: Chart) {
+    constructor(scene: Phaser.Scene, chart: Chart, playConfig: PlayConfig) {
         for (const laneIndex of Array(7).keys()) {
             this.lanes[laneIndex] = new Array()
             this.longNoteBands[laneIndex] = new Array()
@@ -54,8 +56,8 @@ export class ChartPlayer {
             59: 6,
         }
 
-        let isEndLongNote: boolean[] = new Array<boolean>(7).fill(false)
-        let beatEndLongNote: number[] = new Array<number>(7).fill(-1)
+        let isLatestEndLongNote: boolean[] = new Array<boolean>(7).fill(false)
+        let beatLatestEndLongNote: number[] = new Array<number>(7).fill(-1)
 
         for (const object of chart.bmsChart.objects._objects) {
             let noteIndex: number = replacementNormalNote[parseInt(object.channel)]
@@ -71,24 +73,53 @@ export class ChartPlayer {
             if (parseInt(object.channel) in replacementLongNote) {
                 noteIndex = replacementLongNote[parseInt(object.channel)]
 
-                if (!isEndLongNote[noteIndex]) {
-                    beatEndLongNote[noteIndex] = beat
+                if (!isLatestEndLongNote[noteIndex]) {
+                    beatLatestEndLongNote[noteIndex] = beat
                     isLongNoteStart = true
                 } else {
                     isLongNoteEnd = true
                 }
-                isEndLongNote[noteIndex] = true
+                isLatestEndLongNote[noteIndex] = true
             }
 
             if (parseInt(object.channel) === 1) {
                 isBGM = true
             }
-            let noteImage: string = "note-1"
-            if (noteIndex == 1 || noteIndex == 5) {
-                noteImage = "note-2"
-            } else if (noteIndex == 3) {
-                noteImage = "note-3"
+
+            let noteImage: string = ""
+            let longNoteImage: string = ""
+            let displaySizeX: number = 0
+            let displaySizeY: number = 0
+            let visible: boolean = true
+            if (playConfig.noteType === "rectangle") {
+                noteImage = "note-rectangle-1"
+                longNoteImage = "longnote-1"
+                displaySizeX = 117.5
+                displaySizeY = 40
+                visible = !isLongNoteEnd
+                if (noteIndex == 1 || noteIndex == 5) {
+                    noteImage = "note-rectangle-2"
+                    longNoteImage = "longnote-2"
+                } else if (noteIndex == 3) {
+                    noteImage = "note-rectangle-3"
+                    longNoteImage = "longnote-3"
+                }
+            } else if (playConfig.noteType === "circle") {
+                if (isLongNoteEnd || isLongNoteStart) {
+                    noteImage = "note-circle-3"
+                } else {
+                    if (noteIndex % 2 == 0) {
+                        noteImage = "note-circle-1"
+                    } else {
+                        noteImage = "note-circle-2"
+                    }
+                }
+                longNoteImage = "longnote-circle"
+                displaySizeX = 100
+                displaySizeY = 100
+                visible = true
             }
+
 
             let noteColor: number = 0xffffff
             if (noteIndex == 1 || noteIndex == 5) {
@@ -99,25 +130,25 @@ export class ChartPlayer {
 
             if (
                 isLongNoteEnd &&
-                isEndLongNote[noteIndex] &&
-                beatEndLongNote[noteIndex] != beat
+                isLatestEndLongNote[noteIndex] &&
+                beatLatestEndLongNote[noteIndex] != beat
             ) {
                 noteColor = 0x888888
-                isEndLongNote[noteIndex] = false
+                isLatestEndLongNote[noteIndex] = false
 
                 const band = new Band(
-                    beatEndLongNote[noteIndex],
+                    beatLatestEndLongNote[noteIndex],
                     beat,
                     scene.add
-                        .image(319 + 106.8 * noteIndex, -100, `long${noteImage}`)
-                        .setDisplaySize(117.5, 0)
+                        .image(319 + 106.8 * noteIndex, -100, longNoteImage)
+                        .setDisplaySize(displaySizeX, 0)
                         .setOrigin(0.5, 0)
                         .setDepth(-1)
                         .setAlpha(1)
                 )
 
                 this.longNoteBands[noteIndex].push(band)
-                beatEndLongNote[noteIndex] = -1
+                beatLatestEndLongNote[noteIndex] = -1
             }
 
             const note: Note = new Note(
@@ -126,9 +157,9 @@ export class ChartPlayer {
                 noteValue,
                 scene.add
                     .image(319 + 106.8 * noteIndex, -100, noteImage)
-                    .setDisplaySize(127.5 - 10, 40)
+                    .setDisplaySize(displaySizeX, displaySizeY)
                     .setDepth(1)
-                    .setAlpha(Number(!isLongNoteEnd)),
+                    .setVisible(visible),
                 isBGM,
                 false,
                 isLongNoteStart,

@@ -20,13 +20,19 @@ export class LoadingScene extends Phaser.Scene {
         this.load.image("frame-main-light", "./assets/skin/frame_light.png")
         this.load.image("judgebar", "./assets/skin/judgebar.png")
 
-        this.load.image("note-1", "./assets/skin/note1.png")
-        this.load.image("note-2", "./assets/skin/note2.png")
-        this.load.image("note-3", "./assets/skin/note3.png")
+        this.load.image("note-rectangle-1", "./assets/skin/note1.png")
+        this.load.image("note-rectangle-2", "./assets/skin/note2.png")
+        this.load.image("note-rectangle-3", "./assets/skin/note3.png")
+
+        this.load.image("note-circle-1", "./assets/skin/note_circle_1.png")
+        this.load.image("note-circle-2", "./assets/skin/note_circle_2.png")
+        this.load.image("note-circle-3", "./assets/skin/note_circle_3.png")
 
         this.load.image("longnote-1", "./assets/skin/longnote1.png")
         this.load.image("longnote-2", "./assets/skin/longnote2.png")
         this.load.image("longnote-3", "./assets/skin/longnote3.png")
+
+        this.load.image("longnote-circle", "./assets/skin/longnote_circle.png")
 
         this.load.image("judge-0", "./assets/skin/judge_0.png")
         this.load.image("judge-1", "./assets/skin/judge_1.png")
