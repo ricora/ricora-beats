@@ -48,6 +48,7 @@ export class ResultScene extends Phaser.Scene {
                     title: "曲名 タイトル aiueo 12345",
                     artist: "アーティスト名 あいうえお アイウエオ aiueo 12345",
                     difficulty: 3,
+                    key:7
                 },
                 judges:[1000, 200, 30, 4, 5],
                 score:95.21,

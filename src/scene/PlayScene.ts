@@ -105,10 +105,11 @@ export class PlayScene extends Phaser.Scene {
             data.playConfig ||
             new PlayConfig({
                 noteSpeed: 6.5,
-                noteType: "rectangle",
+                noteType: "circle",
                 title: "title",
                 artist: "artist",
-                difficulty: 4
+                difficulty: 4,
+                key: 7
             })
     }
     preload() { }
@@ -238,12 +239,35 @@ export class PlayScene extends Phaser.Scene {
         this.particleYellow = this.add.particles("particle-yellow")
 
         for (const laneIndex of Array(7).keys()) {
+            let positionX = -1280
+            let widths = { 4: 186, 5: 148.5, 6: 124, 7: 106 }
+
+            if (this.playConfig.key == 4) {
+                if (1 <= laneIndex && laneIndex <= 2) {
+                    positionX = 361 + 186 * (laneIndex - 1)
+                } else if (4 <= laneIndex && laneIndex <= 5) {
+                    positionX = 361 + 186 * (laneIndex - 2)
+                }
+            } else if (this.playConfig.key == 5) {
+                if (1 <= laneIndex && laneIndex <= 5) {
+                    positionX = 343 + 148.5 * (laneIndex - 1)
+                }
+            } else if (this.playConfig.key == 6) {
+                if (laneIndex <= 2) {
+                    positionX = 330 + 124 * laneIndex
+                } else if (4 <= laneIndex) {
+                    positionX = 330 + 124 * (laneIndex - 1)
+                }
+            } else if (this.playConfig.key == 7) {
+                positionX = 322 + 106 * laneIndex
+            }
+
             this.keyFlashTweens.push(
                 this.tweens.add({
                     targets: this.add
-                        .image(319 + 106.8 * laneIndex, 720, "key-flash")
+                        .image(positionX, 720, "key-flash")
                         .setOrigin(0.5, 1)
-                        .setDisplaySize(900 / 7, 720)
+                        .setDisplaySize(900 / this.playConfig.key * 1.02, 720)
                         .setDepth(-2)
                         .setAlpha(1),
                     scaleX: { value: 0, duration: 80, ease: "Linear" },
@@ -253,13 +277,13 @@ export class PlayScene extends Phaser.Scene {
             )
             this.holdParticleEmitters.push(
                 this.particleYellow.createEmitter({
-                    x: 319 - 53.4 + 106.8 * laneIndex,
+                    x: positionX - widths[this.playConfig.key]/2,
                     y: 640,
                     angle: { min: 265, max: 275 },
                     speed: 400,
                     emitZone: {
                         type: "random",
-                        source: new Phaser.Geom.Rectangle(0, 0, 100, 1),
+                        source: new Phaser.Geom.Rectangle(0, 0, widths[this.playConfig.key], 1),
                         quantity: 48,
                         yoyo: false,
                     },
@@ -487,9 +511,29 @@ export class PlayScene extends Phaser.Scene {
         }
     }
     private addBomb(laneIndex: number) {
+        let positionX = -1200
+        if (this.playConfig.key == 4) {
+            if (1 <= laneIndex && laneIndex <= 2) {
+                positionX = 361 + 186 * (laneIndex - 1)
+            } else if (4 <= laneIndex && laneIndex <= 5) {
+                positionX = 361 + 186 * (laneIndex - 2)
+            }
+        } else if (this.playConfig.key == 5) {
+            if (1 <= laneIndex && laneIndex <= 5) {
+                positionX = 343 + 148.5 * (laneIndex - 1)
+            }
+        } else if (this.playConfig.key == 6) {
+            if (laneIndex <= 2) {
+                positionX = 330 + 124 * laneIndex
+            } else if (4 <= laneIndex) {
+                positionX = 330 + 124 * (laneIndex - 1)
+            }
+        } else if (this.playConfig.key == 7) {
+            positionX = 322 + 106 * laneIndex
+        }
         this.tweens.add({
             targets: this.add
-                .image(319 + 106.8 * laneIndex, 640, "bomb-2")
+                .image(positionX, 640, "bomb-2")
                 .setDisplaySize(256, 256)
                 .setAlpha(0.5),
             alpha: { value: 0, duration: 280, ease: "Linear" },
@@ -499,7 +543,7 @@ export class PlayScene extends Phaser.Scene {
         })
         this.tweens.add({
             targets: this.add
-                .image(319 + 106.8 * laneIndex, 640, "bomb-3")
+                .image(positionX, 640, "bomb-3")
                 .setDisplaySize(180, 180),
             alpha: { value: 0, duration: 140, ease: "Linear" },
             scale: { value: 0.4, duration: 110, ease: "Quintic.Out" },
@@ -507,7 +551,7 @@ export class PlayScene extends Phaser.Scene {
         })
         this.tweens.add({
             targets: this.add
-                .image(319 + 106.8 * laneIndex, 640, "bomb-1")
+                .image(positionX, 640, "bomb-1")
                 .setDisplaySize(196, 196),
             alpha: { value: 0, duration: 120, ease: "Linear" },
             scale: { value: 0.7, duration: 120, ease: "Linear" },

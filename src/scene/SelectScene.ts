@@ -42,7 +42,8 @@ export class SelectScene extends Phaser.Scene {
                     noteType: this.debugParams.noteType,
                     title: "title",
                     artist: "artist",
-                    difficulty:2
+                    difficulty: 2,
+                    key:7
                 }),
             })
         })

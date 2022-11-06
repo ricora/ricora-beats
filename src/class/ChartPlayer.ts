@@ -90,20 +90,45 @@ export class ChartPlayer {
             let longNoteImage: string = ""
             let displaySizeX: number = 0
             let displaySizeY: number = 0
+            let positionX: number = 0
             let visible: boolean = true
+            if (playConfig.key == 4) {
+                if (1 <= laneIndex && laneIndex <= 2) {
+                    positionX = 361 + 186 * (laneIndex - 1)
+                } else if (4 <= laneIndex && laneIndex <= 5) {
+                    positionX = 361 + 186 * (laneIndex - 2)
+                }
+            } else if (playConfig.key == 5) {
+                if (1 <= laneIndex && laneIndex <= 5) {
+                    positionX = 343 + 148.5 * (laneIndex - 1)
+                }
+            } else if (playConfig.key == 6) {
+                if (laneIndex <= 2) {
+                    positionX = 330 + 124 * laneIndex
+                } else if (4 <= laneIndex) {
+                    positionX = 330 + 124 * (laneIndex - 1)
+                }
+            } else if (playConfig.key == 7) {
+                positionX = 322 + 106 * laneIndex
+            }
             if (playConfig.noteType === "rectangle") {
                 noteImage = "note-rectangle-1"
                 longNoteImage = "longnote-1"
-                displaySizeX = 117.5
+
+                displaySizeX = { 4: 214, 5: 170, 6: 139, 7: 119 }[playConfig.key]
                 displaySizeY = 40
-                visible = !isLongNoteEnd
+
                 if (laneIndex == 1 || laneIndex == 5) {
                     noteImage = "note-rectangle-2"
                     longNoteImage = "longnote-2"
                 } else if (laneIndex == 3) {
                     noteImage = "note-rectangle-3"
                     longNoteImage = "longnote-3"
+                } else {
+                    noteImage = "note-rectangle-1"
+                    longNoteImage = "longnote-1"
                 }
+                visible = !isLongNoteEnd
             } else if (playConfig.noteType === "circle") {
                 if (isLongNoteEnd || isLongNoteStart) {
                     noteImage = "note-circle-3"
@@ -127,7 +152,7 @@ export class ChartPlayer {
                     beatLatestEndLongNote[laneIndex],
                     beat,
                     scene.add
-                        .image(319 + 106.8 * laneIndex, -100, longNoteImage)
+                        .image(positionX, -100, longNoteImage)
                         .setDisplaySize(displaySizeX, 0)
                         .setOrigin(0.5, 0)
                         .setDepth(-1)
@@ -143,7 +168,7 @@ export class ChartPlayer {
                 bms.Timing.fromBMSChart(chart.bmsChart).beatToSeconds(beat),
                 noteValue,
                 scene.add
-                    .image(319 + 106.8 * laneIndex, -100, noteImage)
+                    .image(positionX, -100, noteImage)
                     .setDisplaySize(displaySizeX, displaySizeY)
                     .setDepth(1)
                     .setVisible(visible),
