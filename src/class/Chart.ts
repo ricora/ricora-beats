@@ -1,6 +1,6 @@
 import bms from "bms"
 
-export interface SongInfo {
+interface ChartHeader {
     title: string
     artist: string
     genre: string
@@ -15,7 +15,7 @@ export interface SongInfo {
 export class Chart {
     public bmsChart: any
     public timing: any
-    public info: SongInfo
+    public info: ChartHeader
 
     constructor(public bmsSource: any) {
         this.bmsChart = bms.Compiler.compile(bmsSource).chart
