@@ -8,8 +8,10 @@ import { KeySoundPlayer } from "../class/KeySoundPlayer"
 import { DebugGUI } from "../class/DebugGUI"
 import { PlayResult } from "../class/PlayResult"
 import { PlayConfig } from "../class/PlayConfig"
+import { ChartMetadata } from "../class/ChartMetadata"
 export class PlayScene extends Phaser.Scene {
     private debugGUI: DebugGUI
+    private chartMetadata: ChartMetadata
     private chart: Chart
     private chartPlayer?: ChartPlayer
 
@@ -101,15 +103,24 @@ export class PlayScene extends Phaser.Scene {
 
         this.input.addPointer(9)
 
+        this.chartMetadata =
+            data.chartMetadata ||
+            new ChartMetadata({
+                title: "title",
+                artist: "artist",
+                noter: "noter",
+                key: 7,
+                difficulty: 4,
+                playlevel: 2,
+                folder: "",
+                file: "",
+            })
+
         this.playConfig =
             data.playConfig ||
             new PlayConfig({
                 noteSpeed: 6.5,
                 noteType: "circle",
-                title: "title",
-                artist: "artist",
-                difficulty: 4,
-                key: 7
             })
     }
     preload() { }
@@ -122,10 +133,15 @@ export class PlayScene extends Phaser.Scene {
             .then((response: AxiosResponse) => {
                 const bmsSource = response.data
                 this.chart = new Chart(bmsSource)
-                this.chartPlayer = new ChartPlayer(this, this.chart, this.playConfig)
+                this.chartPlayer = new ChartPlayer(
+                    this,
+                    this.chart,
+                    this.chartMetadata,
+                    this.playConfig
+                )
 
-                this.titleText.setText(this.playConfig.title)
-                this.artistText.setText(this.playConfig.artist)
+                this.titleText.setText(this.chartMetadata.title)
+                this.artistText.setText(this.chartMetadata.artist)
                 this.cameras.main.fadeIn(700)
 
                 this.noteSpeed =
@@ -242,23 +258,23 @@ export class PlayScene extends Phaser.Scene {
             let positionX = -1280
             let widths = { 4: 186, 5: 148.5, 6: 124, 7: 106 }
 
-            if (this.playConfig.key == 4) {
+            if (this.chartMetadata.key == 4) {
                 if (1 <= laneIndex && laneIndex <= 2) {
                     positionX = 361 + 186 * (laneIndex - 1)
                 } else if (4 <= laneIndex && laneIndex <= 5) {
                     positionX = 361 + 186 * (laneIndex - 2)
                 }
-            } else if (this.playConfig.key == 5) {
+            } else if (this.chartMetadata.key == 5) {
                 if (1 <= laneIndex && laneIndex <= 5) {
                     positionX = 343 + 148.5 * (laneIndex - 1)
                 }
-            } else if (this.playConfig.key == 6) {
+            } else if (this.chartMetadata.key == 6) {
                 if (laneIndex <= 2) {
                     positionX = 330 + 124 * laneIndex
                 } else if (4 <= laneIndex) {
                     positionX = 330 + 124 * (laneIndex - 1)
                 }
-            } else if (this.playConfig.key == 7) {
+            } else if (this.chartMetadata.key == 7) {
                 positionX = 322 + 106 * laneIndex
             }
 
@@ -267,7 +283,7 @@ export class PlayScene extends Phaser.Scene {
                     targets: this.add
                         .image(positionX, 720, "key-flash")
                         .setOrigin(0.5, 1)
-                        .setDisplaySize(900 / this.playConfig.key * 1.02, 720)
+                        .setDisplaySize((900 / this.chartMetadata.key) * 1.02, 720)
                         .setDepth(-2)
                         .setAlpha(1),
                     scaleX: { value: 0, duration: 80, ease: "Linear" },
@@ -277,13 +293,18 @@ export class PlayScene extends Phaser.Scene {
             )
             this.holdParticleEmitters.push(
                 this.particleYellow.createEmitter({
-                    x: positionX - widths[this.playConfig.key]/2,
+                    x: positionX - widths[this.chartMetadata.key] / 2,
                     y: 640,
                     angle: { min: 265, max: 275 },
                     speed: 400,
                     emitZone: {
                         type: "random",
-                        source: new Phaser.Geom.Rectangle(0, 0, widths[this.playConfig.key], 1),
+                        source: new Phaser.Geom.Rectangle(
+                            0,
+                            0,
+                            widths[this.chartMetadata.key],
+                            1
+                        ),
                         quantity: 48,
                         yoyo: false,
                     },
@@ -343,7 +364,11 @@ export class PlayScene extends Phaser.Scene {
             .setDepth(9)
             .setOrigin(0.5, 0.5)
 
-        this.add.image(10, 280, `diff-icon-${this.playConfig.difficulty}`).setOrigin(0, 0.5).setDepth(10).setScale(0.7)
+        this.add
+            .image(10, 280, `diff-icon-${this.chartMetadata.difficulty}`)
+            .setOrigin(0, 0.5)
+            .setDepth(10)
+            .setScale(0.7)
 
         //this.add.image(80,140,"jacket-test").setOrigin(0.5,0.5).setDepth(10).setDisplaySize(140,140)
 
@@ -447,7 +472,10 @@ export class PlayScene extends Phaser.Scene {
                                     playConfig: this.playConfig,
                                     judges: this.chartPlayer.judges,
                                     score: this.chartPlayer.score,
-                                    maxCombo: Math.max(this.chartPlayer.combo, this.chartPlayer.combo)
+                                    maxCombo: Math.max(
+                                        this.chartPlayer.combo,
+                                        this.chartPlayer.combo
+                                    ),
                                 }),
                             })
                         }
@@ -512,23 +540,23 @@ export class PlayScene extends Phaser.Scene {
     }
     private addBomb(laneIndex: number) {
         let positionX = -1200
-        if (this.playConfig.key == 4) {
+        if (this.chartMetadata.key == 4) {
             if (1 <= laneIndex && laneIndex <= 2) {
                 positionX = 361 + 186 * (laneIndex - 1)
             } else if (4 <= laneIndex && laneIndex <= 5) {
                 positionX = 361 + 186 * (laneIndex - 2)
             }
-        } else if (this.playConfig.key == 5) {
+        } else if (this.chartMetadata.key == 5) {
             if (1 <= laneIndex && laneIndex <= 5) {
                 positionX = 343 + 148.5 * (laneIndex - 1)
             }
-        } else if (this.playConfig.key == 6) {
+        } else if (this.chartMetadata.key == 6) {
             if (laneIndex <= 2) {
                 positionX = 330 + 124 * laneIndex
             } else if (4 <= laneIndex) {
                 positionX = 330 + 124 * (laneIndex - 1)
             }
-        } else if (this.playConfig.key == 7) {
+        } else if (this.chartMetadata.key == 7) {
             positionX = 322 + 106 * laneIndex
         }
         this.tweens.add({

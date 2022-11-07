@@ -1,4 +1,5 @@
 import { Chart } from "./Chart"
+import { ChartMetadata } from "./ChartMetadata"
 import { KeySoundPlayer } from "./KeySoundPlayer"
 import { Note } from "./Note"
 import { Band } from "./Band"
@@ -30,7 +31,12 @@ export class ChartPlayer {
     public combo: number = 0
     public maxCombo: number = 0
 
-    constructor(scene: Phaser.Scene, chart: Chart, playConfig: PlayConfig) {
+    constructor(
+        scene: Phaser.Scene,
+        chart: Chart,
+        chartMetadata: ChartMetadata,
+        playConfig: PlayConfig
+    ) {
         for (const laneIndex of Array(7).keys()) {
             this.lanes[laneIndex] = new Array()
             this.longNoteBands[laneIndex] = new Array()
@@ -92,30 +98,30 @@ export class ChartPlayer {
             let displaySizeY: number = 0
             let positionX: number = 0
             let visible: boolean = true
-            if (playConfig.key == 4) {
+            if (chartMetadata.key == 4) {
                 if (1 <= laneIndex && laneIndex <= 2) {
                     positionX = 361 + 186 * (laneIndex - 1)
                 } else if (4 <= laneIndex && laneIndex <= 5) {
                     positionX = 361 + 186 * (laneIndex - 2)
                 }
-            } else if (playConfig.key == 5) {
+            } else if (chartMetadata.key == 5) {
                 if (1 <= laneIndex && laneIndex <= 5) {
                     positionX = 343 + 148.5 * (laneIndex - 1)
                 }
-            } else if (playConfig.key == 6) {
+            } else if (chartMetadata.key == 6) {
                 if (laneIndex <= 2) {
                     positionX = 330 + 124 * laneIndex
                 } else if (4 <= laneIndex) {
                     positionX = 330 + 124 * (laneIndex - 1)
                 }
-            } else if (playConfig.key == 7) {
+            } else if (chartMetadata.key == 7) {
                 positionX = 322 + 106 * laneIndex
             }
             if (playConfig.noteType === "rectangle") {
                 noteImage = "note-rectangle-1"
                 longNoteImage = "longnote-1"
 
-                displaySizeX = { 4: 214, 5: 170, 6: 139, 7: 119 }[playConfig.key]
+                displaySizeX = { 4: 214, 5: 170, 6: 139, 7: 119 }[chartMetadata.key]
                 displaySizeY = 40
 
                 if (laneIndex == 1 || laneIndex == 5) {

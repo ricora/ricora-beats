@@ -1,5 +1,6 @@
 import GUI from "lil-gui"
 import { DebugGUI } from "../class/DebugGUI"
+import { ChartMetadata } from "../class/ChartMetadata"
 import { PlayConfig } from "../class/PlayConfig"
 
 export class SelectScene extends Phaser.Scene {
@@ -14,7 +15,9 @@ export class SelectScene extends Phaser.Scene {
         this.debugParams = { noteSpeed: 6.5, noteType: "rectangle" }
         const playFolder = this.gui.addFolder("Play Option")
         playFolder.add(this.debugParams, "noteSpeed", 1, 10).name("Note Speed")
-        playFolder.add(this.debugParams, "noteType", ["rectangle", "circle"]).name("Note Type")
+        playFolder
+            .add(this.debugParams, "noteType", ["rectangle", "circle"])
+            .name("Note Type")
         this.gui.hide()
     }
 
@@ -37,13 +40,19 @@ export class SelectScene extends Phaser.Scene {
         })
         zone.on("pointerdown", () => {
             this.scene.start("play", {
+                chartMetadata: new ChartMetadata({
+                    title: "title",
+                    artist: "artist",
+                    noter: "noter",
+                    key: 7,
+                    difficulty: 3,
+                    playlevel: 2,
+                    folder: "",
+                    file: "",
+                }),
                 playConfig: new PlayConfig({
                     noteSpeed: this.debugParams.noteSpeed,
                     noteType: this.debugParams.noteType,
-                    title: "title",
-                    artist: "artist",
-                    difficulty: 2,
-                    key:7
                 }),
             })
         })

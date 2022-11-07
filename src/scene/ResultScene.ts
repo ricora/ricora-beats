@@ -1,8 +1,11 @@
 import { DebugGUI } from "../class/DebugGUI"
+import { ChartMetadata } from "../class/ChartMetadata"
 import { PlayResult } from "../class/PlayResult"
 
 export class ResultScene extends Phaser.Scene {
     private debugGUI: DebugGUI
+
+    private chartMetadata: ChartMetadata
 
     private playResult: PlayResult
 
@@ -38,22 +41,30 @@ export class ResultScene extends Phaser.Scene {
             this.debugGUI.destroy()
         })
 
-        console.log(data.playResult)
+        this.chartMetadata =
+            data.chartMetadata ||
+            new ChartMetadata({
+                title: "title",
+                artist: "artist",
+                noter: "noter",
+                key: 7,
+                difficulty: 4,
+                playlevel: 2,
+                folder: "",
+                file: "",
+            })
+
         this.playResult =
             data.playResult ||
             new PlayResult({
                 playConfig: {
                     noteSpeed: 6.5,
                     noteType: "rectangle",
-                    title: "曲名 タイトル aiueo 12345",
-                    artist: "アーティスト名 あいうえお アイウエオ aiueo 12345",
-                    difficulty: 3,
-                    key:7
                 },
-                judges:[1000, 200, 30, 4, 5],
-                score:95.21,
-                maxCombo:1234
-    })
+                judges: [1000, 200, 30, 4, 5],
+                score: 95.21,
+                maxCombo: 1234,
+            })
     }
     create() {
         const { width, height } = this.game.canvas
@@ -96,7 +107,7 @@ export class ResultScene extends Phaser.Scene {
         })
 
         this.titleText = this.add
-            .text(190, 110, this.playResult.playConfig.title, {
+            .text(190, 110, this.chartMetadata.title, {
                 fontFamily: "Noto Sans JP",
                 fontSize: "60px",
                 color: "#f0f0f0",
@@ -106,7 +117,7 @@ export class ResultScene extends Phaser.Scene {
             .setAlpha(0)
 
         this.artistText = this.add
-            .text(170, 150, this.playResult.playConfig.artist, {
+            .text(170, 150, this.chartMetadata.artist, {
                 fontFamily: "Noto Sans JP",
                 fontSize: "30px",
                 color: "#bbbbbb",
@@ -115,7 +126,11 @@ export class ResultScene extends Phaser.Scene {
             .setScale(0.5)
             .setAlpha(0)
 
-        this.diffIcon = this.add.image(130,65,`diff-icon-${3}`).setOrigin(0,0.5).setDepth(10).setAlpha(0)
+        this.diffIcon = this.add
+            .image(130, 65, `diff-icon-${3}`)
+            .setOrigin(0, 0.5)
+            .setDepth(10)
+            .setAlpha(0)
 
         this.musicIcon = this.add
             .image(130, 110, "icon-music")
