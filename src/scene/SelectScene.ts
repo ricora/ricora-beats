@@ -39,22 +39,28 @@ export class SelectScene extends Phaser.Scene {
             useHandCursor: true,
         })
         zone.on("pointerdown", () => {
-            this.scene.start("play", {
-                chartMetadata: new ChartMetadata({
-                    title: "title",
-                    artist: "artist",
-                    noter: "noter",
-                    key: 7,
-                    difficulty: 3,
-                    playlevel: 2,
-                    folder: "",
-                    file: "",
-                }),
-                playConfig: new PlayConfig({
-                    noteSpeed: this.debugParams.noteSpeed,
-                    noteType: this.debugParams.noteType,
-                }),
-            })
+            this.cameras.main.fadeOut(500)
+
         })
+        this.cameras.main.once(
+            Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
+            () => {
+                this.scene.start("play", {
+                    chartMetadata: new ChartMetadata({
+                        title: "title",
+                        artist: "artist",
+                        noter: "noter",
+                        key: 7,
+                        difficulty: 3,
+                        playlevel: 2,
+                        folder: "",
+                        file: "",
+                    }),
+                    playConfig: new PlayConfig({
+                        noteSpeed: this.debugParams.noteSpeed,
+                        noteType: this.debugParams.noteType,
+                    }),
+                })
+            })
     }
 }

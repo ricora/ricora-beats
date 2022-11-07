@@ -37,6 +37,8 @@ export class PlayScene extends Phaser.Scene {
 
     private keys: Phaser.Input.Keyboard.Key[]
 
+    private screenMask: Phaser.GameObjects.Rectangle
+
     private background: Phaser.GameObjects.Shader
     private backgroundMask: Phaser.GameObjects.Rectangle
     private laneBackground: Phaser.GameObjects.Image
@@ -128,6 +130,13 @@ export class PlayScene extends Phaser.Scene {
     create() {
         const urlParams = new URLSearchParams(document.location.search.substring(1))
         const url = urlParams.get("chart") as string
+
+        const { width, height } = this.game.canvas
+
+        this.screenMask = this.add
+            .rectangle(width / 2, height / 2, 1280, 720, 0x000000)
+            .setDepth(100)
+
         axios
             .get(url)
             .then((response: AxiosResponse) => {
@@ -142,7 +151,6 @@ export class PlayScene extends Phaser.Scene {
 
                 this.titleText.setText(this.chartMetadata.title)
                 this.artistText.setText(this.chartMetadata.artist)
-                this.cameras.main.fadeIn(700)
 
                 this.noteSpeed =
                     (this.playConfig.noteSpeed * 10000) / this.chart.beatToBPM(0)
@@ -154,7 +162,6 @@ export class PlayScene extends Phaser.Scene {
             .catch((error: AxiosError) => {
                 console.log(error)
             })
-        const { width, height } = this.game.canvas
 
         this.background = this.add
             .shader("background", width / 2, height / 2, 1280, 720)
@@ -284,8 +291,7 @@ export class PlayScene extends Phaser.Scene {
                         .image(positionX, 720, "key-flash")
                         .setOrigin(0.5, 1)
                         .setDisplaySize((900 / this.chartMetadata.key) * 1.02, 720)
-                        .setDepth(-2)
-                        .setAlpha(1),
+                        .setDepth(-2),
                     scaleX: { value: 0, duration: 80, ease: "Linear" },
                     ease: "Quintic.Out",
                     paused: false,
@@ -384,6 +390,8 @@ export class PlayScene extends Phaser.Scene {
         this.load.on("complete", () => {
             this.hasLoaded = true
             this.loadEndTime = new Date()
+
+            this.cameras.main.fadeIn(500)
         })
     }
     update(time: number, dt: number) {
@@ -399,6 +407,7 @@ export class PlayScene extends Phaser.Scene {
             this.loadEndTime !== undefined &&
             this.chartPlayer !== undefined
         ) {
+            this.screenMask.setVisible(false)
             if (
                 this.latestJudgeSec !== this.chartPlayer.latestJudgeSec &&
                 this.chartPlayer.latestJudgeSec !== undefined
@@ -520,6 +529,11 @@ export class PlayScene extends Phaser.Scene {
                 }\nScore:${this.chartPlayer.score}\nJudges:${this.chartPlayer.judges
                 }\nFinished?:${this.chartPlayer.hasFinished(this.beat)}`
             )
+        } else {
+            for (const laneIndex of Array(7).keys()) {
+                this.keyFlashTweens[laneIndex].restart()
+            }
+            this.screenMask.setVisible(true)
         }
     }
     private judgeKeyDown(laneIndex: number) {
