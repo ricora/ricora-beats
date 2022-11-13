@@ -80,8 +80,8 @@ export class ResultScene extends Phaser.Scene {
 
         // @ts-expect-error
         this.plugins.get("rexKawaseBlurPipeline").add(this.backgroundCamera, {
-            blur: 6,
-            quality: 6,
+            blur: 8,
+            quality: 8,
         })
 
         this.titleFrame = this.add
