@@ -94,6 +94,9 @@ export class LoadingScene extends Phaser.Scene {
         this.load.audio("normal-tap-5", "./assets/sound/se/normal_tap4.wav")
 
         this.load.glsl("background", "./assets/shader/synthwave.frag")
+
+        this.load.json("music-list", "./assets/beatmaps/beatmaps.json")
+
         WebFont.load({
             google: {
                 families: ["Noto+Sans+JP:900", "Bungee", "Fredoka+One", "Oswald:700"],
