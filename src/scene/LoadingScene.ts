@@ -11,11 +11,35 @@ export class LoadingScene extends Phaser.Scene {
 
         this.load.image("icon-music", "./assets/skin/tabler-icons/music.png")
         this.load.image("icon-user", "./assets/skin/tabler-icons/user.png")
+        this.load.image("icon-wand", "./assets/skin/tabler-icons/wand.png")
+        this.load.image("icon-config", "./assets/skin/tabler-icons/settings.png")
+        this.load.image("icon-ir", "./assets/skin/tabler-icons/world.png")
+        this.load.image("icon-credit", "./assets/skin/tabler-icons/info-circle.png")
+        this.load.image("icon-help", "./assets/skin/tabler-icons/help.png")
+
+        this.load.image("music-tile-frame", "./assets/skin/music_tile_frame.png")
+        this.load.image("music-detail-frame", "./assets/skin/music_detail_frame.png")
+
+        this.load.image("config-frame", "./assets/skin/config_frame.png")
+
+        this.load.image("scroll-bar-frame", "./assets/skin/scroll_bar_frame.png")
+
+        this.load.image("play-button-enable", "./assets/skin/play_button_enable.png")
+        this.load.image("play-button-disable", "./assets/skin/play_button_disable.png")
 
         this.load.image("frame-back", "./assets/skin/frame_back.png")
-        this.load.image("frame-back-light-blue", "./assets/skin/frame_back_light_blue.png")
-        this.load.image("frame-back-light-yellow", "./assets/skin/frame_back_light_yellow.png")
-        this.load.image("frame-back-light-green", "./assets/skin/frame_back_light_green.png")
+        this.load.image(
+            "frame-back-light-blue",
+            "./assets/skin/frame_back_light_blue.png"
+        )
+        this.load.image(
+            "frame-back-light-yellow",
+            "./assets/skin/frame_back_light_yellow.png"
+        )
+        this.load.image(
+            "frame-back-light-green",
+            "./assets/skin/frame_back_light_green.png"
+        )
         this.load.image("frame-main", "./assets/skin/frame_main.png")
         this.load.image("frame-main-light", "./assets/skin/frame_light.png")
         this.load.image("judgebar", "./assets/skin/judgebar.png")
@@ -55,6 +79,12 @@ export class LoadingScene extends Phaser.Scene {
         this.load.image("diff-icon-2", "./assets/skin/diff_icon_2.png")
         this.load.image("diff-icon-3", "./assets/skin/diff_icon_3.png")
         this.load.image("diff-icon-4", "./assets/skin/diff_icon_4.png")
+
+        this.load.image("key-icon-4", "./assets/skin/key_icon_4.png")
+        this.load.image("key-icon-5", "./assets/skin/key_icon_5.png")
+        this.load.image("key-icon-6", "./assets/skin/key_icon_6.png")
+        this.load.image("key-icon-7", "./assets/skin/key_icon_7.png")
+
         //this.load.image("jacket-test", "./assets/jacket_test.png")
 
         this.load.audio("normal-tap-1", "./assets/sound/se/normal_tap1.wav")
