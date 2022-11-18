@@ -8,10 +8,12 @@ import { KeySoundPlayer } from "../class/KeySoundPlayer"
 import { DebugGUI } from "../class/DebugGUI"
 import { PlayResult } from "../class/PlayResult"
 import { PlayConfig } from "../class/PlayConfig"
-import { ChartMetadata } from "../class/ChartMetadata"
+import { Beatmap, Music } from "../class/Music"
 export class PlayScene extends Phaser.Scene {
     private debugGUI: DebugGUI
-    private chartMetadata: ChartMetadata
+    private beatmap: Beatmap
+    private music: Music
+
     private chart: Chart
     private chartPlayer?: ChartPlayer
 
@@ -105,31 +107,16 @@ export class PlayScene extends Phaser.Scene {
 
         this.input.addPointer(9)
 
-        this.chartMetadata =
-            data.chartMetadata ||
-            new ChartMetadata({
-                title: "title",
-                artist: "artist",
-                noter: "noter",
-                key: 7,
-                difficulty: 4,
-                playlevel: 2,
-                folder: "",
-                file: "",
-            })
+        this.music = data.music
+        this.beatmap = data.beatmap
 
-        this.playConfig =
-            data.playConfig ||
-            new PlayConfig({
-                noteSpeed: 6.5,
-                noteType: "circle",
-            })
+        this.playConfig = data.playConfig
     }
     preload() { }
 
     create() {
         const urlParams = new URLSearchParams(document.location.search.substring(1))
-        const url = urlParams.get("chart") as string
+        const url = `./assets/beatmaps/${this.music.folder}/${this.beatmap.filename}`
 
         const { width, height } = this.game.canvas
 
@@ -145,12 +132,12 @@ export class PlayScene extends Phaser.Scene {
                 this.chartPlayer = new ChartPlayer(
                     this,
                     this.chart,
-                    this.chartMetadata,
+                    this.playConfig.key,
                     this.playConfig
                 )
 
-                this.titleText.setText(this.chartMetadata.title)
-                this.artistText.setText(this.chartMetadata.artist)
+                this.titleText.setText(this.music.title)
+                this.artistText.setText(this.music.artist)
 
                 this.noteSpeed =
                     (this.playConfig.noteSpeed * 10000) / this.chart.beatToBPM(0)
@@ -265,23 +252,23 @@ export class PlayScene extends Phaser.Scene {
             let positionX = -1280
             let widths = { 4: 186, 5: 148.5, 6: 124, 7: 106 }
 
-            if (this.chartMetadata.key == 4) {
+            if (this.playConfig.key == 4) {
                 if (1 <= laneIndex && laneIndex <= 2) {
                     positionX = 361 + 186 * (laneIndex - 1)
                 } else if (4 <= laneIndex && laneIndex <= 5) {
                     positionX = 361 + 186 * (laneIndex - 2)
                 }
-            } else if (this.chartMetadata.key == 5) {
+            } else if (this.playConfig.key == 5) {
                 if (1 <= laneIndex && laneIndex <= 5) {
                     positionX = 343 + 148.5 * (laneIndex - 1)
                 }
-            } else if (this.chartMetadata.key == 6) {
+            } else if (this.playConfig.key == 6) {
                 if (laneIndex <= 2) {
                     positionX = 330 + 124 * laneIndex
                 } else if (4 <= laneIndex) {
                     positionX = 330 + 124 * (laneIndex - 1)
                 }
-            } else if (this.chartMetadata.key == 7) {
+            } else if (this.playConfig.key == 7) {
                 positionX = 322 + 106 * laneIndex
             }
 
@@ -290,7 +277,7 @@ export class PlayScene extends Phaser.Scene {
                     targets: this.add
                         .image(positionX, 720, "key-flash")
                         .setOrigin(0.5, 1)
-                        .setDisplaySize((900 / this.chartMetadata.key) * 1.02, 720)
+                        .setDisplaySize((900 / this.playConfig.key) * 1.02, 720)
                         .setDepth(-2),
                     scaleX: { value: 0, duration: 80, ease: "Linear" },
                     ease: "Quintic.Out",
@@ -299,7 +286,7 @@ export class PlayScene extends Phaser.Scene {
             )
             this.holdParticleEmitters.push(
                 this.particleYellow.createEmitter({
-                    x: positionX - widths[this.chartMetadata.key] / 2,
+                    x: positionX - widths[this.playConfig.key] / 2,
                     y: 640,
                     angle: { min: 265, max: 275 },
                     speed: 400,
@@ -308,7 +295,7 @@ export class PlayScene extends Phaser.Scene {
                         source: new Phaser.Geom.Rectangle(
                             0,
                             0,
-                            widths[this.chartMetadata.key],
+                            widths[this.playConfig.key],
                             1
                         ),
                         quantity: 48,
@@ -341,7 +328,7 @@ export class PlayScene extends Phaser.Scene {
             )
         }
 
-        this.debugText = this.add.text(0, 250, `ロード中`)
+        this.debugText = this.add.text(0, 450, "")
 
         this.titleText = this.add
             .text(10, 230, "", {
@@ -371,7 +358,13 @@ export class PlayScene extends Phaser.Scene {
             .setOrigin(0.5, 0.5)
 
         this.add
-            .image(10, 280, `diff-icon-${this.chartMetadata.difficulty}`)
+            .image(10, 280, `key-icon-${this.playConfig.key}`)
+            .setOrigin(0, 0.5)
+            .setDepth(10)
+            .setScale(0.7)
+
+        this.add
+            .image(10, 310, `diff-icon-${this.playConfig.difficulty}`)
             .setOrigin(0, 0.5)
             .setDepth(10)
             .setScale(0.7)
@@ -478,6 +471,7 @@ export class PlayScene extends Phaser.Scene {
                         if (this.chartPlayer !== undefined) {
                             this.scene.start("result", {
                                 playResult: new PlayResult({
+                                    music: this.music,
                                     playConfig: this.playConfig,
                                     judges: this.chartPlayer.judges,
                                     score: this.chartPlayer.score,
@@ -517,18 +511,7 @@ export class PlayScene extends Phaser.Scene {
             }
 
             // debug
-            this.debugText.setText(
-                `${time}\n\nFPS:${(1000 / dt).toFixed(2)}\n\nGenre:${this.chart.info.genre
-                }\nTitle:${this.chart.info.title}\nSub Title:${this.chart.info.subtitle
-                }\nArtist:${this.chart.info.artist}\nSub Artist:${this.chart.info.subartist
-                }\nDifficulty:${this.chart.info.difficulty}\nLevei:${this.chart.info.level
-                }\n\nSec:${this.playingSec}\nBeat:${this.beat.toFixed(
-                    2
-                )}\nBPM:${this.chart.beatToBPM(this.beat).toFixed(2)}\nCombo:${this.chartPlayer.combo
-                }\nMax Combo:${this.chartPlayer.maxCombo}\nLatest Judge:${this.chartPlayer.latestJudgeIndex
-                }\nScore:${this.chartPlayer.score}\nJudges:${this.chartPlayer.judges
-                }\nFinished?:${this.chartPlayer.hasFinished(this.beat)}`
-            )
+            this.debugText.setText(`${time}\n\nFPS:${(1000 / dt).toFixed(2)}`)
         } else {
             for (const laneIndex of Array(7).keys()) {
                 this.keyFlashTweens[laneIndex].restart()
@@ -554,23 +537,23 @@ export class PlayScene extends Phaser.Scene {
     }
     private addBomb(laneIndex: number) {
         let positionX = -1200
-        if (this.chartMetadata.key == 4) {
+        if (this.playConfig.key == 4) {
             if (1 <= laneIndex && laneIndex <= 2) {
                 positionX = 361 + 186 * (laneIndex - 1)
             } else if (4 <= laneIndex && laneIndex <= 5) {
                 positionX = 361 + 186 * (laneIndex - 2)
             }
-        } else if (this.chartMetadata.key == 5) {
+        } else if (this.playConfig.key == 5) {
             if (1 <= laneIndex && laneIndex <= 5) {
                 positionX = 343 + 148.5 * (laneIndex - 1)
             }
-        } else if (this.chartMetadata.key == 6) {
+        } else if (this.playConfig.key == 6) {
             if (laneIndex <= 2) {
                 positionX = 330 + 124 * laneIndex
             } else if (4 <= laneIndex) {
                 positionX = 330 + 124 * (laneIndex - 1)
             }
-        } else if (this.chartMetadata.key == 7) {
+        } else if (this.playConfig.key == 7) {
             positionX = 322 + 106 * laneIndex
         }
         this.tweens.add({

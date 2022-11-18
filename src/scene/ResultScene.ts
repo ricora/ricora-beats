@@ -1,16 +1,15 @@
 import { DebugGUI } from "../class/DebugGUI"
-import { ChartMetadata } from "../class/ChartMetadata"
 import { PlayResult } from "../class/PlayResult"
+import { Music } from "../class/Music"
 
 export class ResultScene extends Phaser.Scene {
     private debugGUI: DebugGUI
-
-    private chartMetadata: ChartMetadata
 
     private playResult: PlayResult
 
     private titleText: Phaser.GameObjects.Text
     private artistText: Phaser.GameObjects.Text
+    private noterText: Phaser.GameObjects.Text
     private scoreText: Phaser.GameObjects.Text
     private scoreLabelText: Phaser.GameObjects.Text
     private comboText: Phaser.GameObjects.Text
@@ -22,8 +21,10 @@ export class ResultScene extends Phaser.Scene {
     private detailFrame: Phaser.GameObjects.Image
 
     private musicIcon: Phaser.GameObjects.Image
-    private userIcon: Phaser.GameObjects.Image
+    private artistIcon: Phaser.GameObjects.Image
+    private noterIcon: Phaser.GameObjects.Image
 
+    private keyIcon: Phaser.GameObjects.Image
     private diffIcon: Phaser.GameObjects.Image
 
     private line1: Phaser.GameObjects.Rectangle
@@ -41,25 +42,24 @@ export class ResultScene extends Phaser.Scene {
             this.debugGUI.destroy()
         })
 
-        this.chartMetadata =
-            data.chartMetadata ||
-            new ChartMetadata({
-                title: "title",
-                artist: "artist",
-                noter: "noter",
-                key: 7,
-                difficulty: 4,
-                playlevel: 2,
-                folder: "",
-                file: "",
-            })
-
         this.playResult =
             data.playResult ||
             new PlayResult({
+                music: {
+                    title: "test",
+                    artist: "作曲者",
+                    noter: "譜面作者",
+                    folder: "test",
+                    beatmap_7k_1: {
+                        filename: "test7.bme",
+                        playlevel: 1,
+                    },
+                },
                 playConfig: {
                     noteSpeed: 6.5,
                     noteType: "rectangle",
+                    key: 7,
+                    difficulty: 3,
                 },
                 judges: [1000, 200, 30, 4, 5],
                 score: 95.21,
@@ -68,8 +68,6 @@ export class ResultScene extends Phaser.Scene {
     }
     create() {
         const { width, height } = this.game.canvas
-
-        this.add.text(0, 0, "result scene")
 
         this.backgroundCamera = this.cameras.add(0, 0, 1280, 720)
         this.backgroundCamera.setScroll(1280, 720)
@@ -107,7 +105,7 @@ export class ResultScene extends Phaser.Scene {
         })
 
         this.titleText = this.add
-            .text(190, 110, this.chartMetadata.title, {
+            .text(190, 110, this.playResult.music.title, {
                 fontFamily: "Noto Sans JP",
                 fontSize: "60px",
                 color: "#f0f0f0",
@@ -117,7 +115,7 @@ export class ResultScene extends Phaser.Scene {
             .setAlpha(0)
 
         this.artistText = this.add
-            .text(170, 150, this.chartMetadata.artist, {
+            .text(170, 150, this.playResult.music.artist, {
                 fontFamily: "Noto Sans JP",
                 fontSize: "30px",
                 color: "#bbbbbb",
@@ -126,8 +124,24 @@ export class ResultScene extends Phaser.Scene {
             .setScale(0.5)
             .setAlpha(0)
 
+        this.noterText = this.add
+            .text(420, 150, this.playResult.music.noter, {
+                fontFamily: "Noto Sans JP",
+                fontSize: "30px",
+                color: "#bbbbbb",
+            })
+            .setOrigin(0, 0.5)
+            .setScale(0.5)
+            .setAlpha(0)
+
+        this.keyIcon = this.add
+            .image(130, 65, `key-icon-${this.playResult.playConfig.key}`)
+            .setOrigin(0, 0.5)
+            .setDepth(10)
+            .setAlpha(0)
+
         this.diffIcon = this.add
-            .image(130, 65, `diff-icon-${3}`)
+            .image(310, 65, `diff-icon-${this.playResult.playConfig.difficulty}`)
             .setOrigin(0, 0.5)
             .setDepth(10)
             .setAlpha(0)
@@ -138,8 +152,14 @@ export class ResultScene extends Phaser.Scene {
             .setOrigin(0, 0.5)
             .setAlpha(0)
 
-        this.userIcon = this.add
+        this.artistIcon = this.add
             .image(140, 150, "icon-user")
+            .setScale(0.7)
+            .setOrigin(0, 0.5)
+            .setAlpha(0)
+
+        this.noterIcon = this.add
+            .image(390, 150, "icon-wand")
             .setScale(0.7)
             .setOrigin(0, 0.5)
             .setAlpha(0)
@@ -253,9 +273,12 @@ export class ResultScene extends Phaser.Scene {
             targets: [
                 this.titleText,
                 this.artistText,
+                this.noterText,
+                this.keyIcon,
                 this.diffIcon,
                 this.musicIcon,
-                this.userIcon,
+                this.artistIcon,
+                this.noterIcon,
                 this.scoreText,
                 this.scoreLabelText,
                 this.comboText,
