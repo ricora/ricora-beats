@@ -1,6 +1,5 @@
 import GUI from "lil-gui"
 import { DebugGUI } from "../class/DebugGUI"
-import { ChartMetadata } from "../class/ChartMetadata"
 import { PlayConfig } from "../class/PlayConfig"
 
 import { Music, Beatmap } from "../class/Music"
