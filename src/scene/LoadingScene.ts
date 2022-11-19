@@ -18,14 +18,28 @@ export class LoadingScene extends Phaser.Scene {
         this.load.image("icon-help", "./assets/skin/tabler-icons/help.png")
 
         this.load.image("music-tile-frame", "./assets/skin/music_tile_frame.png")
-        this.load.image("music-detail-frame", "./assets/skin/music_detail_frame.png")
+        this.load.image(
+            "music-tile-selected",
+            "./assets/skin/music_tile_selected.png"
+        )
+        this.load.image(
+            "music-detail-frame",
+            "./assets/skin/music_detail_frame.png"
+        )
 
         this.load.image("config-frame", "./assets/skin/config_frame.png")
 
         this.load.image("scroll-bar-frame", "./assets/skin/scroll_bar_frame.png")
+        this.load.image("scroll-bar", "./assets/skin/scroll_bar.png")
 
-        this.load.image("play-button-enable", "./assets/skin/play_button_enable.png")
-        this.load.image("play-button-disable", "./assets/skin/play_button_disable.png")
+        this.load.image(
+            "play-button-enable",
+            "./assets/skin/play_button_enable.png"
+        )
+        this.load.image(
+            "play-button-disable",
+            "./assets/skin/play_button_disable.png"
+        )
 
         this.load.image("frame-back", "./assets/skin/frame_back.png")
         this.load.image(
