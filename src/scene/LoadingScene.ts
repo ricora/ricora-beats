@@ -41,6 +41,10 @@ export class LoadingScene extends Phaser.Scene {
             "play-button-disable",
             "./assets/skin/play_button_disable.png"
         )
+        this.load.image(
+            "play-button-light",
+            "./assets/skin/play_button_light.png"
+        )
 
         this.load.image("frame-back", "./assets/skin/frame_back.png")
         this.load.image(
