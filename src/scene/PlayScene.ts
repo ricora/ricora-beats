@@ -26,8 +26,6 @@ export class PlayScene extends Phaser.Scene {
 
     private debugText: Phaser.GameObjects.Text
 
-    private judgeLine: Phaser.GameObjects.Rectangle
-
     private playingSec: number
     private beat: number
 
@@ -49,6 +47,7 @@ export class PlayScene extends Phaser.Scene {
     private laneMainFrameLight: Phaser.GameObjects.Image
 
     private judgeBar: Phaser.GameObjects.Image
+    private judgeBarLight: Phaser.GameObjects.Image
 
     private titleText: Phaser.GameObjects.Text
     private artistText: Phaser.GameObjects.Text
@@ -183,6 +182,11 @@ export class PlayScene extends Phaser.Scene {
         this.judgeBar = this.add
             .image(width / 2, 640, "judgebar")
             .setDisplaySize(780, 14)
+            .setDepth(-4)
+
+        this.judgeBarLight = this.add
+            .image(width / 2, 640, "judgebar-light")
+            .setDisplaySize(837, 50)
             .setDepth(-4)
 
         this.judgeText = this.add
@@ -436,6 +440,7 @@ export class PlayScene extends Phaser.Scene {
         this.laneBackgroundLight.setAlpha(
             0.5 + 0.25 * 0.5 * (Math.sin(1 * Math.PI * this.beat) + 1)
         )
+        this.judgeBarLight.setAlpha(0.5 + 0.25 * 0.5 * (Math.sin(1 * Math.PI * this.beat) + 1))
 
         if (
             this.hasLoaded &&
