@@ -62,6 +62,7 @@ export class LoadingScene extends Phaser.Scene {
         this.load.image("frame-main", "./assets/skin/frame_main.png")
         this.load.image("frame-main-light", "./assets/skin/frame_light.png")
         this.load.image("judgebar", "./assets/skin/judgebar.png")
+        this.load.image("judgebar-light", "./assets/skin/judgebar_light.png")
 
         this.load.image("note-rectangle-1", "./assets/skin/note1.png")
         this.load.image("note-rectangle-2", "./assets/skin/note2.png")
