@@ -15,6 +15,7 @@ export class SelectScene extends Phaser.Scene {
     private debugParams: any
 
     private playButton: Phaser.GameObjects.Image
+    private playButtonLight: Phaser.GameObjects.Image
     private diffButtons: Phaser.GameObjects.Image[]
     private keyButtons: Phaser.GameObjects.Image[]
 
@@ -211,6 +212,11 @@ export class SelectScene extends Phaser.Scene {
             .setOrigin(0.5, 0.5)
             .setDepth(1)
 
+        this.playButtonLight = this.add
+            .image(830 + 200, 500, "play-button-light")
+            .setOrigin(0.5, 0.5)
+            .setDepth(0)
+
         this.add.image(830, 650, "config-frame").setOrigin(0, 0.5)
         this.add
             .text(830 + 400 * 0.2, 680, "プレイ設定", {
@@ -314,10 +320,14 @@ export class SelectScene extends Phaser.Scene {
             this.beatmapLevelText.setText(
                 this.musicTileManager.getBeatmap(this.key, this.difficulty).playlevel
             )
+            this.playButtonLight.setAlpha(
+                0.2 + 0.8 * Math.abs(Math.sin((time * 2 * Math.PI * 0.25) / 1000))
+            )
         } else {
             this.playButton.setTexture("play-button-disable").setAlpha(0.5)
             this.nonPlayableText.setVisible(true)
             this.beatmapLevelText.setText("?")
+            this.playButtonLight.setAlpha(0)
         }
 
         this.scrollBar.setY(360 + 235 * (2 * this.musicTileManager.scrollRate - 1))
