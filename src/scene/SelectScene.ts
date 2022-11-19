@@ -26,9 +26,10 @@ export class SelectScene extends Phaser.Scene {
     private beatmapLevelText: Phaser.GameObjects.Text
     private nonPlayableText: Phaser.GameObjects.Text
 
-    private difficulty: DIFFICULTY
-    private key: KEY
+    private difficulty: DIFFICULTY = 1
+    private key: KEY = 4
     private isPlayable: boolean = false
+    private scrollIndex: number
 
     private musicList: Music[]
     private musicTileManager: MusicTileManager
@@ -46,6 +47,8 @@ export class SelectScene extends Phaser.Scene {
             .add(this.debugParams, "noteType", ["rectangle", "circle"])
             .name("Note Type")
         this.gui.hide()
+
+        this.scrollIndex = 0
     }
 
     init() {
@@ -56,10 +59,9 @@ export class SelectScene extends Phaser.Scene {
             this.gui.hide()
         })
 
-        this.difficulty = 1
-        this.key = 4
-
         this.musicList = this.cache.json.get("music-list")
+
+        this.musicTileManager = new MusicTileManager(this, this.scrollIndex)
     }
     create() {
         const { width, height } = this.game.canvas
@@ -180,7 +182,6 @@ export class SelectScene extends Phaser.Scene {
                     }
                 })
         }
-        this.musicTileManager = new MusicTileManager(this)
 
         this.add.image(30, 360, "scroll-bar-frame").setOrigin(0.5, 0.5)
 
@@ -279,6 +280,7 @@ export class SelectScene extends Phaser.Scene {
             .on("pointerdown", () => {
                 if (this.isPlayable) {
                     this.cameras.main.fadeOut(500)
+                    this.scrollIndex = this.musicTileManager.scrollIndex
                 }
             })
         this.cameras.main.once(

@@ -27,6 +27,8 @@ export class ResultScene extends Phaser.Scene {
     private keyIcon: Phaser.GameObjects.Image
     private diffIcon: Phaser.GameObjects.Image
 
+    private backIcon: Phaser.GameObjects.Image
+
     private line1: Phaser.GameObjects.Rectangle
     private line2: Phaser.GameObjects.Rectangle
 
@@ -301,6 +303,25 @@ export class ResultScene extends Phaser.Scene {
                 ease: "Quintic.Out",
             },
         })
+
+        this.backIcon = this.add
+            .image(10, 10, "icon-back")
+            .setOrigin(0, 0)
+            .setDepth(10)
+            .setScale(0.6)
+            .setInteractive({
+                useHandCursor: true,
+            })
+            .on("pointerdown", () => {
+                this.cameras.main.fadeOut(500)
+            })
+
+        this.cameras.main.once(
+            Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
+            () => {
+                this.scene.start("select")
+            }
+        )
 
         this.cameras.main.fadeIn(500)
     }

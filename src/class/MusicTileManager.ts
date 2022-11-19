@@ -5,12 +5,14 @@ export class MusicTileManager {
     private musicTiles: MusicTile[]
     private musicList: Music[]
     private selectedMusicTile: Phaser.GameObjects.Image
-    private scrollIndex: number = 0
+    public scrollIndex: number
     private ascTweens: Phaser.Tweens.Tween[]
     private descTweens: Phaser.Tweens.Tween[]
 
-    constructor(public scene: Phaser.Scene) {
+    constructor(public scene: Phaser.Scene, scrollIndex: number) {
         this.musicList = scene.cache.json.get("music-list")
+
+        this.scrollIndex = scrollIndex
 
         this.selectedMusicTile = scene.add
             .image(39, 311, "music-tile-selected")

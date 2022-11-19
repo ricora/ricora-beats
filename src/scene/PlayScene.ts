@@ -61,6 +61,10 @@ export class PlayScene extends Phaser.Scene {
 
     private keyFlashes: Phaser.GameObjects.Image[]
 
+    private backIcon: Phaser.GameObjects.Image
+
+    private hasRetired: boolean
+
     private comboTween: Phaser.Tweens.Tween
     private judgeTween: Phaser.Tweens.Tween
 
@@ -88,6 +92,8 @@ export class PlayScene extends Phaser.Scene {
         this.hasLoaded = false
 
         this.hasFadedOut = false
+
+        this.hasRetired = false
 
         this.latestJudgeSec = -1
 
@@ -178,8 +184,6 @@ export class PlayScene extends Phaser.Scene {
             .image(width / 2, 640, "judgebar")
             .setDisplaySize(780, 14)
             .setDepth(-4)
-
-        this.load.start()
 
         this.judgeText = this.add
             .image(width / 2, 500, "judge-0")
@@ -371,6 +375,45 @@ export class PlayScene extends Phaser.Scene {
 
         //this.add.image(80,140,"jacket-test").setOrigin(0.5,0.5).setDepth(10).setDisplaySize(140,140)
 
+        this.backIcon = this.add
+            .image(10, 10, "icon-back")
+            .setOrigin(0, 0)
+            .setDepth(10)
+            .setScale(0.6)
+            .setInteractive({
+                useHandCursor: true,
+            })
+            .on("pointerdown", () => {
+                this.cameras.main.fadeOut(500)
+                this.hasRetired = true
+            })
+
+        this.cameras.main.once(
+            Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
+            () => {
+                if (
+                    this.chartPlayer !== undefined &&
+                    this.chartPlayer.hasFinished(this.beat) &&
+                    this.chartPlayer !== undefined
+                ) {
+                    this.scene.start("result", {
+                        playResult: new PlayResult({
+                            music: this.music,
+                            playConfig: this.playConfig,
+                            judges: this.chartPlayer.judges,
+                            score: this.chartPlayer.score,
+                            maxCombo: Math.max(
+                                this.chartPlayer.combo,
+                                this.chartPlayer.combo
+                            ),
+                        }),
+                    })
+                } else if (this.hasRetired) {
+                    this.scene.start("select")
+                }
+            }
+        )
+
         this.normalTapSounds = []
         for (const judgeIndex of Array(5).keys()) {
             this.normalTapSounds.push(this.sound.add(`normal-tap-${judgeIndex + 1}`))
@@ -383,7 +426,6 @@ export class PlayScene extends Phaser.Scene {
         this.load.on("complete", () => {
             this.hasLoaded = true
             this.loadEndTime = new Date()
-
             this.cameras.main.fadeIn(500)
         })
     }
@@ -431,9 +473,8 @@ export class PlayScene extends Phaser.Scene {
 
             // update note
             this.playingSec =
-                (new Date().getTime() - this.loadEndTime.getTime()) / 1000
+                (new Date().getTime() - this.loadEndTime.getTime() - 3000) / 1000
             this.beat = this.chart.secondsToBeat(this.playingSec)
-
             this.chartPlayer.update(
                 this,
                 this.beat,
@@ -465,25 +506,7 @@ export class PlayScene extends Phaser.Scene {
             // finish
             if (this.chartPlayer.hasFinished(this.beat) && !this.hasFadedOut) {
                 this.cameras.main.fadeOut(500)
-                this.cameras.main.once(
-                    Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
-                    () => {
-                        if (this.chartPlayer !== undefined) {
-                            this.scene.start("result", {
-                                playResult: new PlayResult({
-                                    music: this.music,
-                                    playConfig: this.playConfig,
-                                    judges: this.chartPlayer.judges,
-                                    score: this.chartPlayer.score,
-                                    maxCombo: Math.max(
-                                        this.chartPlayer.combo,
-                                        this.chartPlayer.combo
-                                    ),
-                                }),
-                            })
-                        }
-                    }
-                )
+
                 this.hasFadedOut = true
             }
 
