@@ -16,6 +16,7 @@ export class LoadingScene extends Phaser.Scene {
         this.load.image("icon-ir", "./assets/skin/tabler-icons/world.png")
         this.load.image("icon-credit", "./assets/skin/tabler-icons/info-circle.png")
         this.load.image("icon-help", "./assets/skin/tabler-icons/help.png")
+        this.load.image("icon-back", "./assets/skin/tabler-icons/arrow-back-up.png")
 
         this.load.image("music-tile-frame", "./assets/skin/music_tile_frame.png")
         this.load.image(
