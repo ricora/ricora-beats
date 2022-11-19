@@ -4,12 +4,18 @@ import { MusicTile } from "./MusicTile"
 export class MusicTileManager {
     private musicTiles: MusicTile[]
     private musicList: Music[]
+    private selectedMusicTile: Phaser.GameObjects.Image
     private scrollIndex: number = 0
     private ascTweens: Phaser.Tweens.Tween[]
     private descTweens: Phaser.Tweens.Tween[]
 
     constructor(public scene: Phaser.Scene) {
         this.musicList = scene.cache.json.get("music-list")
+
+        this.selectedMusicTile = scene.add
+            .image(39, 311, "music-tile-selected")
+            .setOrigin(0)
+            .setDepth(-2)
 
         this.musicTiles = []
         this.ascTweens = []
@@ -72,13 +78,16 @@ export class MusicTileManager {
             )
         }
     }
-    public update() {
+    public update(time: number) {
         for (const musicTileIndex of Array(7).keys()) {
             const musicTile = this.musicTiles[musicTileIndex]
             this.musicTiles[musicTileIndex].setAlpha(
                 1 - (0.8 * Math.abs(musicTile.y - 315)) / 315
             )
         }
+        this.selectedMusicTile.setAlpha(
+            0.5 + 0.5 * Math.abs(Math.sin((time * 2 * Math.PI * 0.25) / 1000))
+        )
     }
 
     public scroll(asc: boolean) {
@@ -125,5 +134,13 @@ export class MusicTileManager {
 
     public getBeatmap(key: number, difficulty: number) {
         return this.musicList[this.scrollIndex][`beatmap_${key}k_${difficulty}`]
+    }
+
+    get scrollRate() {
+        if (this.musicList.length >= 2) {
+            return this.scrollIndex / (this.musicList.length - 1)
+        } else {
+            return 0
+        }
     }
 }

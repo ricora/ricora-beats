@@ -18,6 +18,8 @@ export class SelectScene extends Phaser.Scene {
     private diffButtons: Phaser.GameObjects.Image[]
     private keyButtons: Phaser.GameObjects.Image[]
 
+    private scrollBar: Phaser.GameObjects.Image
+
     private selectedDiffIcon: Phaser.GameObjects.Image
     private selectedKeyIcon: Phaser.GameObjects.Image
 
@@ -180,7 +182,9 @@ export class SelectScene extends Phaser.Scene {
         }
         this.musicTileManager = new MusicTileManager(this)
 
-        this.add.image(20, 360, "scroll-bar-frame").setOrigin(0, 0.5)
+        this.add.image(30, 360, "scroll-bar-frame").setOrigin(0.5, 0.5)
+
+        this.scrollBar = this.add.image(30, 360, "scroll-bar").setOrigin(0.5, 0.5)
 
         this.add.image(830, 120, "music-detail-frame").setOrigin(0, 0)
 
@@ -295,8 +299,8 @@ export class SelectScene extends Phaser.Scene {
         this.cameras.main.fadeIn(500)
     }
 
-    update(time: number, delta: number) {
-        this.musicTileManager.update()
+    update(time: number, dt: number) {
+        this.musicTileManager.update(time)
 
         this.isPlayable = this.musicTileManager.isPlayable(
             this.key,
@@ -313,5 +317,7 @@ export class SelectScene extends Phaser.Scene {
             this.nonPlayableText.setVisible(true)
             this.beatmapLevelText.setText("?")
         }
+
+        this.scrollBar.setY(360 + 235 * (2 * this.musicTileManager.scrollRate - 1))
     }
 }
