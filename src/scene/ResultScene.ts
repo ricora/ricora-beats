@@ -153,13 +153,13 @@ export class ResultScene extends Phaser.Scene {
             .setAlpha(0)
 
         this.artistIcon = this.add
-            .image(140, 150, "icon-user")
+            .image(140, 150, "icon-artist")
             .setScale(0.7)
             .setOrigin(0, 0.5)
             .setAlpha(0)
 
         this.noterIcon = this.add
-            .image(390, 150, "icon-wand")
+            .image(390, 150, "icon-noter")
             .setScale(0.7)
             .setOrigin(0, 0.5)
             .setAlpha(0)

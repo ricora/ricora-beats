@@ -73,14 +73,14 @@ export class MusicTile extends Phaser.GameObjects.Container {
         this.add(this.titleIcon)
 
         this.artistIcon = scene.add
-            .image(110, this.frame.height - 12, "icon-user")
+            .image(110, this.frame.height - 12, "icon-artist")
             .setScale(0.7)
             .setOrigin(0, 1)
 
         this.add(this.artistIcon)
 
         this.noterIcon = scene.add
-            .image(330, this.frame.height - 12, "icon-wand")
+            .image(330, this.frame.height - 12, "icon-noter")
             .setScale(0.7)
             .setOrigin(0, 1)
 
