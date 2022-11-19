@@ -403,7 +403,7 @@ export class PlayScene extends Phaser.Scene {
                             judges: this.chartPlayer.judges,
                             score: this.chartPlayer.score,
                             maxCombo: Math.max(
-                                this.chartPlayer.combo,
+                                this.chartPlayer.maxCombo,
                                 this.chartPlayer.combo
                             ),
                         }),
