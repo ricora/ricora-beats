@@ -12,6 +12,9 @@ export class KeySoundPlayer {
         Object.keys(this.keySoundMap).forEach((noteValue) => {
             const soundFileName = this.keySoundMap[noteValue]
             if (typeof soundFileName === "string") {
+                if (scene.cache.audio.exists(parseInt(noteValue, 36).toString())) {
+                    scene.cache.audio.remove(parseInt(noteValue, 36).toString())
+                }
                 scene.load.audio(
                     parseInt(noteValue, 36).toString(),
                     encodeURIComponent(
