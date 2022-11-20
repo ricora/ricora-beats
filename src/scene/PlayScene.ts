@@ -541,9 +541,6 @@ export class PlayScene extends Phaser.Scene {
             // debug
             this.debugText.setText(`${time}\n\nFPS:${(1000 / dt).toFixed(2)}`)
         } else {
-            for (const laneIndex of Array(7).keys()) {
-                this.keyFlashTweens[laneIndex].restart()
-            }
             this.screenMask.setVisible(true)
         }
     }
