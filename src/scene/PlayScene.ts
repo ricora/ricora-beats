@@ -55,6 +55,8 @@ export class PlayScene extends Phaser.Scene {
     private comboText: Phaser.GameObjects.Text
     private scoreText: Phaser.GameObjects.Text
 
+    private startText: Phaser.GameObjects.Text
+
     private judgeText: Phaser.GameObjects.Image
     private judgeFSText: Phaser.GameObjects.Image
 
@@ -252,6 +254,18 @@ export class PlayScene extends Phaser.Scene {
             .setAlpha(0.5)
             .setScale(0.5)
 
+        this.startText = this.add
+            .text(640, 380, "GET READY...", {
+                fontFamily: "Bungee",
+                fontSize: "120px",
+                color: "#fafafa",
+                align: "center",
+            })
+            .setOrigin(0.5)
+            .setDepth(10)
+            .setAlpha(1)
+            .setScale(0.5)
+
         this.keyFlashTweens = []
         this.holdParticleEmitters = []
         this.particleYellow = this.add.particles("particle-yellow")
@@ -440,7 +454,9 @@ export class PlayScene extends Phaser.Scene {
         this.laneBackgroundLight.setAlpha(
             0.5 + 0.25 * 0.5 * (Math.sin(1 * Math.PI * this.beat) + 1)
         )
-        this.judgeBarLight.setAlpha(0.5 + 0.25 * 0.5 * (Math.sin(1 * Math.PI * this.beat) + 1))
+        this.judgeBarLight.setAlpha(
+            0.5 + 0.25 * 0.5 * (Math.sin(1 * Math.PI * this.beat) + 1)
+        )
 
         if (
             this.hasLoaded &&
@@ -536,6 +552,17 @@ export class PlayScene extends Phaser.Scene {
                 if (this.chartPlayer.isHolds[laneIndex] && time % 130 <= 17) {
                     this.addBomb(laneIndex)
                 }
+            }
+
+            if (this.beat > -1) {
+                this.tweens.add({
+                    targets: this.startText,
+                    y: 460,
+                    ease: "Linear",
+                    alpha: { value: 0, duration: 300, ease: "Linear" },
+                    duration: 300,
+                    paused: false
+                })
             }
 
             // debug
