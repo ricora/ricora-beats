@@ -52,12 +52,14 @@ export class SelectScene extends Phaser.Scene {
 
         this.musicTileManager = new MusicTileManager(this, this.scrollIndex)
 
-        this.playConfig = data.playConfig || new PlayConfig({
-            noteSpeed: 6.5,
-            noteType: "circle",
-            key: 4,
-            difficulty: 1
-        })
+        this.playConfig =
+            data.playConfig ||
+            new PlayConfig({
+                noteSpeed: 6.5,
+                noteType: "circle",
+                key: 4,
+                difficulty: 1,
+            })
     }
     create() {
         const { width, height } = this.game.canvas
@@ -224,11 +226,12 @@ export class SelectScene extends Phaser.Scene {
         this.add
             .image(830 + 400 * 0.2, 640, "icon-config")
             .setOrigin(0.5, 0.5)
-            .setDepth(1).setInteractive({
+            .setDepth(1)
+            .setInteractive({
                 useHandCursor: true,
             })
             .on("pointerdown", () => {
-                this.scene.run("config", {playConfig: this.playConfig})
+                this.scene.run("config", { playConfig: this.playConfig })
             })
 
         this.add
@@ -311,6 +314,16 @@ export class SelectScene extends Phaser.Scene {
                     this.scrollIndex = this.musicTileManager.scrollIndex
                 }
             })
+            .on("pointerover", () => {
+                if (this.isPlayable) {
+                    this.playButton.setAlpha(1)
+                }
+            })
+            .on("pointerout", () => {
+                if (this.isPlayable) {
+                    this.playButton.setAlpha(0.8)
+                }
+            })
         this.cameras.main.once(
             Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
             () => {
@@ -334,7 +347,10 @@ export class SelectScene extends Phaser.Scene {
             this.difficulty
         )
         if (this.isPlayable) {
-            this.playButton.setTexture("play-button-enable").setAlpha(1)
+            if (this.playButton.alpha == 0.3) {
+                this.playButton.setAlpha(0.8)
+            }
+            this.playButton.setTexture("play-button-enable")
             this.nonPlayableText.setVisible(false)
             this.beatmapLevelText.setText(
                 this.musicTileManager.getBeatmap(this.key, this.difficulty).playlevel
@@ -343,7 +359,7 @@ export class SelectScene extends Phaser.Scene {
                 0.2 + 0.8 * Math.abs(Math.sin((time * 2 * Math.PI * 0.25) / 1000))
             )
         } else {
-            this.playButton.setTexture("play-button-disable").setAlpha(0.5)
+            this.playButton.setTexture("play-button-disable").setAlpha(0.3)
             this.nonPlayableText.setVisible(true)
             this.beatmapLevelText.setText("?")
             this.playButtonLight.setAlpha(0)
