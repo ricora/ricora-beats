@@ -36,6 +36,8 @@ export class SelectScene extends Phaser.Scene {
     private musicTileManager: MusicTileManager
 
     private backgroundCamera: Phaser.Cameras.Scene2D.Camera
+
+    private playConfig: PlayConfig
     constructor() {
         super("select")
 
@@ -52,7 +54,7 @@ export class SelectScene extends Phaser.Scene {
         this.scrollIndex = 0
     }
 
-    init() {
+    init(data: any) {
         this.gui.show()
         this.debugGUI = new DebugGUI(this)
         this.events.on(Phaser.Scenes.Events.TRANSITION_OUT, () => {
@@ -63,6 +65,13 @@ export class SelectScene extends Phaser.Scene {
         this.musicList = this.cache.json.get("music-list")
 
         this.musicTileManager = new MusicTileManager(this, this.scrollIndex)
+
+        this.playConfig = data.playConfig || new PlayConfig({
+            noteSpeed: 6.5,
+            noteType: "circle",
+            key: 4,
+            difficulty: 1
+        })
     }
     create() {
         const { width, height } = this.game.canvas
@@ -229,7 +238,12 @@ export class SelectScene extends Phaser.Scene {
         this.add
             .image(830 + 400 * 0.2, 640, "icon-config")
             .setOrigin(0.5, 0.5)
-            .setDepth(1)
+            .setDepth(1).setInteractive({
+                useHandCursor: true,
+            })
+            .on("pointerdown", () => {
+                this.scene.run("config", {playConfig: this.playConfig})
+            })
 
         this.add
             .text(830 + 400 * 0.5, 680, "IRにログイン", {
@@ -292,15 +306,12 @@ export class SelectScene extends Phaser.Scene {
         this.cameras.main.once(
             Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
             () => {
+                this.playConfig.key = this.key
+                this.playConfig.difficulty = this.difficulty
                 this.scene.start("play", {
                     music: this.musicTileManager.getMusic(),
                     beatmap: this.musicTileManager.getBeatmap(this.key, this.difficulty),
-                    playConfig: new PlayConfig({
-                        noteSpeed: this.debugParams.noteSpeed,
-                        noteType: this.debugParams.noteType,
-                        key: this.key,
-                        difficulty: this.difficulty,
-                    }),
+                    playConfig: this.playConfig,
                 })
             }
         )

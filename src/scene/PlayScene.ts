@@ -427,7 +427,7 @@ export class PlayScene extends Phaser.Scene {
                         }),
                     })
                 } else if (this.hasRetired) {
-                    this.scene.start("select")
+                    this.scene.start("select", { playConfig: this.playConfig })
                 }
             }
         )
