@@ -195,7 +195,7 @@ export class ChartPlayer {
             this.lanes[laneIndex].sort((a, b) => a.beat - b.beat)
         }
         this.bgmLane.sort((a, b) => a.beat - b.beat)
-        this.lastBeat += 4
+        this.lastBeat += 0.1
 
         //measure
         for (const measureIndex of Array(1000).keys()) {
