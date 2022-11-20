@@ -455,8 +455,9 @@ export class PlayScene extends Phaser.Scene {
             0.5 + 0.25 * 0.5 * (Math.sin(1 * Math.PI * this.beat) + 1)
         )
         this.judgeBarLight.setAlpha(
-            0.5 + 0.25 * 0.5 * (Math.sin(1 * Math.PI * this.beat) + 1)
+            0.2 + 0.3 * (Math.cos(1 * Math.PI * this.beat) + 1)
         )
+        this.judgeBar.setTint(0xbbbbbb)
 
         if (
             this.hasLoaded &&
