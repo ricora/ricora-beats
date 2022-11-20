@@ -6,6 +6,7 @@ export class DebugGUI {
 
     constructor(public scene: Phaser.Scene) {
         this.gui = new GUI({ title: "Debug Menu" })
+        this.gui.hide()
         this.params = {
             title: () => {
                 this.changeScene("title")

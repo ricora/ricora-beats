@@ -10,9 +10,7 @@ type DIFFICULTY = 1 | 2 | 3 | 4
 type KEY = 4 | 5 | 6 | 7
 
 export class SelectScene extends Phaser.Scene {
-    private gui: GUI
     private debugGUI: DebugGUI
-    private debugParams: any
 
     private playButton: Phaser.GameObjects.Image
     private playButtonLight: Phaser.GameObjects.Image
@@ -41,25 +39,13 @@ export class SelectScene extends Phaser.Scene {
     constructor() {
         super("select")
 
-        this.gui = new GUI({ title: "Settings" })
-        this.gui.domElement.style.setProperty("left", "15px")
-        this.debugParams = { noteSpeed: 6.5, noteType: "rectangle" }
-        const playFolder = this.gui.addFolder("Play Option")
-        playFolder.add(this.debugParams, "noteSpeed", 1, 10).name("Note Speed")
-        playFolder
-            .add(this.debugParams, "noteType", ["rectangle", "circle"])
-            .name("Note Type")
-        this.gui.hide()
-
         this.scrollIndex = 0
     }
 
     init(data: any) {
-        this.gui.show()
         this.debugGUI = new DebugGUI(this)
         this.events.on(Phaser.Scenes.Events.TRANSITION_OUT, () => {
             this.debugGUI.destroy()
-            this.gui.hide()
         })
 
         this.musicList = this.cache.json.get("music-list")
