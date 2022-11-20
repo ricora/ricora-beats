@@ -298,7 +298,9 @@ export class SelectScene extends Phaser.Scene {
                 useHandCursor: true,
             })
             .on("pointerdown", () => {
-                window.open("https://github.com/RICORA/ricora-beats/wiki", "_blank")
+                if (window.open("https://github.com/RICORA/ricora-beats/wiki", "_blank") == null) {
+                    location.href = "https://github.com/RICORA/ricora-beats/wiki"
+                }
             })
             .on("pointerover", () => {
                 helpButton.setAlpha(1)

@@ -104,7 +104,9 @@ export class CreditScene extends Phaser.Scene {
                 useHandCursor: true,
             })
             .on("pointerdown", () => {
-                window.open("https://tus-ricora.com/", "_blank")
+                if (window.open("https://tus-ricora.com/", "_blank") == null) {
+                    location.href = "https://tus-ricora.com/"
+                }
             })
 
         this.add
@@ -135,7 +137,9 @@ export class CreditScene extends Phaser.Scene {
                 useHandCursor: true,
             })
             .on("pointerdown", () => {
-                window.open("https://github.com/RICORA/ricora-beats/", "_blank")
+                if (window.open("https://github.com/RICORA/ricora-beats/", "_blank") == null) {
+                    location.href = "https://github.com/RICORA/ricora-beats/"
+                }
             })
 
         this.add
