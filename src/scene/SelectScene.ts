@@ -256,7 +256,12 @@ export class SelectScene extends Phaser.Scene {
         this.add
             .image(830 + 400 * 0.8, 640, "icon-credit")
             .setOrigin(0.5, 0.5)
-            .setDepth(1)
+            .setDepth(1).setInteractive({
+                useHandCursor: true,
+            })
+            .on("pointerdown", () => {
+                this.scene.run("credit")
+            })
 
         this.add.image(5, 5, "icon-help").setOrigin(0, 0).setAlpha(0.5).setDepth(1)
 
