@@ -256,14 +256,31 @@ export class SelectScene extends Phaser.Scene {
         this.add
             .image(830 + 400 * 0.8, 640, "icon-credit")
             .setOrigin(0.5, 0.5)
-            .setDepth(1).setInteractive({
+            .setDepth(1)
+            .setInteractive({
                 useHandCursor: true,
             })
             .on("pointerdown", () => {
                 this.scene.run("credit")
             })
 
-        this.add.image(5, 5, "icon-help").setOrigin(0, 0).setAlpha(0.5).setDepth(1)
+        const helpButton = this.add
+            .image(5, 5, "icon-help")
+            .setOrigin(0, 0)
+            .setAlpha(0.5)
+            .setDepth(1)
+            .setInteractive({
+                useHandCursor: true,
+            })
+            .on("pointerdown", () => {
+                window.open("https://github.com/RICORA/ricora-beats/wiki", "_blank")
+            })
+            .on("pointerover", () => {
+                helpButton.setAlpha(1)
+            })
+            .on("pointerout", () => {
+                helpButton.setAlpha(0.5)
+            })
 
         const ascScrollZone = this.add
             .zone(100, 100, 570, 200)
