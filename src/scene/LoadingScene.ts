@@ -1,6 +1,8 @@
 import WebFont from "webfontloader"
 
 export class LoadingScene extends Phaser.Scene {
+    private hasLoadedPhaser: boolean = false
+    private hasLoadedFont: boolean = false
     constructor() {
         super("loading")
     }
@@ -45,10 +47,7 @@ export class LoadingScene extends Phaser.Scene {
             "play-button-disable",
             "./assets/skin/play_button_disable.png"
         )
-        this.load.image(
-            "play-button-light",
-            "./assets/skin/play_button_light.png"
-        )
+        this.load.image("play-button-light", "./assets/skin/play_button_light.png")
 
         this.load.image("frame-back", "./assets/skin/frame_back.png")
         this.load.image(
@@ -125,20 +124,31 @@ export class LoadingScene extends Phaser.Scene {
             google: {
                 families: ["Noto+Sans+JP:900", "Bungee", "Fredoka+One", "Oswald:700"],
             },
+            active: () => {
+                this.hasLoadedFont = true
+            },
+            inactive: () => {
+                alert("フォントのロードに失敗しました。")
+                this.hasLoadedFont = true
+            },
         })
     }
 
     create() {
         const { width, height } = this.game.canvas
 
-        this.add.image(width / 2, height / 2, "logo")
-
-        this.add.text(width / 2, height / 2 + 60, "Loading...").setOrigin(0.5)
+        this.add.text(0, 0, "Loading...")
 
         this.load.on("complete", () => {
-            this.scene.start("title")
+            this.hasLoadedPhaser = true
         })
 
         this.load.start()
+    }
+
+    update() {
+        if (this.hasLoadedFont && this.hasLoadedPhaser) {
+            this.scene.start("title")
+        }
     }
 }
