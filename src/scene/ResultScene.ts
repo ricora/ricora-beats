@@ -34,6 +34,8 @@ export class ResultScene extends Phaser.Scene {
 
     private backgroundCamera: Phaser.Cameras.Scene2D.Camera
 
+    private particleEmitter: Phaser.GameObjects.Particles.ParticleEmitter
+
     constructor() {
         super("result")
     }
@@ -82,6 +84,26 @@ export class ResultScene extends Phaser.Scene {
         this.plugins.get("rexKawaseBlurPipeline").add(this.backgroundCamera, {
             blur: 8,
             quality: 8,
+        })
+
+        const particleYellow = this.add.particles("particle-yellow").setDepth(20)
+
+        this.particleEmitter = particleYellow.createEmitter({
+            x: -1280,
+            y: 0,
+            angle: { min: 0, max: 360 },
+            speed: 60,
+            emitZone: {
+                type: "random",
+                source: new Phaser.Geom.Circle(0, 0, 6),
+                quantity: 12,
+                yoyo: false,
+            },
+            scale: { start: 0.08, end: 0 },
+            lifespan: { min: 300, max: 1000 },
+            quantity: 0.6,
+            blendMode: "ADD",
+            on: true,
         })
 
         this.titleFrame = this.add
@@ -326,7 +348,8 @@ export class ResultScene extends Phaser.Scene {
         this.cameras.main.fadeIn(500)
     }
 
-    update(time: number, deltaTime: number) {
+    update(time: number, dt: number) {
+        this.particleEmitter.setPosition(this.input.x, this.input.y)
         switch (Math.floor(time / 40) % 4) {
             case 0:
                 this.judgeLabelTexts[0].setColor("#e530e5")
