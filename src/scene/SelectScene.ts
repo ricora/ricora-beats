@@ -64,6 +64,7 @@ export class SelectScene extends Phaser.Scene {
                 key: 4,
                 difficulty: 1,
             })
+        this.game.sound.stopAll()
     }
     create() {
         const { width, height } = this.game.canvas
