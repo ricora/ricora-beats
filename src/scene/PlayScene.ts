@@ -62,6 +62,8 @@ export class PlayScene extends Phaser.Scene {
 
     private keyFlashes: Phaser.GameObjects.Image[]
 
+    private jacketImage: Phaser.GameObjects.Image
+
     private backButton: Phaser.GameObjects.Image
 
     private hasRetired: boolean
@@ -373,10 +375,16 @@ export class PlayScene extends Phaser.Scene {
             .setDepth(10)
             .setScale(0.5)
 
-        this.add
-            .rectangle(80, 140, 142, 142, 0xffffff)
+        this.jacketImage = this.add
+            .image(80, 140, "jacket-no-image")
             .setDepth(9)
-            .setOrigin(0.5, 0.5)
+            .setDisplaySize(142, 142)
+
+        if (this.music.jacket !== undefined) {
+            this.jacketImage
+                .setTexture(`jacket-${this.music.folder}/${this.music.jacket}`)
+                .setDisplaySize(142, 142)
+        }
 
         this.add
             .image(10, 280, `key-icon-${this.playConfig.key}`)

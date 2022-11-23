@@ -25,6 +25,8 @@ export class SelectScene extends Phaser.Scene {
     private beatmapLevelText: Phaser.GameObjects.Text
     private nonPlayableText: Phaser.GameObjects.Text
 
+    private jacketImage: Phaser.GameObjects.Image
+
     private difficulty: DIFFICULTY = 1
     private key: KEY = 4
     private isPlayable: boolean = false
@@ -209,21 +211,23 @@ export class SelectScene extends Phaser.Scene {
 
         this.add.image(830, 120, "music-detail-frame").setOrigin(0, 0)
 
-        this.add
-            .rectangle(830 + 200, 280, 270, 270, 0xffffff)
-            .setOrigin(0.5, 0.5)
-            .setDepth(1)
+        this.add.rectangle(830 + 200, 280, 270, 270, 0x0a0a0a, 140).setDepth(1)
+
+        this.jacketImage = this.add
+            .image(830 + 200, 280, "")
+            .setDisplaySize(270, 270)
+            .setDepth(2)
 
         this.selectedKeyIcon = this.add
             .image(830 + 70, 140, `key-icon-${this.key}`)
             .setOrigin(0, 0)
-            .setDepth(2)
+            .setDepth(3)
             .setScale(0.5)
 
         this.selectedDiffIcon = this.add
             .image(830 + 70 + 90, 140, `diff-icon-${this.difficulty}`)
             .setOrigin(0, 0)
-            .setDepth(2)
+            .setDepth(3)
             .setScale(0.5)
 
         this.playButton = this.add
@@ -298,7 +302,12 @@ export class SelectScene extends Phaser.Scene {
                 useHandCursor: true,
             })
             .on("pointerdown", () => {
-                if (window.open("https://github.com/RICORA/ricora-beats/wiki", "_blank") == null) {
+                if (
+                    window.open(
+                        "https://github.com/RICORA/ricora-beats/wiki",
+                        "_blank"
+                    ) == null
+                ) {
                     location.href = "https://github.com/RICORA/ricora-beats/wiki"
                 }
             })
@@ -392,5 +401,13 @@ export class SelectScene extends Phaser.Scene {
         }
 
         this.scrollBar.setY(360 + 235 * (2 * this.musicTileManager.scrollRate - 1))
+
+        if (this.textures.exists(this.musicTileManager.getJacketImageKey())) {
+            this.jacketImage
+                .setTexture(this.musicTileManager.getJacketImageKey())
+                .setDisplaySize(270, 270)
+        } else {
+            this.jacketImage.setTexture("jacket-no-image").setDisplaySize(270, 270)
+        }
     }
 }

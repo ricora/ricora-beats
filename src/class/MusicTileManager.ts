@@ -12,6 +12,16 @@ export class MusicTileManager {
     constructor(public scene: Phaser.Scene, scrollIndex: number) {
         this.musicList = scene.cache.json.get("music-list")
 
+        for (const music of this.musicList) {
+            if (music.jacket !== undefined) {
+                scene.load.image(
+                    `jacket-${music.folder}/${music.jacket}`,
+                    `./assets/beatmaps/${music.folder}/${music.jacket}`
+                )
+            }
+        }
+        scene.load.start()
+
         this.scrollIndex = scrollIndex
 
         this.selectedMusicTile = scene.add
@@ -144,5 +154,11 @@ export class MusicTileManager {
         } else {
             return 0
         }
+    }
+
+    public getJacketImageKey() {
+        const selectedMusic = this.musicList[this.scrollIndex]
+
+        return `jacket-${selectedMusic.folder}/${selectedMusic.jacket}`
     }
 }
