@@ -15,6 +15,8 @@ export class LoadingScene extends Phaser.Scene {
         this.load.image("caret-left", "./assets/skin/caret_left.png")
         this.load.image("caret-right", "./assets/skin/caret_right.png")
 
+        this.load.image("jacket-no-image", "./assets/skin/no_image.png")
+
         this.load.image("icon-music", "./assets/skin/tabler-icons/music.png")
         this.load.image("icon-artist", "./assets/skin/tabler-icons/user.png")
         this.load.image("icon-noter", "./assets/skin/tabler-icons/wand.png")
