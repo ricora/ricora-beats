@@ -266,9 +266,11 @@ export class PlayScene extends Phaser.Scene {
             .setAlpha(1)
             .setScale(0.5)
 
+        this.particleYellow = this.add.particles("particle-yellow")
+
         this.keyFlashTweens = []
         this.holdParticleEmitters = []
-        this.particleYellow = this.add.particles("particle-yellow")
+        this.inputZones = []
 
         for (const laneIndex of Array(7).keys()) {
             let positionX = -1280
@@ -331,13 +333,10 @@ export class PlayScene extends Phaser.Scene {
                     on: false,
                 })
             )
-        }
 
-        this.inputZones = []
-        for (const laneIndex of Array(7).keys()) {
             this.inputZones.push(
                 this.add
-                    .zone(319 + 106.8 * laneIndex, 720, 106.8, 720)
+                    .zone(positionX, 720, widths[this.playConfig.key], 720)
                     .setInteractive()
                     .setOrigin(0.5, 1)
                     .on("pointerover", () => {
@@ -405,7 +404,8 @@ export class PlayScene extends Phaser.Scene {
             .on("pointerdown", () => {
                 this.cameras.main.fadeOut(500)
                 this.hasRetired = true
-            }).on("pointerover", () => {
+            })
+            .on("pointerover", () => {
                 this.backButton.setAlpha(1)
             })
             .on("pointerout", () => {
@@ -568,7 +568,7 @@ export class PlayScene extends Phaser.Scene {
                     ease: "Linear",
                     alpha: { value: 0, duration: 300, ease: "Linear" },
                     duration: 300,
-                    paused: false
+                    paused: false,
                 })
             }
 
