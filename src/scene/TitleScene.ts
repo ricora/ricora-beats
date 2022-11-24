@@ -70,6 +70,7 @@ export class TitleScene extends Phaser.Scene {
                 useHandCursor: true,
             })
             .on("pointerdown", () => {
+                this.sound.play("decide")
                 this.cameras.main.fadeOut(800)
             })
         this.cameras.main.once(

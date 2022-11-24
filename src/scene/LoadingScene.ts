@@ -110,7 +110,10 @@ export class LoadingScene extends Phaser.Scene {
         this.load.image("key-icon-6", "./assets/skin/key_icon_6.png")
         this.load.image("key-icon-7", "./assets/skin/key_icon_7.png")
 
-        //this.load.image("jacket-test", "./assets/jacket_test.png")
+        this.load.audio("select", "./assets/sound/se/select.wav")
+        this.load.audio("decide", "./assets/sound/se/decide.wav")
+        this.load.audio("cancel", "./assets/sound/se/cancel.wav")
+        this.load.audio("cursor", "./assets/sound/se/cursor.wav")
 
         this.load.audio("normal-tap-1", "./assets/sound/se/normal_tap1.wav")
         this.load.audio("normal-tap-2", "./assets/sound/se/normal_tap2.wav")

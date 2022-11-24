@@ -171,6 +171,7 @@ export class SelectScene extends Phaser.Scene {
                     useHandCursor: true,
                 })
                 .on("pointerdown", () => {
+                    this.sound.play("cursor")
                     this.difficulty = (diffIndex + 1) as DIFFICULTY
                     this.selectedDiffIcon.setTexture(`diff-icon-${diffIndex + 1}`)
                     for (const diffIndex of Array(4).keys()) {
@@ -197,6 +198,7 @@ export class SelectScene extends Phaser.Scene {
                     useHandCursor: true,
                 })
                 .on("pointerdown", () => {
+                    this.sound.play("cursor")
                     this.key = (keyIndex + 4) as KEY
                     this.selectedKeyIcon.setTexture(`key-icon-${keyIndex + 4}`)
                     for (const keyIndex of Array(4).keys()) {
@@ -259,6 +261,7 @@ export class SelectScene extends Phaser.Scene {
                 useHandCursor: true,
             })
             .on("pointerdown", () => {
+                this.sound.play("select")
                 this.scene.run("config", { playConfig: this.playConfig })
             })
 
@@ -292,6 +295,7 @@ export class SelectScene extends Phaser.Scene {
                 useHandCursor: true,
             })
             .on("pointerdown", () => {
+                this.sound.play("select")
                 this.scene.run("credit")
             })
 
@@ -327,6 +331,7 @@ export class SelectScene extends Phaser.Scene {
                 useHandCursor: true,
             })
             .on("pointerdown", () => {
+                this.sound.play("cursor")
                 this.musicTileManager.scroll(false)
             })
         const descScrollZone = this.add
@@ -336,6 +341,7 @@ export class SelectScene extends Phaser.Scene {
                 useHandCursor: true,
             })
             .on("pointerdown", () => {
+                this.sound.play("cursor")
                 this.musicTileManager.scroll(true)
             })
 
@@ -345,6 +351,7 @@ export class SelectScene extends Phaser.Scene {
             })
             .on("pointerdown", () => {
                 if (this.isPlayable) {
+                    this.sound.play("decide")
                     this.cameras.main.fadeOut(500)
                     this.scrollIndex = this.musicTileManager.scrollIndex
                 }

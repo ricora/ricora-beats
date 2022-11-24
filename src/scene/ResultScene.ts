@@ -336,6 +336,7 @@ export class ResultScene extends Phaser.Scene {
                 useHandCursor: true,
             })
             .on("pointerdown", () => {
+                this.sound.play("cancel")
                 this.cameras.main.fadeOut(500)
             }).on("pointerover", () => {
                 this.backButton.setAlpha(1)

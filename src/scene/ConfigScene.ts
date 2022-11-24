@@ -78,6 +78,7 @@ export class ConfigScene extends Phaser.Scene {
             .setPosition(width / 2 + 260 - 95.5, height / 2 - 180 + 360 * 0)
             .setDepth(2)
         noteSpeedToggleButton.leftZone.on("pointerdown", () => {
+            this.sound.play("cursor")
             this.playConfig.noteSpeed = Math.max(
                 (Math.round(this.playConfig.noteSpeed * 10) - 1) / 10,
                 1
@@ -86,6 +87,7 @@ export class ConfigScene extends Phaser.Scene {
             this.previewTimer = new Date()
         })
         noteSpeedToggleButton.rightZone.on("pointerdown", () => {
+            this.sound.play("cursor")
             this.playConfig.noteSpeed = Math.min(
                 (Math.round(this.playConfig.noteSpeed * 10) + 1) / 10,
                 10
@@ -114,12 +116,14 @@ export class ConfigScene extends Phaser.Scene {
             .setPosition(width / 2 + 260 - 95.5, height / 2 - 180 + 360 * 0.2)
             .setDepth(2)
         noteTypeToggleButton.leftZone.on("pointerdown", () => {
+            this.sound.play("cursor")
             this.noteTypeIndex =
                 (this.noteTypeIndex - 1 + noteTypeList.length) % noteTypeList.length
             this.playConfig.noteType = noteTypeList[this.noteTypeIndex]
             noteTypeToggleButton.setText(`${this.playConfig.noteType}`)
         })
         noteTypeToggleButton.rightZone.on("pointerdown", () => {
+            this.sound.play("cursor")
             this.noteTypeIndex = (this.noteTypeIndex + 1) % noteTypeList.length
             this.playConfig.noteType = noteTypeList[this.noteTypeIndex]
             noteTypeToggleButton.setText(`${this.playConfig.noteType}`)
@@ -144,6 +148,7 @@ export class ConfigScene extends Phaser.Scene {
                 useHandCursor: true,
             })
             .on("pointerdown", () => {
+                this.sound.play("cancel")
                 localStorage.setItem("play_config", JSON.stringify(this.playConfig))
                 this.scene.stop()
                 this.scene.resume("select", { playConfig: this.playConfig })

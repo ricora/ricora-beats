@@ -160,6 +160,7 @@ export class CreditScene extends Phaser.Scene {
                 useHandCursor: true,
             })
             .on("pointerdown", () => {
+                this.sound.play("cancel")
                 this.scene.stop()
                 this.scene.resume("select")
             })
