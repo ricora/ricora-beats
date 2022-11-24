@@ -44,36 +44,52 @@ export class CreditScene extends Phaser.Scene {
             .rectangle(width / 2, height / 2 - 220, 530, 3, 0xeeeeee)
             .setDepth(2)
 
-        const credits = [
-            "# RICORA Beats",
+        const leftCredits = [
+            "RICORA Beats",
             "",
-            "## 企画立案",
+            "企画立案",
+            "楽曲",
+            "システムサウンド",
+            "グラフィック",
+            "プログラム",
+            "譜面",
+            "デバック・テストプレイ",
+            "",
+            "",
+        ]
+
+        const rightCredits = [
+            "",
+            "",
+            "xxx yyy",
+            "xxx yyy",
+            "xxx",
+            "xxx",
+            "xxx",
+            "xxx",
             "xxx",
             "",
-            "## 楽曲",
-            "xxx",
-            "",
-            "## グラフィック",
-            "xxx",
-            "",
-            "## プログラム",
-            "xxx",
-            "",
-            "## 譜面",
-            "xxx",
-            "",
-            "## デバック・テストプレイ",
-            "xxx",
             "",
         ]
 
         this.add
-            .text(width / 2 - 260, height / 2 - 200, credits, {
+            .text(width / 2 - 260, height / 2 - 200, leftCredits, {
                 fontFamily: "Noto Sans JP",
-                fontSize: "22px",
+                fontSize: "32px",
                 color: "#f0f0f0",
             })
             .setOrigin(0, 0)
+            .setScale(0.5)
+            .setDepth(1)
+
+        this.add
+            .text(width / 2 + 260, height / 2 - 200, rightCredits, {
+                fontFamily: "Noto Sans JP",
+                fontSize: "32px",
+                color: "#f0f0f0",
+                align: "right",
+            })
+            .setOrigin(1, 0)
             .setScale(0.5)
             .setDepth(1)
 
@@ -137,7 +153,10 @@ export class CreditScene extends Phaser.Scene {
                 useHandCursor: true,
             })
             .on("pointerdown", () => {
-                if (window.open("https://github.com/RICORA/ricora-beats/", "_blank") == null) {
+                if (
+                    window.open("https://github.com/RICORA/ricora-beats/", "_blank") ==
+                    null
+                ) {
                     location.href = "https://github.com/RICORA/ricora-beats/"
                 }
             })
