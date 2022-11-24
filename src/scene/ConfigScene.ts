@@ -4,6 +4,9 @@ import { ToggleButton } from "../class/ToggleButton"
 export class ConfigScene extends Phaser.Scene {
     private playConfig: PlayConfig
 
+    private previewNote: Phaser.GameObjects.Image
+    private previewTimer: Date
+
     private noteTypeIndex: number
 
     constructor() {
@@ -12,6 +15,7 @@ export class ConfigScene extends Phaser.Scene {
 
     init(data: any) {
         this.playConfig = data.playConfig
+        this.previewTimer = new Date()
     }
 
     create() {
@@ -53,6 +57,10 @@ export class ConfigScene extends Phaser.Scene {
             .rectangle(width / 2, height / 2 - 220, 530, 3, 0xeeeeee)
             .setDepth(2)
 
+        this.add.rectangle(1100, height / 2, 150, 720, 0x0a0a0a, 30).setDepth(2)
+
+        this.previewNote = this.add.image(1100, height / 2, "").setDepth(3)
+
         this.add
             .text(width / 2 - 260, height / 2 - 180 + 360 * 0, "ノーツの速さ", {
                 fontFamily: "Noto Sans JP",
@@ -75,6 +83,7 @@ export class ConfigScene extends Phaser.Scene {
                 1
             )
             noteSpeedToggleButton.setText(`${this.playConfig.noteSpeed}`)
+            this.previewTimer = new Date()
         })
         noteSpeedToggleButton.rightZone.on("pointerdown", () => {
             this.playConfig.noteSpeed = Math.min(
@@ -82,6 +91,7 @@ export class ConfigScene extends Phaser.Scene {
                 10
             )
             noteSpeedToggleButton.setText(`${this.playConfig.noteSpeed}`)
+            this.previewTimer = new Date()
         })
         this.add.existing(noteSpeedToggleButton)
 
@@ -138,5 +148,21 @@ export class ConfigScene extends Phaser.Scene {
                 this.scene.stop()
                 this.scene.resume("select", { playConfig: this.playConfig })
             })
+    }
+
+    update(time: number, dt: number) {
+        if (this.playConfig.noteType === "circle") {
+            this.previewNote.setTexture("note-circle-1").setDisplaySize(100, 100)
+        } else if (this.playConfig.noteType === "rectangle") {
+            this.previewNote.setTexture("note-rectangle-2").setDisplaySize(120, 40)
+        }
+        const previewTime = new Date().getTime() - this.previewTimer.getTime()
+        this.previewNote.setY(
+            360 -
+            320 +
+            640 *
+            ((previewTime % (-115 * this.playConfig.noteSpeed + 1375)) /
+                (-115 * this.playConfig.noteSpeed + 1375))
+        )
     }
 }
