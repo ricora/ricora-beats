@@ -58,6 +58,7 @@ export class SelectScene extends Phaser.Scene {
 
         this.playConfig =
             data.playConfig ||
+            JSON.parse(localStorage.getItem("play_config") as string) ||
             new PlayConfig({
                 noteSpeed: 6.5,
                 noteType: "circle",

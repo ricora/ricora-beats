@@ -134,6 +134,7 @@ export class ConfigScene extends Phaser.Scene {
                 useHandCursor: true,
             })
             .on("pointerdown", () => {
+                localStorage.setItem("play_config", JSON.stringify(this.playConfig))
                 this.scene.stop()
                 this.scene.resume("select", { playConfig: this.playConfig })
             })
