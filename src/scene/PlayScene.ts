@@ -351,7 +351,7 @@ export class PlayScene extends Phaser.Scene {
             )
         }
 
-        this.debugText = this.add.text(0, 450, "")
+        this.debugText = this.add.text(0, 450, "").setVisible(false)
 
         this.titleText = this.add
             .text(10, 230, "", {
