@@ -2,7 +2,7 @@
 // Original License: CC BY 3.0
 // Original Author: Jan Mróz (jaszunio15)
 
-precision mediump float;
+precision highp float;
 
 uniform float time;
 uniform vec2 resolution;
