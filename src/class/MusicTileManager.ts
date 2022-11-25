@@ -19,6 +19,12 @@ export class MusicTileManager {
                     `./assets/beatmaps/${music.folder}/${music.jacket}`
                 )
             }
+            if (music.preview !== undefined) {
+                scene.load.audio(
+                    `preview-${music.folder}/${music.preview}`,
+                    `./assets/beatmaps/${music.folder}/${music.preview}`
+                )
+            }
         }
         scene.load.start()
 

@@ -332,7 +332,9 @@ export class SelectScene extends Phaser.Scene {
             })
             .on("pointerdown", () => {
                 this.sound.play("cursor")
+                this.stopPreviewSound()
                 this.musicTileManager.scroll(false)
+                this.playPreviewSound()
             })
         const descScrollZone = this.add
             .zone(100, 620, 570, 200)
@@ -342,7 +344,9 @@ export class SelectScene extends Phaser.Scene {
             })
             .on("pointerdown", () => {
                 this.sound.play("cursor")
+                this.stopPreviewSound()
                 this.musicTileManager.scroll(true)
+                this.playPreviewSound()
             })
 
         this.playButton
@@ -352,6 +356,7 @@ export class SelectScene extends Phaser.Scene {
             .on("pointerdown", () => {
                 if (this.isPlayable) {
                     this.sound.play("decide")
+                    this.stopPreviewSound()
                     this.cameras.main.fadeOut(500)
                     this.scrollIndex = this.musicTileManager.scrollIndex
                 }
@@ -417,6 +422,22 @@ export class SelectScene extends Phaser.Scene {
                 .setDisplaySize(270, 270)
         } else {
             this.jacketImage.setTexture("jacket-no-image").setDisplaySize(270, 270)
+        }
+    }
+
+    private playPreviewSound() {
+        const music = this.musicList[this.musicTileManager.scrollIndex]
+        const soundKey = `preview-${music.folder}/${music.preview}`
+        if (this.cache.audio.exists(soundKey)) {
+            this.sound.play(soundKey, {loop: true})
+        }
+    }
+
+    private stopPreviewSound() {
+        const music = this.musicList[this.musicTileManager.scrollIndex]
+        const soundKey = `preview-${music.folder}/${music.preview}`
+        if (this.cache.audio.exists(soundKey)) {
+            this.sound.stopByKey(soundKey)
         }
     }
 }

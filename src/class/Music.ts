@@ -11,6 +11,7 @@ export interface Music {
     noter: string
     folder: string
     jacket?: string
+    preview?: string
     beatmap_4k_1?: Beatmap
     beatmap_4k_2?: Beatmap
     beatmap_4k_3?: Beatmap
