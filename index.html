@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta http-equiv="cleartype" content="on" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="theme-color" content="#000000" />
+
+    <link rel="shortcut icon" href="./favicon.svg" type="image/svg" />
+
+    <link rel="manifest" href="./manifest.json" />
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="RICORA Beats" />
+    <link rel="apple-touch-icon" href="./icon-256.png" />
+
+    <meta property="og:url" content="https://beats.tus-ricora.com" />
+    <meta property="og:title" content="RICORA Beats" />
+    <meta property="og:description" content="RICORA Beats" />
+
+    <title>RICORA Beats</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+        }
+
+        #game-app {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+    </style>
+    <script>
+        navigator.serviceWorker.register("./service-worker.js")
+    </script>
+</head>
+
+<body>
+    <div id="game-app"></div>
+    <script src="./bundle.js"></script>
+</body>
+
+</html>
