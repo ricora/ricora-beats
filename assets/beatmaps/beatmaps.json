@@ -1,0 +1,89 @@
+[{
+        "title": "test",
+        "artist": "作曲者",
+        "noter": "譜面作者",
+        "folder": "test",
+        "beatmap_7k_1": {
+            "filename": "test7.bme",
+            "playlevel": 1
+        }
+    },
+    {
+        "title": "LOVE☆TUNE",
+        "artist": "ODAMAKI",
+        "noter": "ODAMAKI",
+        "folder": "ODAMAKI - LOVE☆TUNE",
+        "jacket": "jacket.png",
+        "beatmap_4k_1": {
+            "filename": "easyKey4LOVETUNE.bme",
+            "playlevel": 1
+        },
+        "beatmap_5k_1": {
+            "filename": "easyKey4LOVETUNE.bme",
+            "playlevel": 1
+        },
+        "beatmap_6k_1": {
+            "filename": "easyKey4LOVETUNE.bme",
+            "playlevel": 1
+        },
+        "beatmap_7k_1": {
+            "filename": "easyKey4LOVETUNE.bme",
+            "playlevel": 1
+        },
+        "beatmap_4k_2": {
+            "filename": "normalKey4LOVETUNE.bme",
+            "playlevel": 3
+        },
+        "beatmap_5k_2": {
+            "filename": "normalKey5LOVETUNE.bme",
+            "playlevel": 3
+        },
+        "beatmap_6k_2": {
+            "filename": "normalKey6LOVETUNE.bme",
+            "playlevel": 3
+        },
+        "beatmap_7k_2": {
+            "filename": "normalKey7LOVETUNE.bme",
+            "playlevel": 3
+        }
+    },
+    {
+        "title": "てんてこまいまい",
+        "artist": "ODAMAKI",
+        "noter": "ODAMAKI",
+        "folder": "ODAMAKI - てんてこまいまい",
+        "jacket": "jacket.png",
+        "beatmap_4k_1": {
+            "filename": "easyKey4tentekomaimai.bme",
+            "playlevel": 1
+        },
+        "beatmap_5k_1": {
+            "filename": "easyKey4tentekomaimai.bme",
+            "playlevel": 1
+        },
+        "beatmap_6k_1": {
+            "filename": "easyKey4tentekomaimai.bme",
+            "playlevel": 1
+        },
+        "beatmap_7k_1": {
+            "filename": "easyKey4tentekomaimai.bme",
+            "playlevel": 1
+        },
+        "beatmap_4k_2": {
+            "filename": "normalKey4tentekomaimai.bme",
+            "playlevel": 4
+        },
+        "beatmap_5k_2": {
+            "filename": "normalKey5tentekomaimai.bme",
+            "playlevel": 4
+        },
+        "beatmap_6k_2": {
+            "filename": "normalKey6tentekomaimai.bme",
+            "playlevel": 4
+        },
+        "beatmap_7k_2": {
+            "filename": "normalKey7tentekomaimai.bme",
+            "playlevel": 4
+        }
+    }
+]
