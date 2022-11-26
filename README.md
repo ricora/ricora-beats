@@ -1,4 +1,4 @@
-# rhythm-game
+# RICORA Beats
 
 ## Development
 ### Install
@@ -6,7 +6,7 @@
 npm install
 ```
 
-### Run server
+### Run development server
 ```
 npm run dev
 ```
