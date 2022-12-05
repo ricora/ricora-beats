@@ -23,8 +23,6 @@ export class Chart {
         this.timing = bms.Timing.fromBMSChart(this.bmsChart)
 
         this.info = this.bmsChart.headers._data
-
-        console.log(this.bmsChart, this.info)
     }
 
     public secondsToBeat(sec: number): number {
