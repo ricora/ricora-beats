@@ -55,8 +55,10 @@ export class TitleScene extends Phaser.Scene {
             on: true,
         })
 
+        this.add.image(640, 260, "logo").setScale(0.9)
+
         this.startText = this.add
-            .text(640, 520, "touch to start", {
+            .text(640, 550, "touch to start", {
                 fontFamily: "Bungee",
                 fontSize: "80px",
                 color: "#fafafa",
@@ -66,6 +68,8 @@ export class TitleScene extends Phaser.Scene {
             .setDepth(10)
             .setAlpha(1)
             .setScale(0.5)
+
+        this.add.zone(640, 720, 1280, 640).setOrigin(0.5, 1)
             .setInteractive({
                 useHandCursor: true,
             })

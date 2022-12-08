@@ -8,6 +8,8 @@ export class LoadingScene extends Phaser.Scene {
     }
 
     preload() {
+        this.load.image("logo", "./assets/skin/logo.png")
+
         this.load.image("frame-title", "./assets/skin/frame_title.png")
         this.load.image("frame-detail", "./assets/skin/frame_detail.png")
         this.load.image("frame-button", "./assets/skin/frame_button.png")
