@@ -14,6 +14,8 @@ export class LoadingScene extends Phaser.Scene {
         this.load.image("frame-detail", "./assets/skin/frame_detail.png")
         this.load.image("frame-button", "./assets/skin/frame_button.png")
 
+        this.load.image("frame-vertical", "./assets/skin/frame_vertical.png")
+
         this.load.image("caret-left", "./assets/skin/caret_left.png")
         this.load.image("caret-right", "./assets/skin/caret_right.png")
 

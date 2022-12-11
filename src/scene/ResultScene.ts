@@ -13,6 +13,7 @@ export class ResultScene extends Phaser.Scene {
     private noterText: Phaser.GameObjects.Text
     private scoreText: Phaser.GameObjects.Text
     private scoreLabelText: Phaser.GameObjects.Text
+    private oldScoreLabelText: Phaser.GameObjects.Text
     private oldScoreText: Phaser.GameObjects.Text
     private oldScoreDiffText: Phaser.GameObjects.Text
     private comboText: Phaser.GameObjects.Text
@@ -22,6 +23,7 @@ export class ResultScene extends Phaser.Scene {
 
     private titleFrame: Phaser.GameObjects.Image
     private detailFrame: Phaser.GameObjects.Image
+    private subDetailFrame: Phaser.GameObjects.Image
 
     private musicIcon: Phaser.GameObjects.Image
     private artistIcon: Phaser.GameObjects.Image
@@ -136,8 +138,14 @@ export class ResultScene extends Phaser.Scene {
             .setOrigin(0, 0.5)
             .setDepth(-2)
 
+        this.subDetailFrame = this.add
+            .image(530, 500, "frame-vertical")
+            .setScale(0.67, 0)
+            .setDepth(-2)
+            .setOrigin(0, 0.5)
+
         this.tweens.add({
-            targets: [this.titleFrame, this.detailFrame],
+            targets: [this.titleFrame, this.detailFrame, this.subDetailFrame],
             delay: 200,
             scaleY: {
                 value: 0.67,
@@ -216,8 +224,18 @@ export class ResultScene extends Phaser.Scene {
             .setOrigin(1, 0.5)
             .setAlpha(0)
 
+        this.oldScoreLabelText = this.add
+            .text(550, 340, "BEST SCORE", {
+                fontFamily: "Oswald",
+                fontSize: "18px",
+                color: "#888888",
+                align: "center",
+            })
+            .setOrigin(0, 0.5)
+            .setAlpha(0)
+
         this.oldScoreText = this.add
-            .text(640, 330, `${this.oldPlayResult.score.toFixed(2)} %`, {
+            .text(680, 375, `${this.oldPlayResult.score.toFixed(2)} %`, {
                 fontFamily: "Oswald",
                 fontSize: "30px",
                 color: "#fafafa",
@@ -229,7 +247,7 @@ export class ResultScene extends Phaser.Scene {
         const scoreDiff = this.playResult.score - this.oldPlayResult.score
 
         this.oldScoreDiffText = this.add
-            .text(640, 370, `${scoreDiff >= 0 ? "+" : ""}${scoreDiff.toFixed(2)} %`, {
+            .text(680, 410, `${scoreDiff >= 0 ? "+" : ""}${scoreDiff.toFixed(2)} %`, {
                 fontFamily: "Oswald",
                 fontSize: "30px",
                 color: scoreDiff >= 0 ? "#fafa00" : "#fa0000",
@@ -347,6 +365,7 @@ export class ResultScene extends Phaser.Scene {
                 this.scoreLabelText,
                 this.oldScoreText,
                 this.oldScoreDiffText,
+                this.oldScoreLabelText,
                 this.comboText,
                 this.comboLabelText,
                 this.judgeTexts[0],
