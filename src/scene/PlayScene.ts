@@ -36,6 +36,7 @@ export class PlayScene extends Phaser.Scene {
     private noteSpeed: number = 100
 
     private keys: Phaser.Input.Keyboard.Key[]
+    private keyLabels: Phaser.GameObjects.Text[]
 
     private screenMask: Phaser.GameObjects.Rectangle
 
@@ -273,6 +274,7 @@ export class PlayScene extends Phaser.Scene {
         this.keyFlashTweens = []
         this.holdParticleEmitters = []
         this.inputZones = []
+        this.keyLabels = []
 
         for (const laneIndex of Array(7).keys()) {
             let positionX = -1280
@@ -348,6 +350,19 @@ export class PlayScene extends Phaser.Scene {
                     .on("pointerout", () => {
                         this.isTouching[laneIndex] = false
                     })
+            )
+            this.keyLabels.push(
+                this.add.text(positionX, 680, ["S", "D", "F", "SPACE", "J", "K", "L"][laneIndex], {
+                    fontFamily: "Bungee",
+                    fontSize: "50px",
+                    color: "#fafafa",
+                    align: "center",
+                })
+                    .setOrigin(0.5)
+                    .setDepth(0)
+                    .setAlpha(0.6)
+                    .setScale(0.5)
+
             )
         }
 
@@ -574,6 +589,13 @@ export class PlayScene extends Phaser.Scene {
                 this.tweens.add({
                     targets: this.startText,
                     y: 460,
+                    ease: "Linear",
+                    alpha: { value: 0, duration: 300, ease: "Linear" },
+                    duration: 300,
+                    paused: false,
+                })
+                this.tweens.add({
+                    targets: this.keyLabels,
                     ease: "Linear",
                     alpha: { value: 0, duration: 300, ease: "Linear" },
                     duration: 300,
