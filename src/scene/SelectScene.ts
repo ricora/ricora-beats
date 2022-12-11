@@ -324,6 +324,31 @@ export class SelectScene extends Phaser.Scene {
                 helpButton.setAlpha(0.5)
             })
 
+        const fullScreenButton = this.add
+            .image(1275, 5, "icon-maximize")
+            .setOrigin(1, 0)
+            .setAlpha(0.5)
+            .setDepth(1)
+            .setInteractive({
+                useHandCursor: true,
+            })
+            .on("pointerdown", () => {
+                if (this.scale.isFullscreen) {
+                    fullScreenButton.setTexture("icon-maximize")
+
+                    this.scale.stopFullscreen()
+                } else {
+                    fullScreenButton.setTexture("icon-minimize")
+                    this.scale.startFullscreen()
+                }
+            })
+            .on("pointerover", () => {
+                fullScreenButton.setAlpha(1)
+            })
+            .on("pointerout", () => {
+                fullScreenButton.setAlpha(0.5)
+            })
+
         const ascScrollZone = this.add
             .zone(100, 100, 570, 200)
             .setOrigin(0, 0)
@@ -429,7 +454,7 @@ export class SelectScene extends Phaser.Scene {
         const music = this.musicList[this.musicTileManager.scrollIndex]
         const soundKey = `preview-${music.folder}/${music.preview}`
         if (this.cache.audio.exists(soundKey)) {
-            this.sound.play(soundKey, {loop: true})
+            this.sound.play(soundKey, { loop: true })
         }
     }
 

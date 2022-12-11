@@ -57,6 +57,31 @@ export class TitleScene extends Phaser.Scene {
 
         this.add.image(640, 260, "logo").setScale(0.9)
 
+        const fullScreenButton = this.add
+            .image(1275, 5, "icon-maximize")
+            .setOrigin(1, 0)
+            .setAlpha(0.5)
+            .setDepth(1)
+            .setInteractive({
+                useHandCursor: true,
+            })
+            .on("pointerdown", () => {
+                if (this.scale.isFullscreen) {
+                    fullScreenButton.setTexture("icon-maximize")
+
+                    this.scale.stopFullscreen()
+                } else {
+                    fullScreenButton.setTexture("icon-minimize")
+                    this.scale.startFullscreen()
+                }
+            })
+            .on("pointerover", () => {
+                fullScreenButton.setAlpha(1)
+            })
+            .on("pointerout", () => {
+                fullScreenButton.setAlpha(0.5)
+            })
+
         this.startText = this.add
             .text(640, 550, "touch to start", {
                 fontFamily: "Bungee",
@@ -69,7 +94,9 @@ export class TitleScene extends Phaser.Scene {
             .setAlpha(1)
             .setScale(0.5)
 
-        this.add.zone(640, 720, 1280, 640).setOrigin(0.5, 1)
+        this.add
+            .zone(640, 720, 1280, 640)
+            .setOrigin(0.5, 1)
             .setInteractive({
                 useHandCursor: true,
             })
