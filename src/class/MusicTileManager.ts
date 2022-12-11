@@ -57,12 +57,12 @@ export class MusicTileManager {
                     targets: this.musicTiles[musicTileIndex],
                     x: {
                         value: 70 + 10 * musicTileIndex,
-                        duration: 200,
+                        duration: 100,
                         ease: "Quintic.Out",
                     },
                     y: {
                         value: 20 + 100 * musicTileIndex,
-                        duration: 200,
+                        duration: 100,
                         ease: "Quintic.Out",
                     },
                     onStart: () => {
@@ -78,12 +78,12 @@ export class MusicTileManager {
                     targets: this.musicTiles[musicTileIndex],
                     x: {
                         value: 70 + 10 * musicTileIndex,
-                        duration: 200,
+                        duration: 100,
                         ease: "Quintic.Out",
                     },
                     y: {
                         value: 20 + 100 * musicTileIndex,
-                        duration: 200,
+                        duration: 100,
                         ease: "Quintic.Out",
                     },
                     onStart: () => {
