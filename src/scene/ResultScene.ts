@@ -6,12 +6,15 @@ export class ResultScene extends Phaser.Scene {
     private debugGUI: DebugGUI
 
     private playResult: PlayResult
+    private oldPlayResult: PlayResult
 
     private titleText: Phaser.GameObjects.Text
     private artistText: Phaser.GameObjects.Text
     private noterText: Phaser.GameObjects.Text
     private scoreText: Phaser.GameObjects.Text
     private scoreLabelText: Phaser.GameObjects.Text
+    private oldScoreText: Phaser.GameObjects.Text
+    private oldScoreDiffText: Phaser.GameObjects.Text
     private comboText: Phaser.GameObjects.Text
     private comboLabelText: Phaser.GameObjects.Text
     private judgeTexts: Phaser.GameObjects.Text[]
@@ -69,6 +72,21 @@ export class ResultScene extends Phaser.Scene {
                 score: 95.21,
                 maxCombo: 1234,
             })
+        this.oldPlayResult = JSON.parse(
+            localStorage.getItem(
+                `play_result_${this.playResult.music.folder}_${this.playResult.playConfig.key}_${this.playResult.playConfig.difficulty}`
+            ) as string
+        )
+        if (this.oldPlayResult === null) {
+            this.oldPlayResult = { ...this.playResult }
+            this.oldPlayResult.score = 0
+        }
+        if (this.oldPlayResult.score <= this.playResult.score) {
+            localStorage.setItem(
+                `play_result_${this.playResult.music.folder}_${this.playResult.playConfig.key}_${this.playResult.playConfig.difficulty}`,
+                JSON.stringify(this.playResult)
+            )
+        }
     }
     create() {
         const { width, height } = this.game.canvas
@@ -198,6 +216,28 @@ export class ResultScene extends Phaser.Scene {
             .setOrigin(1, 0.5)
             .setAlpha(0)
 
+        this.oldScoreText = this.add
+            .text(640, 330, `${this.oldPlayResult.score.toFixed(2)} %`, {
+                fontFamily: "Oswald",
+                fontSize: "30px",
+                color: "#fafafa",
+                align: "center",
+            })
+            .setOrigin(1, 0.5)
+            .setAlpha(0)
+
+        const scoreDiff = this.playResult.score - this.oldPlayResult.score
+
+        this.oldScoreDiffText = this.add
+            .text(640, 370, `${scoreDiff >= 0 ? "+" : ""}${scoreDiff.toFixed(2)} %`, {
+                fontFamily: "Oswald",
+                fontSize: "30px",
+                color: scoreDiff >= 0 ? "#fafa00" : "#fa0000",
+                align: "center",
+            })
+            .setOrigin(1, 0.5)
+            .setAlpha(0)
+
         this.scoreLabelText = this.add
             .text(170, 350, "ACC.", {
                 fontFamily: "Oswald",
@@ -305,6 +345,8 @@ export class ResultScene extends Phaser.Scene {
                 this.noterIcon,
                 this.scoreText,
                 this.scoreLabelText,
+                this.oldScoreText,
+                this.oldScoreDiffText,
                 this.comboText,
                 this.comboLabelText,
                 this.judgeTexts[0],
@@ -338,7 +380,8 @@ export class ResultScene extends Phaser.Scene {
             .on("pointerdown", () => {
                 this.sound.play("cancel")
                 this.cameras.main.fadeOut(500)
-            }).on("pointerover", () => {
+            })
+            .on("pointerover", () => {
                 this.backButton.setAlpha(1)
             })
             .on("pointerout", () => {

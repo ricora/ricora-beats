@@ -5,6 +5,7 @@ import { PlayConfig } from "../class/PlayConfig"
 import { Music, Beatmap } from "../class/Music"
 import { MusicTile } from "../class/MusicTile"
 import { MusicTileManager } from "../class/MusicTileManager"
+import { PlayResult } from "../class/PlayResult"
 
 type DIFFICULTY = 1 | 2 | 3 | 4
 type KEY = 4 | 5 | 6 | 7
@@ -24,6 +25,8 @@ export class SelectScene extends Phaser.Scene {
 
     private beatmapLevelText: Phaser.GameObjects.Text
     private nonPlayableText: Phaser.GameObjects.Text
+
+    private bestScoreText: Phaser.GameObjects.Text
 
     private jacketImage: Phaser.GameObjects.Image
 
@@ -126,24 +129,29 @@ export class SelectScene extends Phaser.Scene {
             .setScale(0.5)
 
         this.add
-            .text(975, 460, "LEVEL", {
+            .rectangle(1030, 415, 135, 40, 0x000000, 40)
+            .setOrigin(0, 1)
+            .setDepth(3)
+
+        this.add
+            .text(1045, 415, "LEVEL", {
                 fontFamily: "Oswald",
                 fontSize: "50px",
                 color: "#bbbbbb",
             })
             .setOrigin(0, 1)
             .setScale(0.5)
-            .setDepth(3)
+            .setDepth(4)
 
         this.beatmapLevelText = this.add
-            .text(1085, 463, "?", {
+            .text(1155, 418, "?", {
                 fontFamily: "Oswald",
                 fontSize: "75px",
                 color: "#fafafa",
             })
             .setOrigin(1, 1)
             .setScale(0.5)
-            .setDepth(3)
+            .setDepth(4)
 
         this.nonPlayableText = this.add
             .text(1030, 500, "この譜面はプレイできません。", {
@@ -154,6 +162,26 @@ export class SelectScene extends Phaser.Scene {
             .setOrigin(0.5, 0.5)
             .setScale(0.5)
             .setDepth(3)
+
+        this.add
+            .text(895, 460, "BEST SCORE", {
+                fontFamily: "Oswald",
+                fontSize: "45px",
+                color: "#bbbbbb",
+            })
+            .setOrigin(0, 1)
+            .setScale(0.5)
+            .setDepth(4)
+
+        this.bestScoreText = this.add
+            .text(1165, 463, "", {
+                fontFamily: "Oswald",
+                fontSize: "70px",
+                color: "#fafafa",
+            })
+            .setOrigin(1, 1)
+            .setScale(0.5)
+            .setDepth(4)
 
         this.diffButtons = []
         for (const diffIndex of Array(4).keys()) {
@@ -435,7 +463,7 @@ export class SelectScene extends Phaser.Scene {
         } else {
             this.playButton.setTexture("play-button-disable").setAlpha(0.3)
             this.nonPlayableText.setVisible(true)
-            this.beatmapLevelText.setText("?")
+            this.beatmapLevelText.setText("-")
             this.playButtonLight.setAlpha(0)
         }
 
@@ -447,6 +475,17 @@ export class SelectScene extends Phaser.Scene {
                 .setDisplaySize(270, 270)
         } else {
             this.jacketImage.setTexture("jacket-no-image").setDisplaySize(270, 270)
+        }
+        const bestPlayResult: PlayResult | null = JSON.parse(
+            localStorage.getItem(
+                `play_result_${this.musicTileManager.getMusic().folder}_${this.key}_${this.difficulty
+                }`
+            ) as string
+        )
+        if (bestPlayResult !== null) {
+            this.bestScoreText.setText(`${bestPlayResult.score.toFixed(2)} %`)
+        } else {
+            this.bestScoreText.setText("-    %")
         }
     }
 
