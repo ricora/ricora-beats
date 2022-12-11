@@ -111,6 +111,15 @@ export class TitleScene extends Phaser.Scene {
             }
         )
         this.cameras.main.fadeIn(500)
+
+        if (
+            navigator.userAgent.match(/iPhone|Android.+Mobile/) &&
+            !window.matchMedia("(display-mode: fullscreen)").matches
+        ) {
+            alert(
+                "当サイトはPWAに対応しております。\nWebブラウザのメニューからホーム画面に追加をすることで、フルスクリーンでさらに快適に楽しむことができます。"
+            )
+        }
     }
 
     update(time: number, dt: number) {
