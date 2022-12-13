@@ -12,22 +12,6 @@ export class MusicTileManager {
     constructor(public scene: Phaser.Scene, scrollIndex: number) {
         this.musicList = scene.cache.json.get("music-list")
 
-        for (const music of this.musicList) {
-            if (music.jacket !== undefined) {
-                scene.load.image(
-                    `jacket-${music.folder}/${music.jacket}`,
-                    `./assets/beatmaps/${music.folder}/${music.jacket}`
-                )
-            }
-            if (music.preview !== undefined) {
-                scene.load.audio(
-                    `preview-${music.folder}/${music.preview}`,
-                    `./assets/beatmaps/${music.folder}/${music.preview}`
-                )
-            }
-        }
-        scene.load.start()
-
         this.scrollIndex = scrollIndex
 
         this.selectedMusicTile = scene.add

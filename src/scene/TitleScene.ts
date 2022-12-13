@@ -19,6 +19,25 @@ export class TitleScene extends Phaser.Scene {
         })
     }
 
+    preload() {
+        const musicList = this.cache.json.get("music-list")
+
+        for (const music of musicList) {
+            if (music.jacket !== undefined) {
+                this.load.image(
+                    `jacket-${music.folder}/${music.jacket}`,
+                    `./assets/beatmaps/${music.folder}/${music.jacket}`
+                )
+            }
+            if (music.preview !== undefined) {
+                this.load.audio(
+                    `preview-${music.folder}/${music.preview}`,
+                    `./assets/beatmaps/${music.folder}/${music.preview}`
+                )
+            }
+        }
+    }
+
     create() {
         const { width, height } = this.game.canvas
 

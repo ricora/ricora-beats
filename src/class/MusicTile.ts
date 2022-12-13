@@ -8,6 +8,7 @@ export class MusicTile extends Phaser.GameObjects.Container {
     private artistIcon: Phaser.GameObjects.Image
     private noterText: Phaser.GameObjects.Text
     private noterIcon: Phaser.GameObjects.Image
+    private jacketImage: Phaser.GameObjects.Image
 
     constructor(public scene: Phaser.Scene) {
         // Phaser.GameObjects.Container
@@ -38,8 +39,8 @@ export class MusicTile extends Phaser.GameObjects.Container {
 
         this.titleText = new Phaser.GameObjects.Text(
             this.scene,
-            60 + 50,
-            12,
+            60 + 50 + 40,
+            11,
             "",
             titleTextStyle
         )
@@ -67,8 +68,8 @@ export class MusicTile extends Phaser.GameObjects.Container {
         this.add(this.noterText)
 
         this.titleIcon = scene.add
-            .image(50, this.frame.height / 2, "icon-music")
-            .setScale(0.6)
+            .image(123, 27, "icon-music")
+            .setScale(0.5)
             .setOrigin(0.5)
         this.add(this.titleIcon)
 
@@ -85,6 +86,12 @@ export class MusicTile extends Phaser.GameObjects.Container {
             .setOrigin(0, 1)
 
         this.add(this.noterIcon)
+
+        this.jacketImage = scene.add
+            .image(54, this.frame.height / 2, "jacket-no-image")
+            .setDisplaySize(74, 74)
+            .setOrigin(0.5)
+        this.add(this.jacketImage)
     }
 
     public setTitle(title: string) {
@@ -102,5 +109,10 @@ export class MusicTile extends Phaser.GameObjects.Container {
         this.titleText.setText(music.title)
         this.artistText.setText(music.artist)
         this.noterText.setText(music.noter)
+        const jacketTextureKey =
+            music.jacket !== undefined
+                ? `jacket-${music.folder}/${music.jacket}`
+                : "jacket-no-image"
+        this.jacketImage.setTexture(jacketTextureKey).setDisplaySize(74, 74)
     }
 }
