@@ -154,7 +154,7 @@ export class SelectScene extends Phaser.Scene {
             .setDepth(4)
 
         this.nonPlayableText = this.add
-            .text(1030, 500, "この譜面はプレイできません。", {
+            .text(1030, 500, "この譜面は現在プレーできません。", {
                 fontFamily: "Noto Sans JP",
                 fontSize: "35px",
                 color: "#f0f0f0",
@@ -274,7 +274,7 @@ export class SelectScene extends Phaser.Scene {
 
         this.add.image(830, 650, "config-frame").setOrigin(0, 0.5)
         this.add
-            .text(830 + 400 * 0.2, 680, "プレイ設定", {
+            .text(830 + 400 * 0.2, 680, "プレー設定", {
                 fontFamily: "Noto Sans JP",
                 fontSize: "26px",
                 color: "#f0f0f0",

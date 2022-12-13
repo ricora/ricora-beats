@@ -53,7 +53,7 @@ export class CreditScene extends Phaser.Scene {
             "グラフィック",
             "プログラム",
             "譜面",
-            "デバック・テストプレイ",
+            "デバック・テストプレー",
             "",
             "",
         ]

@@ -44,7 +44,7 @@ export class ConfigScene extends Phaser.Scene {
             .setScale(0.8)
 
         this.add
-            .text(width / 2 - 260 + 60, height / 2 - 230, "プレイ設定", {
+            .text(width / 2 - 260 + 60, height / 2 - 230, "プレー設定", {
                 fontFamily: "Noto Sans JP",
                 fontSize: "55px",
                 color: "#ffffff",
