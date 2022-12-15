@@ -406,7 +406,7 @@ export class SelectScene extends Phaser.Scene {
             .setInteractive({
                 useHandCursor: true,
             })
-            .on("pointerdown", () => {
+            .once("pointerdown", () => {
                 if (this.isPlayable) {
                     this.sound.play("decide")
                     this.stopPreviewSound()

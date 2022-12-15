@@ -119,7 +119,7 @@ export class TitleScene extends Phaser.Scene {
             .setInteractive({
                 useHandCursor: true,
             })
-            .on("pointerdown", () => {
+            .once("pointerdown", () => {
                 this.sound.play("decide")
                 this.cameras.main.fadeOut(800)
             })

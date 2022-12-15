@@ -424,7 +424,7 @@ export class PlayScene extends Phaser.Scene {
             .setInteractive({
                 useHandCursor: true,
             })
-            .on("pointerdown", () => {
+            .once("pointerdown", () => {
                 this.sound.play("cancel")
                 this.cameras.main.fadeOut(500)
                 this.hasRetired = true
