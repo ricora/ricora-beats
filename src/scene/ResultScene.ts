@@ -29,6 +29,8 @@ export class ResultScene extends Phaser.Scene {
     private artistIcon: Phaser.GameObjects.Image
     private noterIcon: Phaser.GameObjects.Image
 
+    private jacketImage: Phaser.GameObjects.Image
+
     private keyIcon: Phaser.GameObjects.Image
     private diffIcon: Phaser.GameObjects.Image
 
@@ -182,6 +184,16 @@ export class ResultScene extends Phaser.Scene {
             })
             .setOrigin(0, 0.5)
             .setScale(0.5)
+            .setAlpha(0)
+
+        this.jacketImage = this.add
+            .image(
+                750,
+                125,
+                `jacket-${this.playResult.music.folder}/${this.playResult.music.jacket}`
+            )
+            .setDisplaySize(90, 90)
+            .setOrigin(0.5)
             .setAlpha(0)
 
         this.keyIcon = this.add
@@ -361,6 +373,7 @@ export class ResultScene extends Phaser.Scene {
                 this.musicIcon,
                 this.artistIcon,
                 this.noterIcon,
+                this.playResult.music.jacket !== undefined ? this.jacketImage : null,
                 this.scoreText,
                 this.scoreLabelText,
                 this.oldScoreText,
