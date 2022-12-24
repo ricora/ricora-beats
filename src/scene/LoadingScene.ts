@@ -131,6 +131,9 @@ export class LoadingScene extends Phaser.Scene {
 
         this.load.json("music-list", "./assets/beatmaps/beatmaps.json")
 
+        this.load.html("login-form", "./assets/html/login-form.html")
+        this.load.html("register-form", "./assets/html/register-form.html")
+
         WebFont.load({
             google: {
                 families: ["Noto+Sans+JP:900", "Bungee", "Fredoka+One", "Oswald:700"],
