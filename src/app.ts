@@ -11,6 +11,9 @@ const config: Phaser.Types.Core.GameConfig = {
         width: 1280,
         height: 720,
     },
+    dom: {
+        createContainer: true
+    },
     parent: "game-app",
     plugins: {
         global: [
