@@ -42,32 +42,29 @@ export class LoginScene extends Phaser.Scene {
             loginFormElement.addEventListener("submit", async (event) => {
                 event.preventDefault()
                 const formData = new FormData(loginFormElement)
-                const options = {
-                    method: "POST",
-                    body: formData,
-                }
-                const url = new URL(
-                    "/token/",
-                    process.env.SERVER_URL as string
-                ).toString()
-                const response = await fetch(url, options)
-                if (response.ok) {
-                    const responseJSON = await response.json()
-                    console.log(responseJSON.access_token, responseJSON.token_type)
+                const tokenResponse = await fetch(
+                    new URL("/token/", process.env.SERVER_URL as string).toString(),
+                    {
+                        method: "POST",
+                        body: formData,
+                    }
+                )
+                if (tokenResponse.ok) {
+                    const tokenResponseJSON = await tokenResponse.json()
                     localStorage.setItem(
                         "access_token",
-                        JSON.stringify(responseJSON.access_token)
+                        JSON.stringify(tokenResponseJSON.access_token)
                     )
                     localStorage.setItem(
                         "token_type",
-                        JSON.stringify(responseJSON.token_type)
+                        JSON.stringify(tokenResponseJSON.token_type)
                     )
                     this.sound.play("decide")
                     this.scene.stop()
                     this.scene.resume("select")
-                } else if (response.status === 401) {
-                    const responseJSON = await response.json()
-                    alert(responseJSON.detail)
+                } else if (tokenResponse.status === 401) {
+                    const tokenResponseJSON = await tokenResponse.json()
+                    alert(tokenResponseJSON.detail)
                 }
             })
         }
@@ -79,26 +76,24 @@ export class LoginScene extends Phaser.Scene {
             registerFormElement.addEventListener("submit", async (event) => {
                 event.preventDefault()
                 const formData = new FormData(registerFormElement)
-                const options = {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(Object.fromEntries(formData)),
-                }
-                const url = new URL(
-                    "/users/",
-                    process.env.SERVER_URL as string
-                ).toString()
-                const response = await fetch(url, options)
-                if (response.ok) {
-                    const responseJSON = await response.json()
+                const registerResponse = await fetch(
+                    new URL("/users/", process.env.SERVER_URL as string).toString(),
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(Object.fromEntries(formData)),
+                    }
+                )
+                if (registerResponse.ok) {
+                    const registerResponseJSON = await registerResponse.json()
                     alert(
-                        `アカウントを作成しました。\nuser id: ${responseJSON.id}\nscreen name: ${responseJSON.screen_name}\nemail: ${responseJSON.email}`
+                        `アカウントを作成しました。\nuser id: ${registerResponseJSON.id}\nscreen name: ${registerResponseJSON.screen_name}\nemail: ${registerResponseJSON.email}`
                     )
-                } else if (response.status === 400) {
-                    const responseJSON = await response.json()
-                    alert(responseJSON.detail)
+                } else if (registerResponse.status === 400) {
+                    const registerResponseJSON = await registerResponse.json()
+                    alert(registerResponseJSON.detail)
                 }
             })
         }
@@ -193,6 +188,5 @@ export class LoginScene extends Phaser.Scene {
         if (loginFormElement && loginFormElement.style.transformOrigin !== "") {
             loginFormElement.style.transformOrigin = ""
         }
-        //console.log(this.scale.displayScale.x)
     }
 }

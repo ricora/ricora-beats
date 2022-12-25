@@ -301,12 +301,17 @@ export class SelectScene extends Phaser.Scene {
             })
             .setOrigin(0.5, 0.5)
             .setScale(0.5)
-            .setAlpha(0.3)
         this.add
             .image(830 + 400 * 0.5, 640, "icon-ir")
             .setOrigin(0.5, 0.5)
             .setDepth(1)
-            .setAlpha(0.3)
+            .setInteractive({
+                useHandCursor: true,
+            })
+            .on("pointerdown", () => {
+                this.sound.play("select")
+                this.scene.run("login")
+            })
         this.add
             .text(830 + 400 * 0.8, 680, "クレジット", {
                 fontFamily: "Noto Sans JP",
