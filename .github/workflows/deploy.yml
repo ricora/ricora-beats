@@ -8,6 +8,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      SERVER_URL: ${{ secrets.SERVER_URL }}
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
