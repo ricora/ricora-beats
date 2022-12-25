@@ -6,6 +6,7 @@ import { Music, Beatmap } from "../class/Music"
 import { MusicTile } from "../class/MusicTile"
 import { MusicTileManager } from "../class/MusicTileManager"
 import { PlayResult } from "../class/PlayResult"
+import { User } from "../class/User"
 
 type DIFFICULTY = 1 | 2 | 3 | 4
 type KEY = 4 | 5 | 6 | 7
@@ -22,7 +23,7 @@ export class SelectScene extends Phaser.Scene {
 
     private selectedDiffIcon: Phaser.GameObjects.Image
     private selectedKeyIcon: Phaser.GameObjects.Image
-
+    private selectedMusicTitleText: Phaser.GameObjects.Text
     private beatmapLevelText: Phaser.GameObjects.Text
     private nonPlayableText: Phaser.GameObjects.Text
 
@@ -38,11 +39,16 @@ export class SelectScene extends Phaser.Scene {
     private musicList: Music[]
     private musicTileManager: MusicTileManager
 
+    private userScreenNameText: Phaser.GameObjects.Text
+    private userStatusText: Phaser.GameObjects.Text
+
     private backgroundCamera: Phaser.Cameras.Scene2D.Camera
 
     private particleEmitter: Phaser.GameObjects.Particles.ParticleEmitter
 
     private playConfig: PlayConfig
+
+    private user: User
     constructor() {
         super("select")
 
@@ -69,6 +75,15 @@ export class SelectScene extends Phaser.Scene {
                 difficulty: 1,
             })
         this.game.sound.stopAll()
+
+        this.user = new User(
+            JSON.parse(localStorage.getItem("user") as string) || {
+                id: 0,
+                screen_name: "Guest",
+                rank: 0,
+                performance_point: 0,
+            }
+        )
     }
     create() {
         const { width, height } = this.game.canvas
@@ -110,31 +125,34 @@ export class SelectScene extends Phaser.Scene {
 
         this.add.image(52, 635, "frame-title").setScale(0.7, 0.45).setOrigin(0, 0)
 
+        this.add.image(80, 15 + 18, "icon-adjustments").setOrigin(0, 0.5)
+        this.add.image(80, 635 + 18, "icon-adjustments").setOrigin(0, 0.5)
+
         this.add
-            .text(80, 20, "難易度を変更", {
+            .text(120, 15 + 18, "難易度を変更", {
                 fontFamily: "Noto Sans JP",
-                fontSize: "30px",
+                fontSize: "34px",
                 color: "#f0f0f0",
             })
-            .setOrigin(0, 0)
+            .setOrigin(0, 0.5)
             .setScale(0.5)
 
         this.add
-            .text(80, 640, "使用するキーの数を変更", {
+            .text(120, 635 + 18, "使用するキーの数を変更", {
                 fontFamily: "Noto Sans JP",
-                fontSize: "30px",
+                fontSize: "34px",
                 color: "#f0f0f0",
             })
-            .setOrigin(0, 0)
+            .setOrigin(0, 0.5)
             .setScale(0.5)
 
         this.add
-            .rectangle(1030, 415, 135, 40, 0x000000, 40)
+            .rectangle(1030, 415 + 15, 120, 40, 0x000000, 40)
             .setOrigin(0, 1)
             .setDepth(3)
 
         this.add
-            .text(1045, 415, "LEVEL", {
+            .text(1045, 415 + 15, "LEVEL", {
                 fontFamily: "Oswald",
                 fontSize: "50px",
                 color: "#bbbbbb",
@@ -144,7 +162,7 @@ export class SelectScene extends Phaser.Scene {
             .setDepth(4)
 
         this.beatmapLevelText = this.add
-            .text(1155, 418, "?", {
+            .text(1139, 418 + 15, "", {
                 fontFamily: "Oswald",
                 fontSize: "75px",
                 color: "#fafafa",
@@ -154,7 +172,7 @@ export class SelectScene extends Phaser.Scene {
             .setDepth(4)
 
         this.nonPlayableText = this.add
-            .text(1030, 500, "この譜面は現在プレーできません。", {
+            .text(1030, 500 + 30, "この譜面は現在プレーできません。", {
                 fontFamily: "Noto Sans JP",
                 fontSize: "35px",
                 color: "#f0f0f0",
@@ -164,7 +182,7 @@ export class SelectScene extends Phaser.Scene {
             .setDepth(3)
 
         this.add
-            .text(895, 460, "BEST SCORE", {
+            .text(895, 460 + 18, "BEST SCORE", {
                 fontFamily: "Oswald",
                 fontSize: "45px",
                 color: "#bbbbbb",
@@ -174,7 +192,7 @@ export class SelectScene extends Phaser.Scene {
             .setDepth(4)
 
         this.bestScoreText = this.add
-            .text(1165, 463, "", {
+            .text(1165, 463 + 20, "", {
                 fontFamily: "Oswald",
                 fontSize: "70px",
                 color: "#fafafa",
@@ -241,34 +259,50 @@ export class SelectScene extends Phaser.Scene {
 
         this.scrollBar = this.add.image(30, 360, "scroll-bar").setOrigin(0.5, 0.5)
 
-        this.add.image(830, 120, "music-detail-frame").setOrigin(0, 0)
+        this.add.image(830, 360, "music-detail-frame").setOrigin(0, 0.5)
 
-        this.add.rectangle(830 + 200, 280, 270, 270, 0x0a0a0a, 140).setDepth(1)
+        this.add
+            .image(850, 160, "icon-music")
+            .setOrigin(0, 0.5)
+            .setScale(0.4)
+            .setDepth(4)
+
+        this.selectedMusicTitleText = this.add
+            .text(890, 160, "", {
+                fontFamily: "Noto Sans JP",
+                fontSize: "45px",
+                color: "#fafafa",
+            })
+            .setOrigin(0, 0.5)
+            .setScale(0.5)
+            .setDepth(4)
+
+        this.add.rectangle(830 + 200, 280 + 30, 240, 240, 0x0a0a0a, 140).setDepth(1)
 
         this.jacketImage = this.add
-            .image(830 + 200, 280, "")
-            .setDisplaySize(270, 270)
+            .image(830 + 200, 280 + 30, "")
+            .setDisplaySize(240, 240)
             .setDepth(2)
 
         this.selectedKeyIcon = this.add
-            .image(830 + 70, 140, `key-icon-${this.key}`)
+            .image(830 + 83, 140 + 40, `key-icon-${this.key}`)
             .setOrigin(0, 0)
             .setDepth(3)
             .setScale(0.5)
 
         this.selectedDiffIcon = this.add
-            .image(830 + 70 + 90, 140, `diff-icon-${this.difficulty}`)
+            .image(830 + 83 + 87, 140 + 40, `diff-icon-${this.difficulty}`)
             .setOrigin(0, 0)
             .setDepth(3)
             .setScale(0.5)
 
         this.playButton = this.add
-            .image(830 + 200, 500, "play-button-enable")
+            .image(830 + 200, 500 + 30, "play-button-enable")
             .setOrigin(0.5, 0.5)
             .setDepth(1)
 
         this.playButtonLight = this.add
-            .image(830 + 200, 500, "play-button-light")
+            .image(830 + 200, 500 + 30, "play-button-light")
             .setOrigin(0.5, 0.5)
             .setDepth(0)
 
@@ -407,6 +441,35 @@ export class SelectScene extends Phaser.Scene {
                 this.playPreviewSound()
             })
 
+        this.add.image(1030, 70, "config-frame")
+
+        this.add.image(880, 70, "icon-user")
+
+        this.userScreenNameText = this.add
+            .text(930, 55, this.user.screen_name, {
+                fontFamily: "Noto Sans JP",
+                fontSize: "48px",
+                color: "#f0f0f0",
+            })
+            .setOrigin(0, 0.5)
+            .setScale(0.5)
+            .setDepth(2)
+
+        this.userStatusText = this.add
+            .text(
+                930,
+                90,
+                `${this.user.ordinalRank} / ${this.user.performance_point}pts.`,
+                {
+                    fontFamily: "Noto Sans JP",
+                    fontSize: "36px",
+                    color: "#bbbbbb",
+                }
+            )
+            .setOrigin(0, 0.5)
+            .setScale(0.5)
+            .setDepth(2)
+
         this.playButton
             .setInteractive({
                 useHandCursor: true,
@@ -449,6 +512,8 @@ export class SelectScene extends Phaser.Scene {
 
         this.particleEmitter.setPosition(this.input.x, this.input.y)
 
+        this.selectedMusicTitleText.setText(this.musicTileManager.getMusic().title)
+
         this.isPlayable = this.musicTileManager.isPlayable(
             this.key,
             this.difficulty
@@ -477,9 +542,9 @@ export class SelectScene extends Phaser.Scene {
         if (this.textures.exists(this.musicTileManager.getJacketImageKey())) {
             this.jacketImage
                 .setTexture(this.musicTileManager.getJacketImageKey())
-                .setDisplaySize(270, 270)
+                .setDisplaySize(240, 240)
         } else {
-            this.jacketImage.setTexture("jacket-no-image").setDisplaySize(270, 270)
+            this.jacketImage.setTexture("jacket-no-image").setDisplaySize(240, 240)
         }
         const bestPlayResult: PlayResult | null = JSON.parse(
             localStorage.getItem(

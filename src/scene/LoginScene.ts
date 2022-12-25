@@ -1,3 +1,5 @@
+import { User } from "../class/User"
+
 export class LoginScene extends Phaser.Scene {
     private loginForm: Phaser.GameObjects.DOMElement
     private registerForm: Phaser.GameObjects.DOMElement
@@ -59,9 +61,30 @@ export class LoginScene extends Phaser.Scene {
                         "token_type",
                         JSON.stringify(tokenResponseJSON.token_type)
                     )
-                    this.sound.play("decide")
-                    this.scene.stop()
-                    this.scene.resume("select")
+
+                    const userResponse = await fetch(
+                        new URL("/users/me", process.env.SERVER_URL as string).toString(),
+                        {
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `${tokenResponseJSON.token_type} ${tokenResponseJSON.access_token}`,
+                            },
+                        }
+                    )
+                    if (userResponse.ok) {
+                        const userResponseJSON = await userResponse.json()
+                        const user = new User({
+                            id: userResponseJSON.id,
+                            screen_name: userResponseJSON.screen_name,
+                            rank: userResponseJSON.rank,
+                            performance_point: userResponseJSON.performance_point,
+                        })
+                        localStorage.setItem("user", JSON.stringify(user))
+                        this.sound.play("decide")
+                        window.setTimeout(() => {
+                            this.scene.start("select")
+                        }, 400)
+                    }
                 } else if (tokenResponse.status === 401) {
                     const tokenResponseJSON = await tokenResponse.json()
                     alert(tokenResponseJSON.detail)
