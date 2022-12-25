@@ -21,6 +21,9 @@ export class SelectScene extends Phaser.Scene {
 
     private scrollBar: Phaser.GameObjects.Image
 
+    private loginIcon: Phaser.GameObjects.Image
+    private loginLabel: Phaser.GameObjects.Text
+
     private selectedDiffIcon: Phaser.GameObjects.Image
     private selectedKeyIcon: Phaser.GameObjects.Image
     private selectedMusicTitleText: Phaser.GameObjects.Text
@@ -108,6 +111,8 @@ export class SelectScene extends Phaser.Scene {
                     })
 
                     localStorage.setItem("user", JSON.stringify(user))
+                    this.loginIcon.setAlpha(0.3).removeListener("pointerdown")
+                    this.loginLabel.setAlpha(0.3)
                 }
             }
 
@@ -360,7 +365,7 @@ export class SelectScene extends Phaser.Scene {
                 this.scene.run("config", { playConfig: this.playConfig })
             })
 
-        this.add
+        this.loginLabel = this.add
             .text(830 + 400 * 0.5, 680, "IRにログイン", {
                 fontFamily: "Noto Sans JP",
                 fontSize: "26px",
@@ -368,7 +373,7 @@ export class SelectScene extends Phaser.Scene {
             })
             .setOrigin(0.5, 0.5)
             .setScale(0.5)
-        this.add
+        this.loginIcon = this.add
             .image(830 + 400 * 0.5, 640, "icon-ir")
             .setOrigin(0.5, 0.5)
             .setDepth(1)
