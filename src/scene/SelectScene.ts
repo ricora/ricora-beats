@@ -76,14 +76,47 @@ export class SelectScene extends Phaser.Scene {
             })
         this.game.sound.stopAll()
 
-        this.user = new User(
-            JSON.parse(localStorage.getItem("user") as string) || {
-                id: 0,
-                screen_name: "Guest",
-                rank: 0,
-                performance_point: 0,
+        this.user = new User({
+            id: 0,
+            screen_name: "Guest",
+            rank: 0,
+            performance_point: 0,
+        })
+
+        const checkAuthorization = async () => {
+            const token_type = localStorage.getItem("token_type")
+            const access_token = localStorage.getItem("access_token")
+
+            if (token_type && access_token) {
+                const headers = {
+                    "Content-Type": "application/json",
+                    Authorization: `${token_type} ${access_token}`,
+                }
+                const userResponse = await fetch(
+                    new URL("/users/me", process.env.SERVER_URL as string).toString(),
+                    {
+                        headers: headers,
+                    }
+                )
+                if (userResponse.ok) {
+                    const user = await userResponse.json()
+                    this.user = new User({
+                        id: user.id,
+                        screen_name: user.screen_name,
+                        rank: user.rank,
+                        performance_point: user.performance_point,
+                    })
+
+                    localStorage.setItem("user", JSON.stringify(user))
+                }
             }
-        )
+
+            this.userScreenNameText.setText(`${this.user.screen_name}`)
+            this.userStatusText.setText(
+                `${this.user.ordinalRank} / ${this.user.performance_point}pts.`
+            )
+        }
+        checkAuthorization()
     }
     create() {
         const { width, height } = this.game.canvas
@@ -446,7 +479,7 @@ export class SelectScene extends Phaser.Scene {
         this.add.image(880, 70, "icon-user")
 
         this.userScreenNameText = this.add
-            .text(930, 55, this.user.screen_name, {
+            .text(930, 55, "", {
                 fontFamily: "Noto Sans JP",
                 fontSize: "48px",
                 color: "#f0f0f0",
@@ -456,16 +489,11 @@ export class SelectScene extends Phaser.Scene {
             .setDepth(2)
 
         this.userStatusText = this.add
-            .text(
-                930,
-                90,
-                `${this.user.ordinalRank} / ${this.user.performance_point}pts.`,
-                {
-                    fontFamily: "Noto Sans JP",
-                    fontSize: "36px",
-                    color: "#bbbbbb",
-                }
-            )
+            .text(930, 90, "", {
+                fontFamily: "Noto Sans JP",
+                fontSize: "36px",
+                color: "#bbbbbb",
+            })
             .setOrigin(0, 0.5)
             .setScale(0.5)
             .setDepth(2)
