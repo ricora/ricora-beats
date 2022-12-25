@@ -1,0 +1,93 @@
+<style>
+    #register-form {
+        height: 257px;
+        margin: 20px auto 0;
+        width: 298px;
+    }
+
+    #register-form input[type="password"],
+    #register-form input[type="text"] {
+        box-sizing: border-box;
+        color: #696969;
+        height: 39px;
+        margin: 6px 11px 0 29px;
+        padding-left: 37px;
+        transition: box-shadow 0.3s;
+        width: 240px;
+    }
+
+    #register-form input[type="password"]:focus,
+    #register-form input[type="text"]:focus {
+        outline: 0;
+    }
+
+    #register-form .show-password {
+        display: block;
+        height: 16px;
+        margin: 26px 0 0 28px;
+        width: 87px;
+    }
+
+    #register-form input[type="checkbox"] {
+        cursor: pointer;
+        height: 16px;
+        position: relative;
+        width: 64px;
+    }
+
+    #register-form input[type="checkbox"]:checked {
+        left: 29px;
+        width: 58px;
+    }
+
+    #register-form .toggle {
+        display: block;
+        height: 16px;
+        margin-top: -20px;
+        width: 87px;
+        z-index: -1;
+    }
+
+    #register-form input[type="checkbox"]:checked+.toggle {
+        background-position: 0 -16px;
+    }
+
+    #register-form input[type="submit"] {
+        width: 240px;
+        height: 35px;
+        display: block;
+        font-family: Arial, "Helvetica", sans-serif;
+        font-size: 16px;
+        font-weight: bold;
+        color: #fff;
+        text-decoration: none;
+        text-transform: uppercase;
+        text-align: center;
+        text-shadow: 1px 1px 0px #289acc;
+        padding-top: 6px;
+        margin: 20px 0 0 29px;
+        position: relative;
+        cursor: pointer;
+        border: none;
+        background-color: #32befc;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        border-bottom-left-radius: 5px;
+        box-shadow: 0px 5px 0px 0px #289acc;
+    }
+
+    #register-form input[type="submit"]:active {
+        top: 3px;
+        box-shadow: 0px 2px 0px 0px #289acc;
+    }
+</style>
+
+<div class="register" id="register-form">
+    <form>
+        <input type="text" placeholder="screen name" name="screen_name" />
+        <input type="text" placeholder="email (パスワード紛失時に使用)" name="email" />
+        <input type="password" placeholder="password" name="password" />
+        <input type="submit" value="アカウントを作成" />
+    </form>
+</div>

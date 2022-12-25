@@ -1,0 +1,109 @@
+<style>
+    #login-form {
+        height: 257px;
+        margin: 20px auto 0;
+        width: 298px;
+    }
+
+    #login-form input[type="password"],
+    #login-form input[type="text"] {
+        box-sizing: border-box;
+        color: #696969;
+        height: 39px;
+        margin: 6px 31px 0 29px;
+        padding-left: 37px;
+        transition: box-shadow 0.3s;
+        width: 240px;
+    }
+
+    #login-form input[type="password"]:focus,
+    #login-form input[type="text"]:focus {
+        outline: 0;
+    }
+
+    #login-form.show-password {
+        display: block;
+        height: 16px;
+        margin: 26px 0 0 28px;
+        width: 87px;
+    }
+
+    #login-form input[type="checkbox"] {
+        cursor: pointer;
+        height: 16px;
+        position: relative;
+        width: 64px;
+    }
+
+    #login-form input[type="checkbox"]:checked {
+        left: 29px;
+        width: 58px;
+    }
+
+    #login-form.toggle {
+        display: block;
+        height: 16px;
+        margin-top: -20px;
+        width: 87px;
+        z-index: -1;
+    }
+
+    #login-form input[type="checkbox"]:checked+.toggle {
+        background-position: 0 -16px;
+    }
+
+    #login-form .forgot {
+        color: #bbbbbb;
+        display: inline-block;
+        float: right;
+        font: 12px/1 sans-serif;
+        left: -19px;
+        position: relative;
+        text-decoration: none;
+        top: 5px;
+        transition: color 0.4s;
+    }
+
+    #login-form .forgot:hover {
+        color: #fafafa;
+    }
+
+    #login-form input[type="submit"] {
+        width: 240px;
+        height: 35px;
+        display: block;
+        font-family: Arial, "Helvetica", sans-serif;
+        font-size: 16px;
+        font-weight: bold;
+        color: #fff;
+        text-decoration: none;
+        text-transform: uppercase;
+        text-align: center;
+        text-shadow: 1px 1px 0px #cd2e87;
+        padding-top: 6px;
+        margin: 29px 0 0 29px;
+        position: relative;
+        cursor: pointer;
+        border: none;
+        background-color: #fc39a6;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        border-bottom-left-radius: 5px;
+        box-shadow: 0px 5px 0px 0px #cd2e87;
+    }
+
+    #login-form input[type="submit"]:active {
+        top: 3px;
+        box-shadow: 0px 2px 0px 0px #cd2e87;
+    }
+</style>
+
+<div class="login" id="login-form">
+    <form>
+        <input type="text" placeholder="screen name" name="username" />
+        <input type="password" placeholder="password" name="password" />
+        <a href="#" class="forgot">forgot password?</a>
+        <input type="submit" value="ログイン" />
+    </form>
+</div>
