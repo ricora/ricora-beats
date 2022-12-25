@@ -113,13 +113,12 @@ export class SelectScene extends Phaser.Scene {
                     localStorage.setItem("user", JSON.stringify(user))
                     this.loginIcon.setAlpha(0.3).removeListener("pointerdown")
                     this.loginLabel.setAlpha(0.3)
+                    this.userScreenNameText.setText(`${this.user.screen_name}`)
+                    this.userStatusText.setText(
+                        `${this.user.ordinalRank} / ${this.user.performance_point}pts.`
+                    )
                 }
             }
-
-            this.userScreenNameText.setText(`${this.user.screen_name}`)
-            this.userStatusText.setText(
-                `${this.user.ordinalRank} / ${this.user.performance_point}pts.`
-            )
         }
         checkAuthorization()
     }
@@ -484,7 +483,7 @@ export class SelectScene extends Phaser.Scene {
         this.add.image(880, 70, "icon-user")
 
         this.userScreenNameText = this.add
-            .text(930, 55, "", {
+            .text(930, 55, "Guest", {
                 fontFamily: "Noto Sans JP",
                 fontSize: "48px",
                 color: "#f0f0f0",
