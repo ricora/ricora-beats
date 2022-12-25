@@ -35,6 +35,74 @@ export class LoginScene extends Phaser.Scene {
             .dom(width / 2 + 150, 320)
             .createFromCache("register-form")
 
+        const loginFormElement = document
+            .getElementById("login-form")
+            ?.getElementsByTagName("form")[0]
+        if (loginFormElement) {
+            loginFormElement.addEventListener("submit", async (event) => {
+                event.preventDefault()
+                const formData = new FormData(loginFormElement)
+                const options = {
+                    method: "POST",
+                    body: formData,
+                }
+                const url = new URL(
+                    "/token/",
+                    process.env.SERVER_URL as string
+                ).toString()
+                const response = await fetch(url, options)
+                if (response.ok) {
+                    const responseJSON = await response.json()
+                    console.log(responseJSON.access_token, responseJSON.token_type)
+                    localStorage.setItem(
+                        "access_token",
+                        JSON.stringify(responseJSON.access_token)
+                    )
+                    localStorage.setItem(
+                        "token_type",
+                        JSON.stringify(responseJSON.token_type)
+                    )
+                    this.sound.play("decide")
+                    this.scene.stop()
+                    this.scene.resume("select")
+                } else if (response.status === 401) {
+                    const responseJSON = await response.json()
+                    alert(responseJSON.detail)
+                }
+            })
+        }
+
+        const registerFormElement = document
+            .getElementById("register-form")
+            ?.getElementsByTagName("form")[0]
+        if (registerFormElement) {
+            registerFormElement.addEventListener("submit", async (event) => {
+                event.preventDefault()
+                const formData = new FormData(registerFormElement)
+                const options = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(Object.fromEntries(formData)),
+                }
+                const url = new URL(
+                    "/users/",
+                    process.env.SERVER_URL as string
+                ).toString()
+                const response = await fetch(url, options)
+                if (response.ok) {
+                    const responseJSON = await response.json()
+                    alert(
+                        `アカウントを作成しました。\nuser id: ${responseJSON.id}\nscreen name: ${responseJSON.screen_name}\nemail: ${responseJSON.email}`
+                    )
+                } else if (response.status === 400) {
+                    const responseJSON = await response.json()
+                    alert(responseJSON.detail)
+                }
+            })
+        }
+
         this.add
             .image(width / 2 - 260, height / 2 - 225, "icon-ir")
             .setOrigin(0, 1)
