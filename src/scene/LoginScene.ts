@@ -53,14 +53,8 @@ export class LoginScene extends Phaser.Scene {
                 )
                 if (tokenResponse.ok) {
                     const tokenResponseJSON = await tokenResponse.json()
-                    localStorage.setItem(
-                        "access_token",
-                        JSON.stringify(tokenResponseJSON.access_token)
-                    )
-                    localStorage.setItem(
-                        "token_type",
-                        JSON.stringify(tokenResponseJSON.token_type)
-                    )
+                    localStorage.setItem("access_token", tokenResponseJSON.access_token)
+                    localStorage.setItem("token_type", tokenResponseJSON.token_type)
 
                     const userResponse = await fetch(
                         new URL("/users/me", process.env.SERVER_URL as string).toString(),
