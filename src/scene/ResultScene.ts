@@ -100,11 +100,79 @@ export class ResultScene extends Phaser.Scene {
                 JSON.stringify(this.playResult)
             )
         }
+        const getRanking = async (userId?: number) => {
+            const folder = this.playResult.music.folder
+            const filename = this.playResult.music[
+                `beatmap_${this.playResult.playConfig.key}k_${this.playResult.playConfig.difficulty}`
+            ]?.filename as string
+            const rankingResponse = await fetch(
+                new URL(
+                    `/scores/${encodeURIComponent(folder)}/${encodeURIComponent(
+                        filename
+                    )}/`,
+                    process.env.SERVER_URL as string
+                ).toString(),
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            )
+            if (!rankingResponse.ok) {
+                return
+            }
+            const ranking: any[] = await rankingResponse.json()
+            ranking.sort((a: any, b: any) => {
+                return a.score < b.score ? 1 : -1
+            })
+            if (userId) {
+                let rank: number | undefined
+                for (const [rankingIndex, score] of ranking.entries()) {
+                    if (score.player_id === userId) {
+                        rank = rankingIndex + 1
+                        break
+                    }
+                }
+                this.rankText.setText(`${rank} / ${ranking.length}`)
+            } else {
+                this.rankText.setText("")
+            }
+
+            this.ranking = ranking
+
+            const usersResponse = await fetch(
+                new URL("/users/", process.env.SERVER_URL as string).toString(),
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            )
+            if (!usersResponse.ok) {
+                return
+            }
+            const users = await usersResponse.json()
+            let userIdToScreenName: { [key: number]: string } = {}
+            for (const user of users) {
+                userIdToScreenName[user.id] = user.screen_name
+            }
+
+            for (const [rankingIndex, score] of ranking.slice(0, 30).entries()) {
+                this.rankingIndexTexts[rankingIndex].setText(`${rankingIndex + 1}`)
+                this.rankingScoreTexts[rankingIndex].setText(
+                    `${score.score.toFixed(2)}%`
+                )
+                this.rankingScreenNameTexts[rankingIndex].setText(
+                    `${userIdToScreenName[score.player_id]}`
+                )
+            }
+        }
         const sendScore = async () => {
             const token_type = localStorage.getItem("token_type")
             const access_token = localStorage.getItem("access_token")
 
             if (!token_type || !access_token) {
+                await getRanking()
                 return
             }
 
@@ -120,6 +188,7 @@ export class ResultScene extends Phaser.Scene {
                 }
             )
             if (!userResponse.ok) {
+                await getRanking()
                 return
             }
             const user = await userResponse.json()
@@ -146,60 +215,10 @@ export class ResultScene extends Phaser.Scene {
                 }
             )
             if (!sendScoreResponse.ok) {
+                await getRanking()
                 return
             }
-            const rankingResponse = await fetch(
-                new URL(
-                    `/scores/${encodeURIComponent(folder)}/${encodeURIComponent(
-                        filename
-                    )}/`,
-                    process.env.SERVER_URL as string
-                ).toString(),
-                {
-                    headers: headers,
-                }
-            )
-            if (!rankingResponse.ok) {
-                return
-            }
-            const ranking: any[] = await rankingResponse.json()
-            ranking.sort((a: any, b: any) => {
-                return a.score < b.score ? 1 : -1
-            })
-            let rank: number | undefined
-            for (const [rankingIndex, score] of ranking.entries()) {
-                if (score.player_id === user.id) {
-                    rank = rankingIndex + 1
-                    break
-                }
-            }
-            this.ranking = ranking
-            this.rankText.setText(`${rank}/${ranking.length}`)
-
-            const usersResponse = await fetch(
-                new URL("/users/", process.env.SERVER_URL as string).toString(),
-                {
-                    headers: headers,
-                }
-            )
-            if (!usersResponse.ok) {
-                return
-            }
-            const users = await usersResponse.json()
-            let userIdToScreenName: { [key: number]: string } = {}
-            for (const user of users) {
-                userIdToScreenName[user.id] = user.screen_name
-            }
-
-            for (const [rankingIndex, score] of ranking.slice(0, 30).entries()) {
-                this.rankingIndexTexts[rankingIndex].setText(`${rankingIndex + 1}`)
-                this.rankingScoreTexts[rankingIndex].setText(
-                    `${score.score.toFixed(2)}%`
-                )
-                this.rankingScreenNameTexts[rankingIndex].setText(
-                    `${userIdToScreenName[score.player_id]}`
-                )
-            }
+            await getRanking(user.id)
         }
         sendScore()
     }
