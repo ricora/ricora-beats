@@ -106,7 +106,7 @@ export class LoginScene extends Phaser.Scene {
                 if (registerResponse.ok) {
                     const registerResponseJSON = await registerResponse.json()
                     alert(
-                        `アカウントを作成しました。\nuser id: ${registerResponseJSON.id}\nscreen name: ${registerResponseJSON.screen_name}\nemail: ${registerResponseJSON.email}`
+                        `アカウントを作成しました。\nuser id: ${registerResponseJSON.id}\nscreen name: ${registerResponseJSON.screen_name}`
                     )
                 } else if (registerResponse.status === 400) {
                     const registerResponseJSON = await registerResponse.json()
