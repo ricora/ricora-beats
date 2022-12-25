@@ -368,8 +368,20 @@ export class PlayScene extends Phaser.Scene {
 
         this.debugText = this.add.text(0, 450, "").setVisible(false)
 
+        this.add.image(100, 80, "frame-vertical").setOrigin(0.5, 0).setScale(0.66).setDepth(1)
+
+        this.add
+            .text(100, 110, "MUSIC INFO", {
+                fontFamily: "Oswald",
+                fontSize: "36px",
+                color: "#dddddd",
+            })
+            .setOrigin(0.5, 0.5)
+            .setDepth(4)
+            .setScale(0.5)
+
         this.titleText = this.add
-            .text(10, 230, "", {
+            .text(30, 300, "", {
                 fontFamily: "Noto Sans JP",
                 fontSize: "28px",
                 color: "#f0f0f0",
@@ -380,7 +392,7 @@ export class PlayScene extends Phaser.Scene {
             .setScale(0.5)
 
         this.artistText = this.add
-            .text(10, 250, "", {
+            .text(30, 320, "", {
                 fontFamily: "Noto Sans JP",
                 fontSize: "20px",
                 color: "#f0f0f0",
@@ -391,7 +403,7 @@ export class PlayScene extends Phaser.Scene {
             .setScale(0.5)
 
         this.jacketImage = this.add
-            .image(80, 140, "jacket-no-image")
+            .image(100, 210, "jacket-no-image")
             .setDepth(9)
             .setDisplaySize(142, 142)
 
@@ -402,14 +414,14 @@ export class PlayScene extends Phaser.Scene {
         }
 
         this.add
-            .image(10, 280, `key-icon-${this.playConfig.key}`)
-            .setOrigin(0, 0.5)
+            .image(100, 380, `key-icon-${this.playConfig.key}`)
+            .setOrigin(0.5, 0.5)
             .setDepth(10)
             .setScale(0.7)
 
         this.add
-            .image(10, 310, `diff-icon-${this.playConfig.difficulty}`)
-            .setOrigin(0, 0.5)
+            .image(100, 410, `diff-icon-${this.playConfig.difficulty}`)
+            .setOrigin(0.5, 0.5)
             .setDepth(10)
             .setScale(0.7)
 
