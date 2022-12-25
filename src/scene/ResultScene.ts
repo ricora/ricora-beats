@@ -20,10 +20,19 @@ export class ResultScene extends Phaser.Scene {
     private comboLabelText: Phaser.GameObjects.Text
     private judgeTexts: Phaser.GameObjects.Text[]
     private judgeLabelTexts: Phaser.GameObjects.Text[]
+    private rankText: Phaser.GameObjects.Text
+    private rankLabelText: Phaser.GameObjects.Text
+
+    private ranking: any[]
+    private rankingIndexTexts: Phaser.GameObjects.Text[]
+    private rankingScoreTexts: Phaser.GameObjects.Text[]
+    private rankingScreenNameTexts: Phaser.GameObjects.Text[]
 
     private titleFrame: Phaser.GameObjects.Image
     private detailFrame: Phaser.GameObjects.Image
     private subDetailFrame: Phaser.GameObjects.Image
+
+    private rankingFrame: Phaser.GameObjects.Rectangle
 
     private musicIcon: Phaser.GameObjects.Image
     private artistIcon: Phaser.GameObjects.Image
@@ -91,6 +100,108 @@ export class ResultScene extends Phaser.Scene {
                 JSON.stringify(this.playResult)
             )
         }
+        const sendScore = async () => {
+            const token_type = localStorage.getItem("token_type")
+            const access_token = localStorage.getItem("access_token")
+
+            if (!token_type || !access_token) {
+                return
+            }
+
+            const headers = {
+                "Content-Type": "application/json",
+                Authorization: `${token_type} ${access_token}`,
+            }
+
+            const userResponse = await fetch(
+                new URL("/users/me", process.env.SERVER_URL as string).toString(),
+                {
+                    headers: headers,
+                }
+            )
+            if (!userResponse.ok) {
+                return
+            }
+            const user = await userResponse.json()
+            const folder = this.playResult.music.folder
+            const filename = this.playResult.music[
+                `beatmap_${this.playResult.playConfig.key}k_${this.playResult.playConfig.difficulty}`
+            ]?.filename as string
+            const sendScoreResponse = await fetch(
+                new URL("/scores/", process.env.SERVER_URL as string).toString(),
+                {
+                    method: "POST",
+                    headers: headers,
+                    body: JSON.stringify({
+                        folder: folder,
+                        filename: filename,
+                        score: this.playResult.score,
+                        combo: this.playResult.maxCombo,
+                        judge_0: this.playResult.judges[0],
+                        judge_1: this.playResult.judges[1],
+                        judge_2: this.playResult.judges[2],
+                        judge_3: this.playResult.judges[3],
+                        judge_4: this.playResult.judges[4],
+                    }),
+                }
+            )
+            if (!sendScoreResponse.ok) {
+                return
+            }
+            const rankingResponse = await fetch(
+                new URL(
+                    `/scores/${encodeURIComponent(folder)}/${encodeURIComponent(
+                        filename
+                    )}/`,
+                    process.env.SERVER_URL as string
+                ).toString(),
+                {
+                    headers: headers,
+                }
+            )
+            if (!rankingResponse.ok) {
+                return
+            }
+            const ranking: any[] = await rankingResponse.json()
+            ranking.sort((a: any, b: any) => {
+                return a.score < b.score ? 1 : -1
+            })
+            let rank: number | undefined
+            for (const [rankingIndex, score] of ranking.entries()) {
+                if (score.player_id === user.id) {
+                    rank = rankingIndex + 1
+                    break
+                }
+            }
+            this.ranking = ranking
+            this.rankText.setText(`${rank}/${ranking.length}`)
+
+            const usersResponse = await fetch(
+                new URL(`/users/`, process.env.SERVER_URL as string).toString(),
+                {
+                    headers: headers,
+                }
+            )
+            if (!usersResponse.ok) {
+                return
+            }
+            const users = await usersResponse.json()
+            let userIdToScreenName: { [key: number]: string } = {}
+            for (const user of users) {
+                userIdToScreenName[user.id] = user.screen_name
+            }
+
+            for (const [rankingIndex, score] of ranking.slice(0, 30).entries()) {
+                this.rankingIndexTexts[rankingIndex].setText(`${rankingIndex + 1}`)
+                this.rankingScoreTexts[rankingIndex].setText(
+                    `${score.score.toFixed(2)}%`
+                )
+                this.rankingScreenNameTexts[rankingIndex].setText(
+                    `${userIdToScreenName[score.player_id]}`
+                )
+            }
+        }
+        sendScore()
     }
     create() {
         const { width, height } = this.game.canvas
@@ -145,16 +256,6 @@ export class ResultScene extends Phaser.Scene {
             .setScale(0.67, 0)
             .setDepth(-2)
             .setOrigin(0, 0.5)
-
-        this.tweens.add({
-            targets: [this.titleFrame, this.detailFrame, this.subDetailFrame],
-            delay: 200,
-            scaleY: {
-                value: 0.67,
-                duration: 200,
-                ease: "Quintic.Out",
-            },
-        })
 
         this.titleText = this.add
             .text(190, 110, this.playResult.music.title, {
@@ -226,6 +327,16 @@ export class ResultScene extends Phaser.Scene {
             .setOrigin(0, 0.5)
             .setAlpha(0)
 
+        this.scoreLabelText = this.add
+            .text(170, 350, "ACC.", {
+                fontFamily: "Oswald",
+                fontSize: "30px",
+                color: "#888888",
+                align: "center",
+            })
+            .setOrigin(0, 0.5)
+            .setAlpha(0)
+
         this.scoreText = this.add
             .text(431, 350, `${this.playResult.score.toFixed(2)} %`, {
                 fontFamily: "Oswald",
@@ -268,15 +379,95 @@ export class ResultScene extends Phaser.Scene {
             .setOrigin(1, 0.5)
             .setAlpha(0)
 
-        this.scoreLabelText = this.add
-            .text(170, 350, "ACC.", {
+        this.rankLabelText = this.add
+            .text(550, 545, "RANKING", {
                 fontFamily: "Oswald",
-                fontSize: "30px",
+                fontSize: "18px",
                 color: "#888888",
                 align: "center",
             })
             .setOrigin(0, 0.5)
             .setAlpha(0)
+
+        this.rankText = this.add
+            .text(680, 580, "Pending...", {
+                fontFamily: "Oswald",
+                fontSize: "30px",
+                color: "#fafafa",
+                align: "center",
+            })
+            .setOrigin(1, 0.5)
+            .setAlpha(0)
+
+        this.rankingFrame = this.add
+            .rectangle(1280, 0, 340, 720, 0x000000)
+            .setAlpha(0.3)
+            .setOrigin(1, 0)
+            .setDepth(-2)
+
+        this.add
+            .rectangle(1280, 50, 340, 2, 0x444444)
+            .setAlpha(1)
+            .setDepth(-1)
+            .setOrigin(1, 0)
+
+        this.rankingIndexTexts = []
+        this.rankingScoreTexts = []
+        this.rankingScreenNameTexts = []
+        const rankingFontSize = "24px"
+
+        this.add
+            .text(1080, 10, "SCORE", {
+                fontFamily: "Oswald",
+                fontSize: rankingFontSize,
+                color: "#bbbbbb",
+                align: "right",
+            })
+            .setOrigin(1, 0)
+
+        this.add
+            .text(1100, 10, "PLAYER", {
+                fontFamily: "Oswald",
+                fontSize: rankingFontSize,
+                color: "#bbbbbb",
+                align: "left",
+            })
+            .setOrigin(0, 0)
+
+        for (const rankingIndex of Array(25).keys()) {
+            const y = 60 + 30 * rankingIndex
+            this.rankingIndexTexts.push(
+                this.add
+                    .text(950, y, "", {
+                        fontFamily: "Oswald",
+                        fontSize: rankingFontSize,
+                        color: "#888888",
+                        align: "left",
+                    })
+                    .setOrigin(0, 0)
+            )
+            this.rankingScoreTexts.push(
+                this.add
+                    .text(1080, y, "", {
+                        fontFamily: "Oswald",
+                        fontSize: rankingFontSize,
+                        color: "#fafafa",
+                        align: "right",
+                    })
+                    .setOrigin(1, 0)
+            )
+
+            this.rankingScreenNameTexts.push(
+                this.add
+                    .text(1100, y, "", {
+                        fontFamily: "Noto Sans JP",
+                        fontSize: rankingFontSize,
+                        color: "#fafafa",
+                        align: "left",
+                    })
+                    .setOrigin(0, 0)
+            )
+        }
 
         this.line1 = this.add
             .rectangle(300, 385, 320, 2, 0x444444, 30)
@@ -364,6 +555,16 @@ export class ResultScene extends Phaser.Scene {
             .setAlpha(0)
 
         this.tweens.add({
+            targets: [this.titleFrame, this.detailFrame, this.subDetailFrame],
+            delay: 200,
+            scaleY: {
+                value: 0.67,
+                duration: 200,
+                ease: "Quintic.Out",
+            },
+        })
+
+        this.tweens.add({
             targets: [
                 this.titleText,
                 this.artistText,
@@ -381,6 +582,8 @@ export class ResultScene extends Phaser.Scene {
                 this.oldScoreLabelText,
                 this.comboText,
                 this.comboLabelText,
+                this.rankText,
+                this.rankLabelText,
                 this.judgeTexts[0],
                 this.judgeTexts[1],
                 this.judgeTexts[2],
