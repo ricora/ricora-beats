@@ -45,7 +45,7 @@ export class LoginScene extends Phaser.Scene {
                 event.preventDefault()
                 const formData = new FormData(loginFormElement)
                 const tokenResponse = await fetch(
-                    new URL("/token/", process.env.SERVER_URL as string).toString(),
+                    new URL("/token", process.env.SERVER_URL as string).toString(),
                     {
                         method: "POST",
                         body: formData,

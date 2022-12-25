@@ -177,7 +177,7 @@ export class ResultScene extends Phaser.Scene {
             this.rankText.setText(`${rank}/${ranking.length}`)
 
             const usersResponse = await fetch(
-                new URL(`/users/`, process.env.SERVER_URL as string).toString(),
+                new URL("/users/", process.env.SERVER_URL as string).toString(),
                 {
                     headers: headers,
                 }
