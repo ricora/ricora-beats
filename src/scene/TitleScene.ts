@@ -114,6 +114,19 @@ export class TitleScene extends Phaser.Scene {
             .setScale(0.5)
 
         this.add
+            .text(0, 0, `BUILD:${process.env.BUILD_DATE as string}`, {
+                fontFamily: "Noto Sans JP",
+                fontSize: "40px",
+                color: "#fafafa",
+                align: "center",
+            })
+            .setStroke("#000000", 6)
+            .setOrigin(0, 0)
+            .setDepth(10)
+            .setAlpha(1)
+            .setScale(0.5)
+
+        this.add
             .zone(640, 720, 1280, 640)
             .setOrigin(0.5, 1)
             .setInteractive({
