@@ -114,6 +114,19 @@ export class TitleScene extends Phaser.Scene {
             .setScale(0.5)
 
         this.add
+            .text(1280, 720, "© RICORA", {
+                fontFamily: "Noto Sans JP",
+                fontSize: "40px",
+                color: "#fafafa",
+                align: "center",
+            })
+            .setStroke("#000000", 8)
+            .setOrigin(1, 1)
+            .setDepth(10)
+            .setAlpha(1)
+            .setScale(0.5)
+
+        this.add
             .text(0, 0, `BUILD:${process.env.BUILD_DATE as string}`, {
                 fontFamily: "Noto Sans JP",
                 fontSize: "40px",
