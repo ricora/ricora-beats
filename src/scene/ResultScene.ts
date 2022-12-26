@@ -204,6 +204,9 @@ export class ResultScene extends Phaser.Scene {
                     body: JSON.stringify({
                         folder: folder,
                         filename: filename,
+                        level: this.playResult.music[
+                            `beatmap_${this.playResult.playConfig.key}k_${this.playResult.playConfig.difficulty}`
+                        ]?.playlevel,
                         score: this.playResult.score,
                         combo: this.playResult.maxCombo,
                         judge_0: this.playResult.judges[0],
