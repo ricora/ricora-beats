@@ -45,8 +45,6 @@ export class CreditScene extends Phaser.Scene {
             .setDepth(2)
 
         const leftCredits = [
-            "RICORA Beats",
-            "",
             "企画立案",
             "楽曲",
             "システムサウンド",
@@ -58,22 +56,21 @@ export class CreditScene extends Phaser.Scene {
             "",
         ]
 
-        const rightCredits = [
-            "",
-            "",
-            "xxx yyy",
-            "xxx yyy",
-            "xxx",
-            "xxx",
-            "xxx",
-            "xxx",
-            "xxx",
-            "",
-            "",
-        ]
+        const rightCredits = (process.env.CREDITS as string).split(/\\r\\n|\\n|\\r/)
 
         this.add
-            .text(width / 2 - 260, height / 2 - 200, leftCredits, {
+            .text(width / 2 - 260, height / 2 - 200 - 5, "RICORA Beats", {
+                fontFamily: "Noto Sans JP",
+                fontSize: "50px",
+                color: "#f0f0f0",
+            })
+            .setOrigin(0, 0)
+            .setScale(0.5)
+            .setDepth(1)
+
+
+        this.add
+            .text(width / 2 - 260, height / 2 - 200 + 40, leftCredits, {
                 fontFamily: "Noto Sans JP",
                 fontSize: "32px",
                 color: "#f0f0f0",
@@ -83,7 +80,7 @@ export class CreditScene extends Phaser.Scene {
             .setDepth(1)
 
         this.add
-            .text(width / 2 + 260, height / 2 - 200, rightCredits, {
+            .text(width / 2 + 260, height / 2 - 200 + 40, rightCredits, {
                 fontFamily: "Noto Sans JP",
                 fontSize: "32px",
                 color: "#f0f0f0",
