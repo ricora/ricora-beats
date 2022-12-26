@@ -9,6 +9,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
+      TZ: "Asia/Tokyo"
       SERVER_URL: ${{ secrets.SERVER_URL }}
       CREDITS: ${{ secrets.CREDITS }}
     concurrency:
