@@ -29,6 +29,7 @@ module.exports = {
         new webpack.DefinePlugin({
             "process.env.SERVER_URL": JSON.stringify(process.env.SERVER_URL),
             "process.env.BUILD_DATE": JSON.stringify(buildDate),
+            "process.env.CREDITS": JSON.stringify(process.env.CREDITS),
         }),
     ],
     devServer: {
