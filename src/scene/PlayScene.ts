@@ -264,6 +264,7 @@ export class PlayScene extends Phaser.Scene {
                 color: "#fafafa",
                 align: "center",
             })
+            .setShadow(0, 0, "#111111", 20, true, true)
             .setOrigin(0.5)
             .setDepth(10)
             .setAlpha(1)
@@ -352,23 +353,32 @@ export class PlayScene extends Phaser.Scene {
                     })
             )
             this.keyLabels.push(
-                this.add.text(positionX, 680, ["S", "D", "F", "SPACE", "J", "K", "L"][laneIndex], {
-                    fontFamily: "Bungee",
-                    fontSize: "50px",
-                    color: "#fafafa",
-                    align: "center",
-                })
+                this.add
+                    .text(
+                        positionX,
+                        680,
+                        ["S", "D", "F", "SPACE", "J", "K", "L"][laneIndex],
+                        {
+                            fontFamily: "Bungee",
+                            fontSize: "50px",
+                            color: "#fafafa",
+                            align: "center",
+                        }
+                    )
                     .setOrigin(0.5)
                     .setDepth(0)
                     .setAlpha(0.6)
                     .setScale(0.5)
-
             )
         }
 
         this.debugText = this.add.text(0, 450, "").setVisible(false)
 
-        this.add.image(100, 80, "frame-vertical").setOrigin(0.5, 0).setScale(0.66).setDepth(1)
+        this.add
+            .image(100, 80, "frame-vertical")
+            .setOrigin(0.5, 0)
+            .setScale(0.66)
+            .setDepth(1)
 
         this.add
             .text(100, 110, "MUSIC INFO", {
