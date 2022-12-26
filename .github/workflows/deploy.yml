@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SERVER_URL: ${{ secrets.SERVER_URL }}
+      CREDITS: ${{ secrets.CREDITS }}
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
