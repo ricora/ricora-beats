@@ -139,6 +139,15 @@ export class TitleScene extends Phaser.Scene {
             .setAlpha(1)
             .setScale(0.5)
 
+            this.add
+            .text(1280, 0, "あ難易度使用数変更譜面現在設定企画立案楽曲", {
+                fontFamily: "Noto Sans JP",
+                fontSize: "40px",
+                color: "#fafafa",
+                align: "center",
+            })
+            .setVisible(false)
+
         this.add
             .zone(640, 720, 1280, 640)
             .setOrigin(0.5, 1)
