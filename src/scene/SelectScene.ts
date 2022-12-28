@@ -538,6 +538,7 @@ export class SelectScene extends Phaser.Scene {
             }
         )
         this.cameras.main.fadeIn(500)
+        this.playPreviewSound()
     }
 
     update(time: number, dt: number) {
