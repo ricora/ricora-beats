@@ -211,9 +211,10 @@ export class SelectScene extends Phaser.Scene {
         this.nonPlayableText = this.add
             .text(1030, 500 + 30, "この譜面は現在プレーできません。", {
                 fontFamily: "Noto Sans JP",
-                fontSize: "35px",
+                fontSize: "40px",
                 color: "#f0f0f0",
             })
+            .setStroke("#000000", 8)
             .setOrigin(0.5, 0.5)
             .setScale(0.5)
             .setDepth(3)
