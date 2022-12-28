@@ -3,7 +3,7 @@ import { MusicTile } from "./MusicTile"
 
 export class MusicTileManager {
     private musicTiles: MusicTile[]
-    private musicList: Music[]
+    public musicList: Music[]
     private selectedMusicTile: Phaser.GameObjects.Image
     public scrollIndex: number
     private ascTweens: Phaser.Tweens.Tween[]
@@ -136,14 +136,6 @@ export class MusicTileManager {
 
     public getBeatmap(key: number, difficulty: number) {
         return this.musicList[this.scrollIndex][`beatmap_${key}k_${difficulty}`]
-    }
-
-    get scrollRate() {
-        if (this.musicList.length >= 2) {
-            return this.scrollIndex / (this.musicList.length - 1)
-        } else {
-            return 0
-        }
     }
 
     public getJacketImageKey() {

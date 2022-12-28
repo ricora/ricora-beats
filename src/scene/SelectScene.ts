@@ -295,7 +295,9 @@ export class SelectScene extends Phaser.Scene {
 
         this.add.image(30, 360, "scroll-bar-frame").setOrigin(0.5, 0.5)
 
-        this.scrollBar = this.add.image(30, 360, "scroll-bar").setOrigin(0.5, 0.5)
+        this.scrollBar = this.add
+            .image(30, 360 - 235, "scroll-bar")
+            .setOrigin(0.5, 0.5)
 
         this.add.image(830, 360, "music-detail-frame").setOrigin(0, 0.5)
 
@@ -464,6 +466,30 @@ export class SelectScene extends Phaser.Scene {
                 this.sound.play("cursor")
                 this.stopPreviewSound()
                 this.musicTileManager.scroll(false)
+                this.tweens.add({
+                    targets: this.scrollBar,
+                    y: {
+                        value: `-=${(235 * 2) /
+                            Math.max(this.musicTileManager.musicList.length - 1, 1)
+                            }`,
+                        duration: 120,
+                        ease: "Quintic.Out",
+                    },
+                    onUpdate: () => {
+                        if (this.scrollBar.y < 360 - 235) {
+                            this.scrollBar.setY(360 + 235)
+                        }
+                    },
+                    onComplete: () => {
+                        this.scrollBar.setY(
+                            360 +
+                            235 *
+                            ((2 * this.musicTileManager.scrollIndex) /
+                                Math.max(this.musicTileManager.musicList.length - 1, 1) -
+                                1)
+                        )
+                    },
+                })
                 this.playPreviewSound()
             })
         const descScrollZone = this.add
@@ -476,6 +502,30 @@ export class SelectScene extends Phaser.Scene {
                 this.sound.play("cursor")
                 this.stopPreviewSound()
                 this.musicTileManager.scroll(true)
+                this.tweens.add({
+                    targets: this.scrollBar,
+                    y: {
+                        value: `+=${(235 * 2) /
+                            Math.max(this.musicTileManager.musicList.length - 1, 1)
+                            }`,
+                        duration: 120,
+                        ease: "Quintic.Out",
+                    },
+                    onUpdate: () => {
+                        if (360 + 235 < this.scrollBar.y) {
+                            this.scrollBar.setY(360 - 235)
+                        }
+                    },
+                    onComplete: () => {
+                        this.scrollBar.setY(
+                            360 +
+                            235 *
+                            ((2 * this.musicTileManager.scrollIndex) /
+                                Math.max(this.musicTileManager.musicList.length - 1, 1) -
+                                1)
+                        )
+                    },
+                })
                 this.playPreviewSound()
             })
 
@@ -570,8 +620,6 @@ export class SelectScene extends Phaser.Scene {
             this.beatmapLevelText.setText("-")
             this.playButtonLight.setAlpha(0)
         }
-
-        this.scrollBar.setY(360 + 235 * (2 * this.musicTileManager.scrollRate - 1))
 
         if (this.textures.exists(this.musicTileManager.getJacketImageKey())) {
             this.jacketImage
