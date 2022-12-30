@@ -46,6 +46,18 @@
             "filename": "normalKey7LOVETUNE.bme",
             "playlevel": 3
         },
+        "beatmap_4k_3": {
+            "filename": "4k_3.bme",
+            "playlevel": 6
+        },
+        "beatmap_5k_3": {
+            "filename": "5k_3.bme",
+            "playlevel": 6
+        },
+        "beatmap_6k_3": {
+            "filename": "6k_3.bme",
+            "playlevel": 6
+        },
         "beatmap_7k_3": {
             "filename": "7k_3.bme",
             "playlevel": 6
@@ -76,19 +88,19 @@
         },
         "beatmap_4k_2": {
             "filename": "normalKey4tentekomaimai.bme",
-            "playlevel": 4
+            "playlevel": 3
         },
         "beatmap_5k_2": {
             "filename": "normalKey5tentekomaimai.bme",
-            "playlevel": 4
+            "playlevel": 3
         },
         "beatmap_6k_2": {
             "filename": "normalKey6tentekomaimai.bme",
-            "playlevel": 4
+            "playlevel": 3
         },
         "beatmap_7k_2": {
             "filename": "normalKey7tentekomaimai.bme",
-            "playlevel": 4
+            "playlevel": 3
         }
     },
     {
@@ -97,7 +109,39 @@
         "noter": "YurA",
         "folder": "YurA - Lost Artifact",
         "jacket": "LostArtifactCover.png",
-        "preview": "LostArtifact_shichou.wav"
+        "preview": "LostArtifact_shichou.wav",
+        "beatmap_4k_2": {
+            "filename": "4k_2.bme",
+            "playlevel": 4
+        },
+        "beatmap_5k_2": {
+            "filename": "5k_2.bme",
+            "playlevel": 4
+        },
+        "beatmap_6k_2": {
+            "filename": "6k_2.bme",
+            "playlevel": 4
+        },
+        "beatmap_7k_2": {
+            "filename": "7k_2.bme",
+            "playlevel": 4
+        },
+        "beatmap_4k_3": {
+            "filename": "4k_3.bme",
+            "playlevel": 6
+        },
+        "beatmap_5k_3": {
+            "filename": "5k_3.bme",
+            "playlevel": 6
+        },
+        "beatmap_6k_3": {
+            "filename": "6k_3.bme",
+            "playlevel": 6
+        },
+        "beatmap_7k_3": {
+            "filename": "7k_3.bme",
+            "playlevel": 6
+        }
     },
     {
         "title": "Talent Show",
