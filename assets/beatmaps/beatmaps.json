@@ -45,6 +45,10 @@
         "beatmap_7k_2": {
             "filename": "normalKey7LOVETUNE.bme",
             "playlevel": 3
+        },
+        "beatmap_7k_3": {
+            "filename": "7k_3.bme",
+            "playlevel": 6
         }
     },
     {
