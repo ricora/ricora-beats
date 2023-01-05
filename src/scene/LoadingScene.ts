@@ -1,4 +1,5 @@
 import WebFont from "webfontloader"
+import { MusicTileManager } from "../class/MusicTileManager"
 
 export class LoadingScene extends Phaser.Scene {
     private hasLoadedPhaser: boolean = false
@@ -153,7 +154,11 @@ export class LoadingScene extends Phaser.Scene {
     create() {
         const { width, height } = this.game.canvas
 
-        this.add.text(0, 0, "Loading...")
+        this.add.text(0, 0, "Loading...").setDepth(1)
+
+        // Web Font Loaderのロード完了判定がうまく動かないので選曲シーンで使用する文字を予め強制的に読み込む
+        new MusicTileManager(this, 0)
+        this.add.rectangle(640, 360, 1280, 720, 0x000000).setDepth(0)
 
         this.load.on("complete", () => {
             this.hasLoadedPhaser = true
