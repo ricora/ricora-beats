@@ -111,8 +111,14 @@ export class SelectScene extends Phaser.Scene {
                     })
 
                     localStorage.setItem("user", JSON.stringify(user))
-                    this.loginIcon.setAlpha(0.3).removeListener("pointerdown")
-                    this.loginLabel.setAlpha(0.3)
+                    this.loginIcon.removeListener("pointerdown").on("pointerdown", () => {
+                        if (
+                            window.open("https://beats-ir.tus-ricora.com/", "_blank") == null
+                        ) {
+                            location.href = "https://beats-ir.tus-ricora.com/"
+                        }
+                    })
+                    this.loginLabel.setText("IRサイトを開く")
                     this.userScreenNameText.setText(`${this.user.screen_name}`)
                     this.userStatusText.setText(
                         `${this.user.ordinalRank} / ${this.user.performance_point}pts.`
