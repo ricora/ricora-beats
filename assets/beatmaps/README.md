@@ -1,5 +1,5 @@
 # ricora-beats-beatmap
-https://github.com/RICORA/ricora-beats の楽曲&譜面置き場
+[RICORA Beats](https://github.com/RICORA/ricora-beats)の楽曲&譜面置き場。
 
 > **Note**
 >
@@ -11,4 +11,4 @@ https://github.com/RICORA/ricora-beats の楽曲&譜面置き場
 > 
 > **@Organization members**
 > 
-> RICORA Beatsのビルドとデプロイ時にこのリポジトリが参照されるので、権限の変更やリポジトリの削除をしないでください。
+> RICORA Beatsのビルドとデプロイ時にこのリポジトリが参照されるので、リポジトリの名前や権限の変更、削除をしないでください。
