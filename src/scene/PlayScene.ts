@@ -393,7 +393,7 @@ export class PlayScene extends Phaser.Scene {
         this.titleText = this.add
             .text(30, 300, "", {
                 fontFamily: "Noto Sans JP",
-                fontSize: "28px",
+                fontSize: "26px",
                 color: "#f0f0f0",
             })
             .setShadow(0, 0, "#080808", 4, false, true)
