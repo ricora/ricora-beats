@@ -3,6 +3,7 @@ import { KeySoundPlayer } from "./KeySoundPlayer"
 import { Note } from "./Note"
 import { Band } from "./Band"
 import { Measure } from "./Measure"
+import { JudgeMeter } from "./JudgeMeter"
 
 import { PlayConfig } from "./PlayConfig"
 
@@ -30,6 +31,8 @@ export class ChartPlayer {
 
     public combo: number = 0
     public maxCombo: number = 0
+
+    public judgeMeters: JudgeMeter[]
 
     constructor(
         scene: Phaser.Scene,
@@ -197,7 +200,7 @@ export class ChartPlayer {
         this.bgmLane.sort((a, b) => a.beat - b.beat)
         this.lastBeat += 0.1
 
-        //measure
+        // measure
         for (const measureIndex of Array(1000).keys()) {
             this.measures.push(
                 new Measure(
@@ -206,6 +209,9 @@ export class ChartPlayer {
                 )
             )
         }
+
+        // judge meter
+        this.judgeMeters = []
     }
 
     public update(
@@ -288,6 +294,9 @@ export class ChartPlayer {
                 }
             }
         }
+        for (const judgeMeter of this.judgeMeters) {
+            judgeMeter.update()
+        }
     }
 
     public judgeKeyDown = (
@@ -317,6 +326,7 @@ export class ChartPlayer {
                     this.latestJudgeIndex = judgeIndex
                     this.latestJudgeSec = playingSec
                     this.latestJudgeDiff = note.sec - playingSec
+                    this.judgeMeters.push(new JudgeMeter(scene, this.latestJudgeDiff))
                     keySoundPlayer.playKeySound(scene, note.value.toString())
 
                     if (note.isLongStart) {
