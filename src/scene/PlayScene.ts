@@ -345,8 +345,10 @@ export class PlayScene extends Phaser.Scene {
                     .setInteractive()
                     .setOrigin(0.5, 1)
                     .on("pointerover", () => {
-                        this.isTouching[laneIndex] = true
-                        this.judgeKeyDown(laneIndex)
+                        if (!this.isTouching[laneIndex]) {
+                            this.isTouching[laneIndex] = true
+                            this.judgeKeyDown(laneIndex)
+                        }
                     })
                     .on("pointerout", () => {
                         this.isTouching[laneIndex] = false
