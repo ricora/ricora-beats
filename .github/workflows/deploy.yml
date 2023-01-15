@@ -10,8 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       TZ: "Asia/Tokyo"
-      SERVER_URL: ${{ secrets.SERVER_URL }}
-      CREDITS: ${{ secrets.CREDITS }}
+      SERVER_URL: ${{ vars.SERVER_URL }}
+      CREDITS: ${{ vars.CREDITS }}
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
