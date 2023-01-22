@@ -8,6 +8,8 @@ import { MusicTileManager } from "../class/MusicTileManager"
 import { PlayResult } from "../class/PlayResult"
 import { User } from "../class/User"
 
+import { retryFetch } from "../lib/retryFetch"
+
 type DIFFICULTY = 1 | 2 | 3 | 4
 type KEY = 4 | 5 | 6 | 7
 
@@ -95,7 +97,7 @@ export class SelectScene extends Phaser.Scene {
                     "Content-Type": "application/json",
                     Authorization: `${token_type} ${access_token}`,
                 }
-                const userResponse = await fetch(
+                const userResponse = await retryFetch(
                     new URL("/users/me", process.env.SERVER_URL as string).toString(),
                     {
                         headers: headers,

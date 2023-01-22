@@ -1,5 +1,7 @@
 import { User } from "../class/User"
 
+import { retryFetch } from "../lib/retryFetch"
+
 export class LoginScene extends Phaser.Scene {
     private loginForm: Phaser.GameObjects.DOMElement
     private registerForm: Phaser.GameObjects.DOMElement
@@ -44,7 +46,7 @@ export class LoginScene extends Phaser.Scene {
             loginFormElement.addEventListener("submit", async (event) => {
                 event.preventDefault()
                 const formData = new FormData(loginFormElement)
-                const tokenResponse = await fetch(
+                const tokenResponse = await retryFetch(
                     new URL("/token", process.env.SERVER_URL as string).toString(),
                     {
                         method: "POST",
@@ -56,7 +58,7 @@ export class LoginScene extends Phaser.Scene {
                     localStorage.setItem("access_token", tokenResponseJSON.access_token)
                     localStorage.setItem("token_type", tokenResponseJSON.token_type)
 
-                    const userResponse = await fetch(
+                    const userResponse = await retryFetch(
                         new URL("/users/me", process.env.SERVER_URL as string).toString(),
                         {
                             headers: {
@@ -93,7 +95,7 @@ export class LoginScene extends Phaser.Scene {
             registerFormElement.addEventListener("submit", async (event) => {
                 event.preventDefault()
                 const formData = new FormData(registerFormElement)
-                const registerResponse = await fetch(
+                const registerResponse = await retryFetch(
                     new URL("/users/", process.env.SERVER_URL as string).toString(),
                     {
                         method: "POST",

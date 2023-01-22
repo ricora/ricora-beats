@@ -2,6 +2,8 @@ import { DebugGUI } from "../class/DebugGUI"
 import { PlayResult } from "../class/PlayResult"
 import { Music } from "../class/Music"
 
+import { retryFetch } from "../lib/retryFetch"
+
 export class ResultScene extends Phaser.Scene {
     private debugGUI: DebugGUI
 
@@ -105,7 +107,7 @@ export class ResultScene extends Phaser.Scene {
             const filename = this.playResult.music[
                 `beatmap_${this.playResult.playConfig.key}k_${this.playResult.playConfig.difficulty}`
             ]?.filename as string
-            const rankingResponse = await fetch(
+            const rankingResponse = await retryFetch(
                 new URL(
                     `/scores/${encodeURIComponent(folder)}/${encodeURIComponent(
                         filename
@@ -140,7 +142,7 @@ export class ResultScene extends Phaser.Scene {
 
             this.ranking = ranking
 
-            const usersResponse = await fetch(
+            const usersResponse = await retryFetch(
                 new URL("/users/", process.env.SERVER_URL as string).toString(),
                 {
                     headers: {
@@ -181,7 +183,7 @@ export class ResultScene extends Phaser.Scene {
                 Authorization: `${token_type} ${access_token}`,
             }
 
-            const userResponse = await fetch(
+            const userResponse = await retryFetch(
                 new URL("/users/me", process.env.SERVER_URL as string).toString(),
                 {
                     headers: headers,
@@ -196,7 +198,7 @@ export class ResultScene extends Phaser.Scene {
             const filename = this.playResult.music[
                 `beatmap_${this.playResult.playConfig.key}k_${this.playResult.playConfig.difficulty}`
             ]?.filename as string
-            const sendScoreResponse = await fetch(
+            const sendScoreResponse = await retryFetch(
                 new URL("/scores/", process.env.SERVER_URL as string).toString(),
                 {
                     method: "POST",
