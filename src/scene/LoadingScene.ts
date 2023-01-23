@@ -30,6 +30,8 @@ export class LoadingScene extends Phaser.Scene {
         this.load.image("icon-credit", "./assets/skin/tabler-icons/info-circle.png")
         this.load.image("icon-help", "./assets/skin/tabler-icons/help.png")
         this.load.image("icon-back", "./assets/skin/tabler-icons/arrow-back-up.png")
+        this.load.image("icon-twitter", "./assets/skin/tabler-icons/brand-twitter.png")
+        this.load.image("icon-camera", "./assets/skin/tabler-icons/camera.png")
         this.load.image("icon-maximize", "./assets/skin/tabler-icons/maximize.png")
         this.load.image("icon-minimize", "./assets/skin/tabler-icons/minimize.png")
         this.load.image("icon-user", "./assets/skin/tabler-icons/user-circle.png")
