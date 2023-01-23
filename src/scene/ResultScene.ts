@@ -46,6 +46,8 @@ export class ResultScene extends Phaser.Scene {
     private diffIcon: Phaser.GameObjects.Image
 
     private backButton: Phaser.GameObjects.Image
+    private tweetButton: Phaser.GameObjects.Image
+    private snapButton: Phaser.GameObjects.Image
 
     private line1: Phaser.GameObjects.Rectangle
     private line2: Phaser.GameObjects.Rectangle
@@ -206,9 +208,10 @@ export class ResultScene extends Phaser.Scene {
                     body: JSON.stringify({
                         folder: folder,
                         filename: filename,
-                        level: this.playResult.music[
-                            `beatmap_${this.playResult.playConfig.key}k_${this.playResult.playConfig.difficulty}`
-                        ]?.playlevel,
+                        level:
+                            this.playResult.music[
+                                `beatmap_${this.playResult.playConfig.key}k_${this.playResult.playConfig.difficulty}`
+                            ]?.playlevel,
                         score: this.playResult.score,
                         combo: this.playResult.maxCombo,
                         judge_0: this.playResult.judges[0],
@@ -647,6 +650,68 @@ export class ResultScene extends Phaser.Scene {
                 this.backButton.setAlpha(0.5)
             })
 
+        this.tweetButton = this.add
+            .image(790, 500, "icon-twitter")
+            .setOrigin(0, 0)
+            .setDepth(10)
+            .setScale(0.8)
+            .setAlpha(0.5)
+            .setInteractive({
+                useHandCursor: true,
+            })
+            .on("pointerdown", () => {
+                ; (async () => {
+                    this.sound.play("decide")
+                    this.tweetButton.setAlpha(0.5)
+                    this.copySnapshot()
+                    await new Promise((resolve) => setTimeout(resolve, 1000))
+
+                    const url =
+                        "https://twitter.com/intent/tweet?text=" +
+                        encodeURIComponent(
+                            `${this.playResult.music.title} (${this.playResult.playConfig.key
+                            }KEYS - ${{
+                                1: "BEGINNER",
+                                2: "STANDARD",
+                                3: "ADVANCED",
+                                4: "EXTRA",
+                            }[this.playResult.playConfig.difficulty]
+                            }) ${this.playResult.score.toFixed(2)
+                            }%\n(画像は自動で挿入されません。スクリーンショットをクリップボードからペーストし、この文章は消してください。)\n#RICORA_Beats\nhttps://beats-ir.tus-ricora.com/`
+                        )
+                    if (window.open(url, "_blank") == null) {
+                        location.href = url
+                    }
+                })()
+            })
+            .on("pointerover", () => {
+                this.tweetButton.setAlpha(1)
+            })
+            .on("pointerout", () => {
+                this.tweetButton.setAlpha(0.5)
+            })
+
+        this.snapButton = this.add
+            .image(790, 600, "icon-camera")
+            .setOrigin(0, 0)
+            .setDepth(10)
+            .setScale(0.8)
+            .setAlpha(0.5)
+            .setInteractive({
+                useHandCursor: true,
+            })
+            .on("pointerdown", () => {
+                this.sound.play("decide")
+                this.snapButton.setAlpha(0.5)
+                this.copySnapshot()
+            })
+            .on("pointerover", () => {
+                this.snapButton.setAlpha(1)
+            })
+            .on("pointerout", () => {
+                this.snapButton.setAlpha(0.5)
+            })
+
         this.cameras.main.once(
             Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
             () => {
@@ -673,5 +738,40 @@ export class ResultScene extends Phaser.Scene {
                 this.judgeLabelTexts[0].setColor("#ffffff")
                 break
         }
+    }
+
+    private copySnapshot() {
+        this.renderer.snapshot((image: HTMLImageElement | Phaser.Display.Color) => {
+            if (image instanceof HTMLImageElement) {
+                const base64ToBlob = (base64Data: string): Blob => {
+                    const contentType = "image/png"
+                    const sliceSize = 512
+                    const byteCharacters = atob(base64Data)
+                    const byteArrays: Uint8Array[] = []
+                    for (
+                        let offset = 0;
+                        offset < byteCharacters.length;
+                        offset += sliceSize
+                    ) {
+                        const slice = byteCharacters.slice(offset, offset + sliceSize)
+                        const byteNumbers: number[] = new Array(slice.length)
+                        for (let i = 0; i < slice.length; i++) {
+                            byteNumbers[i] = slice.charCodeAt(i)
+                        }
+                        const byteArray = new Uint8Array(byteNumbers)
+                        byteArrays.push(byteArray)
+                    }
+                    return new Blob(byteArrays, { type: contentType })
+                }
+
+                navigator.clipboard.write([
+                    new ClipboardItem({
+                        "image/png": base64ToBlob(
+                            image.src.replace("data:image/png;base64,", "")
+                        ),
+                    } as any),
+                ])
+            }
+        })
     }
 }
