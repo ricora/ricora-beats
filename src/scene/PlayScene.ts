@@ -50,8 +50,12 @@ export class PlayScene extends Phaser.Scene {
     private judgeBar: Phaser.GameObjects.Image
     private judgeBarLight: Phaser.GameObjects.Image
 
+    private musicFrame: Phaser.GameObjects.Image
+    private musicFrameLabelText: Phaser.GameObjects.Text
     private titleText: Phaser.GameObjects.Text
     private artistText: Phaser.GameObjects.Text
+    private keyIcon: Phaser.GameObjects.Image
+    private diffIcon: Phaser.GameObjects.Image
 
     private comboText: Phaser.GameObjects.Text
     private scoreText: Phaser.GameObjects.Text
@@ -166,33 +170,35 @@ export class PlayScene extends Phaser.Scene {
         this.backgroundMask = this.add
             .rectangle(width / 2, height / 2, 760, 720, 0x000000, 70)
             .setDepth(-9)
+            .setScale(0, 1)
 
         this.laneBackground = this.add
             .image(width / 2, height / 2, "frame-back")
-            .setDisplaySize(1280, 720)
+            .setDisplaySize(0, 720)
             .setDepth(-5)
         this.laneBackgroundLight = this.add
             .image(width / 2, height / 2, "frame-back-light-yellow")
-            .setDisplaySize(1280, 720)
+            .setDisplaySize(0, 720)
             .setDepth(-4)
         this.laneMainFrame = this.add
             .image(width / 2, height / 2, "frame-main")
-            .setDisplaySize(1280, 720)
+            .setDisplaySize(0, 720)
             .setDepth(-3)
         this.laneMainFrameLight = this.add
             .image(width / 2, height / 2, "frame-main-light")
-            .setDisplaySize(1280, 720)
+            .setDisplaySize(0, 720)
             .setDepth(-2)
 
         this.judgeBar = this.add
             .image(width / 2, 640, "judgebar")
             .setDisplaySize(780, 14)
             .setDepth(-4)
-
+            .setAlpha(0)
         this.judgeBarLight = this.add
             .image(width / 2, 640, "judgebar-light")
             .setDisplaySize(837, 50)
             .setDepth(-4)
+            .setAlpha(0)
 
         this.judgeText = this.add
             .image(width / 2, 500, "judge-0")
@@ -376,13 +382,13 @@ export class PlayScene extends Phaser.Scene {
 
         this.debugText = this.add.text(0, 450, "").setVisible(false)
 
-        this.add
+        this.musicFrame = this.add
             .image(100, 80, "frame-vertical")
             .setOrigin(0.5, 0)
-            .setScale(0.66)
+            .setScale(0, 0.67)
             .setDepth(1)
 
-        this.add
+        this.musicFrameLabelText = this.add
             .text(100, 110, "MUSIC INFO", {
                 fontFamily: "Oswald",
                 fontSize: "36px",
@@ -391,6 +397,7 @@ export class PlayScene extends Phaser.Scene {
             .setOrigin(0.5, 0.5)
             .setDepth(4)
             .setScale(0.5)
+            .setAlpha(0)
 
         this.titleText = this.add
             .text(30, 300, "", {
@@ -402,6 +409,7 @@ export class PlayScene extends Phaser.Scene {
             .setOrigin(0, 0.5)
             .setDepth(10)
             .setScale(0.5)
+            .setAlpha(0)
 
         this.artistText = this.add
             .text(30, 320, "", {
@@ -413,11 +421,13 @@ export class PlayScene extends Phaser.Scene {
             .setOrigin(0, 0.5)
             .setDepth(10)
             .setScale(0.5)
+            .setAlpha(0)
 
         this.jacketImage = this.add
             .image(100, 210, "jacket-no-image")
             .setDepth(9)
             .setDisplaySize(142, 142)
+            .setAlpha(0)
 
         if (this.music.jacket !== undefined) {
             this.jacketImage
@@ -425,17 +435,19 @@ export class PlayScene extends Phaser.Scene {
                 .setDisplaySize(142, 142)
         }
 
-        this.add
+        this.keyIcon = this.add
             .image(100, 380, `key-icon-${this.playConfig.key}`)
             .setOrigin(0.5, 0.5)
             .setDepth(10)
             .setScale(0.7)
+            .setAlpha(0)
 
-        this.add
+        this.diffIcon = this.add
             .image(100, 410, `diff-icon-${this.playConfig.difficulty}`)
             .setOrigin(0.5, 0.5)
             .setDepth(10)
             .setScale(0.7)
+            .setAlpha(0)
 
         //this.add.image(80,140,"jacket-test").setOrigin(0.5,0.5).setDepth(10).setDisplaySize(140,140)
 
@@ -499,6 +511,55 @@ export class PlayScene extends Phaser.Scene {
             this.hasLoaded = true
             this.loadEndTime = new Date()
             this.cameras.main.fadeIn(500)
+            this.tweens.add({
+                targets: [
+                    this.laneMainFrame,
+                    this.laneMainFrameLight,
+                    this.laneBackground,
+                    this.laneBackgroundLight
+                ],
+                delay: 100,
+                scaleX: {
+                    value: 0.67,
+                    duration: 600,
+                    ease: Phaser.Math.Easing["Cubic"]["Out"],
+                },
+                onComplete: () => {
+                    this.tweens.add({
+                        targets: [this.judgeBar, this.judgeBarLight],
+                        alpha: {
+                            value: 1,
+                            duration: 400,
+                        }
+                    })
+                    this.tweens.add({
+                        targets: this.musicFrame,
+                        scaleX: {
+                            value: 0.67,
+                            duration: 400,
+                            ease: Phaser.Math.Easing["Cubic"]["Out"],
+                        },
+                        onComplete: () => {
+                            this.tweens.add({
+                                targets: [this.musicFrameLabelText, this.jacketImage, this.titleText, this.artistText, this.keyIcon, this.diffIcon],
+                                alpha: {
+                                    value: 1,
+                                    duration: 400,
+                                }
+                            })
+                        }
+                    })
+                },
+            })
+            this.tweens.add({
+                targets: [this.backgroundMask],
+                delay: 100,
+                scaleX: {
+                    value: 1,
+                    duration: 600,
+                    ease: Phaser.Math.Easing["Cubic"]["Out"],
+                },
+            })
         })
     }
     update(time: number, dt: number) {
@@ -509,7 +570,7 @@ export class PlayScene extends Phaser.Scene {
             0.5 + 0.25 * 0.5 * (Math.sin(1 * Math.PI * this.beat) + 1)
         )
         this.judgeBarLight.setAlpha(
-            0.2 + 0.3 * (Math.cos(1 * Math.PI * this.beat) + 1)
+            0 <= this.beat ? 0.2 + 0.3 * (Math.cos(1 * Math.PI * this.beat) + 1) : 0
         )
         this.judgeBar.setTint(0xbbbbbb)
 
