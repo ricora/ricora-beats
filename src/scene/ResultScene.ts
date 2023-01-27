@@ -511,8 +511,8 @@ export class ResultScene extends Phaser.Scene {
             delay: 450,
             scaleX: {
                 value: 1,
-                duration: 200,
-                ease: "Quintic.Out",
+                duration: 300,
+                ease: Phaser.Math.Easing["Cubic"]["Out"],
             },
         })
 
@@ -586,8 +586,8 @@ export class ResultScene extends Phaser.Scene {
             delay: 200,
             scaleY: {
                 value: 0.67,
-                duration: 200,
-                ease: "Quintic.Out",
+                duration: 400,
+                ease: Phaser.Math.Easing["Cubic"]["Out"],
             },
         })
 
@@ -622,11 +622,10 @@ export class ResultScene extends Phaser.Scene {
                 this.judgeLabelTexts[3],
                 this.judgeLabelTexts[4],
             ],
-            delay: 500,
+            delay: 700,
             alpha: {
                 value: 1,
                 duration: 150,
-                ease: "Quintic.Out",
             },
         })
 
