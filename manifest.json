@@ -1,18 +1,21 @@
 {
-    "name": "RICORA Beats",
-    "short_name": "RICORA Beats",
-    "description": "",
-    "start_url": "./",
-    "theme_color": "#000000",
-    "display": "fullscreen",
-    "orientation": "landscape",
-    "icons": [{
-        "src": "icon-192.png",
-        "sizes": "192x192",
-        "type": "image/png"
-    }, {
-        "src": "icon-256.png",
-        "sizes": "256x256",
-        "type": "image/png"
-    }]
+  "name": "RICORA Beats",
+  "short_name": "RICORA Beats",
+  "description": "",
+  "start_url": "./",
+  "theme_color": "#000000",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    }
+  ]
 }
