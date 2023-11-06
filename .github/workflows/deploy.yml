@@ -17,20 +17,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16'
-          cache: npm
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
 
-      - name: Install
-        run: npm install
+      - name: Install Dependencies
+        run: bun install
 
       - name: Fetch beatmap repository
-        run: npx degit RICORA/ricora-beats-beatmap ./dist/assets/beatmaps
+        run: bunx degit RICORA/ricora-beats-beatmap ./dist/assets/beatmaps
 
       - name: Build
-        run: npm run build
+        run: bun run build
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
