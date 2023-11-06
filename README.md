@@ -98,10 +98,12 @@ Have a look through existing [Issues](https://github.com/RICORA/ricora-beats/iss
 
 #### Development
 
+This project requires the use of [Bun](https://bun.sh/) as the JavaScript runtime. Please make sure you have [Bun](https://bun.sh/) installed before proceeding with the setup.
+
 ##### Install
 
 ```sh
-npm install
+bun install
 ```
 
 ##### Set environment variable
@@ -114,20 +116,19 @@ export CREDITS="Alice\nBob, Carol\nDave, Ellen, Frank"
 ##### Fetch beatmap repository
 
 ```sh
-npx degit RICORA/ricora-beats-beatmap ./dist/assets/beatmaps
+bunx degit RICORA/ricora-beats-beatmap ./dist/assets/beatmaps
 ```
 
 ##### Run development server
 
 ```sh
-
-npm run dev
+bun run dev
 ```
 
 ##### Build
 
 ```sh
-npm run build
+bun run build
 ```
 
 ### Score ranking (Frontend)
