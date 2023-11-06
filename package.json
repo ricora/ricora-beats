@@ -5,13 +5,16 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --mode=development",
-    "dev": "webpack-dev-server --mode=development"
+    "dev": "webpack-dev-server --mode=development",
+    "format": "prettier --write './**/*.{js,ts,json,yaml,yml,md,html,css,scss}' --ignore-path '.gitignore'",
+    "format:check": "prettier --check './**/*.{js,ts,json,yaml,yml,md,html,css,scss}' --ignore-path '.gitignore'"
   },
   "keywords": [],
   "author": "",
   "devDependencies": {
     "@types/webfontloader": "^1.6.34",
     "phaser": "^3.55.2",
+    "prettier": "^3.0.3",
     "ts-loader": "^8.0.11",
     "typescript": "^4.1.2",
     "webpack": "^5.0.0-rc.6",

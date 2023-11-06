@@ -1,7 +1,6 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
-<head prefix="og:http://ogp.me/ns#">
+  <head prefix="og:http://ogp.me/ns#">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <meta name="HandheldFriendly" content="True" />
@@ -11,7 +10,7 @@
     <meta name="theme-color" content="#000000" />
     <meta name="description" content="Webブラウザからタッチパネルやキーボードで遊ぶ音楽ゲーム「RICORA Beats」です。" />
 
-    <link rel="icon" href="./favicon.svg" type="image/svg+xml"/>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
 
     <link rel="manifest" href="./manifest.json" />
 
@@ -22,7 +21,10 @@
 
     <meta property="og:url" content="https://beats.tus-ricora.com" />
     <meta property="og:title" content="RICORA Beats" />
-    <meta property="og:description" content="Webブラウザからタッチパネルやキーボードで遊ぶ音楽ゲーム「RICORA Beats」です。" />
+    <meta
+      property="og:description"
+      content="Webブラウザからタッチパネルやキーボードで遊ぶ音楽ゲーム「RICORA Beats」です。"
+    />
     <meta property="og:image" content="https://beats.tus-ricora.com/ogp.png" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="RICORA Beats" />
@@ -33,26 +35,25 @@
 
     <title>RICORA Beats</title>
     <style>
-        html,
-        body {
-            margin: 0;
-        }
+      html,
+      body {
+        margin: 0;
+      }
 
-        #game-app {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
+      #game-app {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
     </style>
     <script>
-        navigator.serviceWorker.register("./service-worker.js")
+      navigator.serviceWorker.register("./service-worker.js")
     </script>
-</head>
+  </head>
 
-<body>
+  <body>
     <div id="game-app"></div>
     <script src="./bundle.js"></script>
-</body>
-
+  </body>
 </html>
