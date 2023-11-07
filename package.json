@@ -7,7 +7,9 @@
     "build": "webpack --mode=development",
     "dev": "webpack-dev-server --mode=development",
     "format": "prettier --write './**/*.{js,ts,json,yaml,yml,md,html,css,scss}' --ignore-path '.gitignore'",
-    "format:check": "prettier --check './**/*.{js,ts,json,yaml,yml,md,html,css,scss}' --ignore-path '.gitignore'"
+    "format:check": "prettier --check './**/*.{js,ts,json,yaml,yml,md,html,css,scss}' --ignore-path '.gitignore'",
+    "lint": "eslint './src/**/*.ts' --ignore-path '.gitignore'",
+    "lint:fix": "eslint --fix './src/**/*.ts' --ignore-path '.gitignore'"
   },
   "keywords": [],
   "author": "",
