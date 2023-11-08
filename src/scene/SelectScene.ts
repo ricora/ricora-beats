@@ -1,9 +1,7 @@
-import GUI from "lil-gui"
 import { DebugGUI } from "../class/DebugGUI"
 import { PlayConfig } from "../class/PlayConfig"
 
-import { type Music, Beatmap } from "../class/Music"
-import { MusicTile } from "../class/MusicTile"
+import { type Music } from "../class/Music"
 import { MusicTileManager } from "../class/MusicTileManager"
 import { type PlayResult } from "../class/PlayResult"
 import { User } from "../class/User"
@@ -70,9 +68,14 @@ export class SelectScene extends Phaser.Scene {
 
     this.musicTileManager = new MusicTileManager(this, this.scrollIndex)
 
+    const localStoragePlayConfig = localStorage.getItem("play_config")
+    let localStoragePlayConfigJSON = null
+    if (localStoragePlayConfig !== null) {
+      localStoragePlayConfigJSON = JSON.parse(localStoragePlayConfig)
+    }
     this.playConfig =
       data.playConfig ||
-      JSON.parse(localStorage.getItem("play_config")) ||
+      localStoragePlayConfigJSON ||
       new PlayConfig({
         noteSpeed: 3.0,
         noteType: "circle",
@@ -595,13 +598,15 @@ export class SelectScene extends Phaser.Scene {
     } else {
       this.jacketImage.setTexture("jacket-no-image").setDisplaySize(240, 240)
     }
-    const bestPlayResult: PlayResult | null = JSON.parse(
-      localStorage.getItem(`play_result_${this.musicTileManager.getMusic().folder}_${this.key}_${this.difficulty}`),
-    )
-    if (bestPlayResult !== null) {
+
+    this.bestScoreText.setText("-    %")
+    const localStoragePlayResultKey = `play_result_${this.musicTileManager.getMusic().folder}_${this.key}_${
+      this.difficulty
+    }`
+    const localStoragePlayResult = localStorage.getItem(localStoragePlayResultKey)
+    if (localStoragePlayResult !== null) {
+      const bestPlayResult: PlayResult = JSON.parse(localStoragePlayResult)
       this.bestScoreText.setText(`${bestPlayResult.score.toFixed(2)} %`)
-    } else {
-      this.bestScoreText.setText("-    %")
     }
   }
 

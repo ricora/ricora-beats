@@ -52,7 +52,7 @@ export class CreditScene extends Phaser.Scene {
       "",
     ]
 
-    const rightCredits = process.env.CREDITS.split(/\\r\\n|\\n|\\r/)
+    const rightCredits = (process.env.CREDITS || "").split(/\\r\\n|\\n|\\r/)
 
     this.add
       .text(width / 2 - 260, height / 2 - 200 - 5, "RICORA Beats", {

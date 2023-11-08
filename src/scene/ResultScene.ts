@@ -1,6 +1,5 @@
 import { DebugGUI } from "../class/DebugGUI"
 import { PlayResult } from "../class/PlayResult"
-import { Music } from "../class/Music"
 
 import { retryFetch } from "../lib/retryFetch"
 
@@ -89,12 +88,12 @@ export class ResultScene extends Phaser.Scene {
         score: 95.21,
         maxCombo: 1234,
       })
-    this.oldPlayResult = JSON.parse(
-      localStorage.getItem(
-        `play_result_${this.playResult.music.folder}_${this.playResult.playConfig.key}_${this.playResult.playConfig.difficulty}`,
-      ),
+    const localStoragePlayResult = localStorage.getItem(
+      `play_result_${this.playResult.music.folder}_${this.playResult.playConfig.key}_${this.playResult.playConfig.difficulty}`,
     )
-    if (this.oldPlayResult === null) {
+    if (localStoragePlayResult !== null) {
+      this.oldPlayResult = JSON.parse(localStoragePlayResult)
+    } else {
       this.oldPlayResult = { ...this.playResult }
       this.oldPlayResult.score = 0
     }
@@ -109,6 +108,10 @@ export class ResultScene extends Phaser.Scene {
       const filename =
         this.playResult.music[`beatmap_${this.playResult.playConfig.key}k_${this.playResult.playConfig.difficulty}`]
           ?.filename
+      if (filename === undefined) {
+        this.rankText.setText("- / -")
+        return
+      }
       const rankingResponse = await retryFetch(
         new URL(
           `/scores/${encodeURIComponent(folder)}/${encodeURIComponent(filename)}/`,
@@ -121,6 +124,7 @@ export class ResultScene extends Phaser.Scene {
         },
       )
       if (!rankingResponse.ok) {
+        this.rankText.setText("- / -")
         return
       }
       const ranking: any[] = await rankingResponse.json()
@@ -137,9 +141,8 @@ export class ResultScene extends Phaser.Scene {
         }
         this.rankText.setText(`${rank} / ${ranking.length}`)
       } else {
-        this.rankText.setText("")
+        this.rankText.setText("- / -")
       }
-
       this.ranking = ranking
 
       const usersResponse = await retryFetch(new URL("/users/", process.env.SERVER_URL).toString(), {
