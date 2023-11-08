@@ -22,7 +22,6 @@
     "eslint-plugin-import": "^2.29.0",
     "eslint-plugin-n": "^16.3.0",
     "eslint-plugin-promise": "^6.1.1",
-    "phaser": "^3.55.2",
     "prettier": "^3.0.3",
     "ts-loader": "^9.5.0",
     "typescript": "^5.2.2",
@@ -34,6 +33,7 @@
     "axios": "^0.26.1",
     "bms": "github:bemusic/bms-js#v2.1.0-beta.1",
     "lil-gui": "^0.17.0",
+    "phaser": "^3.60.0",
     "phaser3-rex-plugins": "^1.1.75",
     "webfontloader": "^1.6.28"
   }
