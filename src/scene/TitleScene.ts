@@ -122,7 +122,7 @@ export class TitleScene extends Phaser.Scene {
       .setScale(0.5)
 
     this.add
-      .text(0, 0, `BUILD:${process.env.BUILD_DATE as string}`, {
+      .text(0, 0, `BUILD:${process.env.BUILD_DATE}`, {
         fontFamily: "Noto Sans JP",
         fontSize: "40px",
         color: "#fafafa",

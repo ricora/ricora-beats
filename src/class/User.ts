@@ -24,7 +24,7 @@ export class User {
   get ordinalRank(): string {
     const rankMod10 = this.rank % 10
     const rankMod100 = this.rank % 100
-    if (11 <= rankMod100 && rankMod100 <= 13) {
+    if (rankMod100 >= 11 && rankMod100 <= 13) {
       return `${this.rank}th`
     } else if (rankMod10 === 1) {
       return `${this.rank}st`

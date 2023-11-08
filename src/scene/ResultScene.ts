@@ -92,7 +92,7 @@ export class ResultScene extends Phaser.Scene {
     this.oldPlayResult = JSON.parse(
       localStorage.getItem(
         `play_result_${this.playResult.music.folder}_${this.playResult.playConfig.key}_${this.playResult.playConfig.difficulty}`,
-      ) as string,
+      ),
     )
     if (this.oldPlayResult === null) {
       this.oldPlayResult = { ...this.playResult }
@@ -106,13 +106,13 @@ export class ResultScene extends Phaser.Scene {
     }
     const getRanking = async (userId?: number) => {
       const folder = this.playResult.music.folder
-      const filename = this.playResult.music[
-        `beatmap_${this.playResult.playConfig.key}k_${this.playResult.playConfig.difficulty}`
-      ]?.filename as string
+      const filename =
+        this.playResult.music[`beatmap_${this.playResult.playConfig.key}k_${this.playResult.playConfig.difficulty}`]
+          ?.filename
       const rankingResponse = await retryFetch(
         new URL(
           `/scores/${encodeURIComponent(folder)}/${encodeURIComponent(filename)}/`,
-          process.env.SERVER_URL as string,
+          process.env.SERVER_URL,
         ).toString(),
         {
           headers: {
@@ -142,7 +142,7 @@ export class ResultScene extends Phaser.Scene {
 
       this.ranking = ranking
 
-      const usersResponse = await retryFetch(new URL("/users/", process.env.SERVER_URL as string).toString(), {
+      const usersResponse = await retryFetch(new URL("/users/", process.env.SERVER_URL).toString(), {
         headers: {
           "Content-Type": "application/json",
         },
@@ -151,7 +151,7 @@ export class ResultScene extends Phaser.Scene {
         return
       }
       const users = await usersResponse.json()
-      let userIdToScreenName: { [key: number]: string } = {}
+      const userIdToScreenName: Record<number, string> = {}
       for (const user of users) {
         userIdToScreenName[user.id] = user.screen_name
       }
@@ -176,8 +176,8 @@ export class ResultScene extends Phaser.Scene {
         Authorization: `${token_type} ${access_token}`,
       }
 
-      const userResponse = await retryFetch(new URL("/users/me", process.env.SERVER_URL as string).toString(), {
-        headers: headers,
+      const userResponse = await retryFetch(new URL("/users/me", process.env.SERVER_URL).toString(), {
+        headers,
       })
       if (!userResponse.ok) {
         await getRanking()
@@ -185,15 +185,15 @@ export class ResultScene extends Phaser.Scene {
       }
       const user = await userResponse.json()
       const folder = this.playResult.music.folder
-      const filename = this.playResult.music[
-        `beatmap_${this.playResult.playConfig.key}k_${this.playResult.playConfig.difficulty}`
-      ]?.filename as string
-      const sendScoreResponse = await retryFetch(new URL("/scores/", process.env.SERVER_URL as string).toString(), {
+      const filename =
+        this.playResult.music[`beatmap_${this.playResult.playConfig.key}k_${this.playResult.playConfig.difficulty}`]
+          ?.filename
+      const sendScoreResponse = await retryFetch(new URL("/scores/", process.env.SERVER_URL).toString(), {
         method: "POST",
-        headers: headers,
+        headers,
         body: JSON.stringify({
-          folder: folder,
-          filename: filename,
+          folder,
+          filename,
           level:
             this.playResult.music[`beatmap_${this.playResult.playConfig.key}k_${this.playResult.playConfig.difficulty}`]
               ?.playlevel,
@@ -214,6 +214,7 @@ export class ResultScene extends Phaser.Scene {
     }
     sendScore()
   }
+
   create() {
     const { width, height } = this.game.canvas
 
@@ -452,7 +453,7 @@ export class ResultScene extends Phaser.Scene {
       scaleX: {
         value: 1,
         duration: 300,
-        ease: Phaser.Math.Easing["Cubic"]["Out"],
+        ease: Phaser.Math.Easing.Cubic.Out,
       },
     })
 
@@ -515,7 +516,7 @@ export class ResultScene extends Phaser.Scene {
       scaleY: {
         value: 0.67,
         duration: 400,
-        ease: Phaser.Math.Easing["Cubic"]["Out"],
+        ease: Phaser.Math.Easing.Cubic.Out,
       },
     })
 

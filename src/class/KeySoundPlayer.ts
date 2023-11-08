@@ -1,13 +1,14 @@
 import bms from "bms"
-import { Chart } from "./Chart"
+import { type Chart } from "./Chart"
 
 export class KeySoundPlayer {
-  private keySoundSet = new Set<string>()
-  private keySoundMap
+  private readonly keySoundSet = new Set<string>()
+  private readonly keySoundMap
 
   constructor(chart: Chart) {
     this.keySoundMap = bms.Keysounds.fromBMSChart(chart.bmsChart)._map
   }
+
   public loadKeySounds(scene: Phaser.Scene, url: string) {
     Object.keys(this.keySoundMap).forEach((noteValue) => {
       const soundFileName = this.keySoundMap[noteValue]

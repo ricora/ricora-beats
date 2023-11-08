@@ -1,13 +1,13 @@
-import { Music, Beatmap } from "./Music"
+import { type Music, Beatmap } from "./Music"
 import { MusicTile } from "./MusicTile"
 
 export class MusicTileManager {
-  private musicTiles: MusicTile[]
+  private readonly musicTiles: MusicTile[]
   public musicList: Music[]
-  private selectedMusicTile: Phaser.GameObjects.Image
+  private readonly selectedMusicTile: Phaser.GameObjects.Image
   public scrollIndex: number
-  private ascTweens: Phaser.Tweens.Tween[]
-  private descTweens: Phaser.Tweens.Tween[]
+  private readonly ascTweens: Phaser.Tweens.Tween[]
+  private readonly descTweens: Phaser.Tweens.Tween[]
 
   constructor(
     public scene: Phaser.Scene,
@@ -71,6 +71,7 @@ export class MusicTileManager {
       )
     }
   }
+
   public update(time: number) {
     for (const musicTileIndex of Array(7).keys()) {
       const musicTile = this.musicTiles[musicTileIndex]
@@ -102,6 +103,7 @@ export class MusicTileManager {
   public isPlayable(key: number, difficulty: number) {
     return this.musicList[this.scrollIndex].hasOwnProperty(`beatmap_${key}k_${difficulty}`)
   }
+
   public getMusic() {
     return this.musicList[this.scrollIndex]
   }

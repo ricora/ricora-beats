@@ -1,9 +1,9 @@
 export class ToggleButton extends Phaser.GameObjects.Container {
-  private frame: Phaser.GameObjects.Image
-  private text: Phaser.GameObjects.Text
+  private readonly frame: Phaser.GameObjects.Image
+  private readonly text: Phaser.GameObjects.Text
 
-  private leftIcon: Phaser.GameObjects.Image
-  private rightIcon: Phaser.GameObjects.Image
+  private readonly leftIcon: Phaser.GameObjects.Image
+  private readonly rightIcon: Phaser.GameObjects.Image
 
   public leftZone: Phaser.GameObjects.Zone
   public rightZone: Phaser.GameObjects.Zone

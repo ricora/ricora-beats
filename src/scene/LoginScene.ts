@@ -38,7 +38,7 @@ export class LoginScene extends Phaser.Scene {
       loginFormElement.addEventListener("submit", async (event) => {
         event.preventDefault()
         const formData = new FormData(loginFormElement)
-        const tokenResponse = await retryFetch(new URL("/token", process.env.SERVER_URL as string).toString(), {
+        const tokenResponse = await retryFetch(new URL("/token", process.env.SERVER_URL).toString(), {
           method: "POST",
           body: formData,
         })
@@ -47,7 +47,7 @@ export class LoginScene extends Phaser.Scene {
           localStorage.setItem("access_token", tokenResponseJSON.access_token)
           localStorage.setItem("token_type", tokenResponseJSON.token_type)
 
-          const userResponse = await retryFetch(new URL("/users/me", process.env.SERVER_URL as string).toString(), {
+          const userResponse = await retryFetch(new URL("/users/me", process.env.SERVER_URL).toString(), {
             headers: {
               "Content-Type": "application/json",
               Authorization: `${tokenResponseJSON.token_type} ${tokenResponseJSON.access_token}`,
@@ -79,7 +79,7 @@ export class LoginScene extends Phaser.Scene {
       registerFormElement.addEventListener("submit", async (event) => {
         event.preventDefault()
         const formData = new FormData(registerFormElement)
-        const registerResponse = await retryFetch(new URL("/users/", process.env.SERVER_URL as string).toString(), {
+        const registerResponse = await retryFetch(new URL("/users/", process.env.SERVER_URL).toString(), {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

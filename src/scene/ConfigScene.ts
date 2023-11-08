@@ -1,4 +1,4 @@
-import { PlayConfig, NoteType } from "../class/PlayConfig"
+import { type PlayConfig, type NoteType } from "../class/PlayConfig"
 import { ToggleButton } from "../class/ToggleButton"
 
 export class ConfigScene extends Phaser.Scene {

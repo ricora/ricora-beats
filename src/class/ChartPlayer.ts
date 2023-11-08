@@ -1,11 +1,11 @@
-import { Chart } from "./Chart"
-import { KeySoundPlayer } from "./KeySoundPlayer"
+import { type Chart } from "./Chart"
+import { type KeySoundPlayer } from "./KeySoundPlayer"
 import { Note } from "./Note"
 import { Band } from "./Band"
 import { Measure } from "./Measure"
 import { JudgeMeter } from "./JudgeMeter"
 
-import { PlayConfig } from "./PlayConfig"
+import { type PlayConfig } from "./PlayConfig"
 
 import bms from "bms"
 
@@ -14,7 +14,7 @@ export class ChartPlayer {
   public lanes: Note[][] = []
   public bgmLane: Note[] = []
   public measures: Measure[] = []
-  public longNoteBands: Band[][] = new Array()
+  public longNoteBands: Band[][] = []
 
   public isHolds = new Array<boolean>(7).fill(false)
 
@@ -36,11 +36,11 @@ export class ChartPlayer {
 
   constructor(scene: Phaser.Scene, chart: Chart, key: Key, playConfig: PlayConfig) {
     for (const laneIndex of Array(7).keys()) {
-      this.lanes[laneIndex] = new Array()
-      this.longNoteBands[laneIndex] = new Array()
+      this.lanes[laneIndex] = []
+      this.longNoteBands[laneIndex] = []
     }
 
-    const replacementNormalNote: { [key: number]: number } = {
+    const replacementNormalNote: Record<number, number> = {
       11: 0,
       12: 1,
       13: 2,
@@ -50,7 +50,7 @@ export class ChartPlayer {
       19: 6,
     }
 
-    const replacementLongNote: { [key: number]: number } = {
+    const replacementLongNote: Record<number, number> = {
       51: 0,
       52: 1,
       53: 2,
@@ -60,12 +60,12 @@ export class ChartPlayer {
       59: 6,
     }
 
-    let isLatestEndLongNote: boolean[] = new Array<boolean>(7).fill(false)
-    let beatLatestEndLongNote: number[] = new Array<number>(7).fill(-1)
+    const isLatestEndLongNote: boolean[] = new Array<boolean>(7).fill(false)
+    const beatLatestEndLongNote: number[] = new Array<number>(7).fill(-1)
 
     for (const object of chart.bmsChart.objects._objects) {
       let laneIndex: number = replacementNormalNote[parseInt(object.channel)]
-      let noteValue: number = parseInt(object.value, 36)
+      const noteValue: number = parseInt(object.value, 36)
       let isLongNoteStart: boolean = false
       let isLongNoteEnd: boolean = false
       let isBGM: boolean = false
@@ -94,19 +94,19 @@ export class ChartPlayer {
       let positionX: number = 0
       let visible: boolean = true
       if (key == 4) {
-        if (1 <= laneIndex && laneIndex <= 2) {
+        if (laneIndex >= 1 && laneIndex <= 2) {
           positionX = 361 + 186 * (laneIndex - 1)
-        } else if (4 <= laneIndex && laneIndex <= 5) {
+        } else if (laneIndex >= 4 && laneIndex <= 5) {
           positionX = 361 + 186 * (laneIndex - 2)
         }
       } else if (key == 5) {
-        if (1 <= laneIndex && laneIndex <= 5) {
+        if (laneIndex >= 1 && laneIndex <= 5) {
           positionX = 343 + 148.5 * (laneIndex - 1)
         }
       } else if (key == 6) {
         if (laneIndex <= 2) {
           positionX = 330 + 124 * laneIndex
-        } else if (4 <= laneIndex) {
+        } else if (laneIndex >= 4) {
           positionX = 330 + 124 * (laneIndex - 1)
         }
       } else if (key == 7) {
@@ -177,7 +177,7 @@ export class ChartPlayer {
 
       if (isBGM) {
         this.bgmLane.push(note)
-      } else if (0 <= laneIndex && laneIndex <= 7) {
+      } else if (laneIndex >= 0 && laneIndex <= 7) {
         this.lanes[laneIndex].push(note)
         this.lastBeat = Math.max(this.lastBeat, beat)
       }
@@ -360,6 +360,7 @@ export class ChartPlayer {
       }
     }
   }
+
   public hasFinished(beat: number): boolean {
     return beat > this.lastBeat
   }

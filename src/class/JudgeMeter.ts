@@ -6,7 +6,7 @@ export class JudgeMeter {
     this.judgedTime = new Date().getTime()
 
     let color = 0xffffff
-    if (18 <= deltaTime * 1000) {
+    if (deltaTime * 1000 >= 18) {
       color = 0x2fdfe2
     } else if (deltaTime * 1000 <= -18) {
       color = 0xe530e5
