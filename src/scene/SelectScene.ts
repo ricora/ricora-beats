@@ -1,11 +1,9 @@
-import GUI from "lil-gui"
 import { DebugGUI } from "../class/DebugGUI"
 import { PlayConfig } from "../class/PlayConfig"
 
-import { Music, Beatmap } from "../class/Music"
-import { MusicTile } from "../class/MusicTile"
+import { type Music } from "../class/Music"
 import { MusicTileManager } from "../class/MusicTileManager"
-import { PlayResult } from "../class/PlayResult"
+import { type PlayResult } from "../class/PlayResult"
 import { User } from "../class/User"
 
 import { retryFetch } from "../lib/retryFetch"
@@ -70,9 +68,14 @@ export class SelectScene extends Phaser.Scene {
 
     this.musicTileManager = new MusicTileManager(this, this.scrollIndex)
 
+    const localStoragePlayConfig = localStorage.getItem("play_config")
+    let localStoragePlayConfigJSON = null
+    if (localStoragePlayConfig !== null) {
+      localStoragePlayConfigJSON = JSON.parse(localStoragePlayConfig)
+    }
     this.playConfig =
       data.playConfig ||
-      JSON.parse(localStorage.getItem("play_config") as string) ||
+      localStoragePlayConfigJSON ||
       new PlayConfig({
         noteSpeed: 3.0,
         noteType: "circle",
@@ -97,8 +100,8 @@ export class SelectScene extends Phaser.Scene {
           "Content-Type": "application/json",
           Authorization: `${token_type} ${access_token}`,
         }
-        const userResponse = await retryFetch(new URL("/users/me", process.env.SERVER_URL as string).toString(), {
-          headers: headers,
+        const userResponse = await retryFetch(new URL("/users/me", process.env.SERVER_URL).toString(), {
+          headers,
         })
         if (userResponse.ok) {
           const user = await userResponse.json()
@@ -123,6 +126,7 @@ export class SelectScene extends Phaser.Scene {
     }
     checkAuthorization()
   }
+
   create() {
     const { width, height } = this.game.canvas
 
@@ -594,15 +598,15 @@ export class SelectScene extends Phaser.Scene {
     } else {
       this.jacketImage.setTexture("jacket-no-image").setDisplaySize(240, 240)
     }
-    const bestPlayResult: PlayResult | null = JSON.parse(
-      localStorage.getItem(
-        `play_result_${this.musicTileManager.getMusic().folder}_${this.key}_${this.difficulty}`,
-      ) as string,
-    )
-    if (bestPlayResult !== null) {
+
+    this.bestScoreText.setText("-    %")
+    const localStoragePlayResultKey = `play_result_${this.musicTileManager.getMusic().folder}_${this.key}_${
+      this.difficulty
+    }`
+    const localStoragePlayResult = localStorage.getItem(localStoragePlayResultKey)
+    if (localStoragePlayResult !== null) {
+      const bestPlayResult: PlayResult = JSON.parse(localStoragePlayResult)
       this.bestScoreText.setText(`${bestPlayResult.score.toFixed(2)} %`)
-    } else {
-      this.bestScoreText.setText("-    %")
     }
   }
 

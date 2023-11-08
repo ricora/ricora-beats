@@ -1,5 +1,5 @@
 import bms from "bms"
-import axios, { AxiosResponse, AxiosError } from "axios"
+import axios, { type AxiosResponse, type AxiosError } from "axios"
 import WebFont from "webfontloader"
 
 import { Chart } from "../class/Chart"
@@ -7,8 +7,8 @@ import { ChartPlayer } from "../class/ChartPlayer"
 import { KeySoundPlayer } from "../class/KeySoundPlayer"
 import { DebugGUI } from "../class/DebugGUI"
 import { PlayResult } from "../class/PlayResult"
-import { PlayConfig } from "../class/PlayConfig"
-import { Beatmap, Music } from "../class/Music"
+import { type PlayConfig } from "../class/PlayConfig"
+import { type Beatmap, type Music } from "../class/Music"
 export class PlayScene extends Phaser.Scene {
   private debugGUI: DebugGUI
   private beatmap: Beatmap
@@ -65,7 +65,7 @@ export class PlayScene extends Phaser.Scene {
   private judgeText: Phaser.GameObjects.Image
   private judgeFSText: Phaser.GameObjects.Image
 
-  private keyFlashes: Phaser.GameObjects.Image[]
+  private readonly keyFlashes: Phaser.GameObjects.Image[]
 
   private jacketImage: Phaser.GameObjects.Image
 
@@ -126,6 +126,7 @@ export class PlayScene extends Phaser.Scene {
 
     this.playConfig = data.playConfig
   }
+
   preload() {}
 
   create() {
@@ -232,7 +233,7 @@ export class PlayScene extends Phaser.Scene {
       targets: this.comboText,
       y: 210,
       ease: (t: number): number => {
-        return 0 < t && t <= 1 ? 1 - t : 0
+        return t > 0 && t <= 1 ? 1 - t : 0
       },
       duration: 100,
       paused: false,
@@ -275,22 +276,22 @@ export class PlayScene extends Phaser.Scene {
 
     for (const laneIndex of Array(7).keys()) {
       let positionX = -1280
-      let widths = { 4: 186, 5: 148.5, 6: 124, 7: 106 }
+      const widths = { 4: 186, 5: 148.5, 6: 124, 7: 106 }
 
       if (this.playConfig.key == 4) {
-        if (1 <= laneIndex && laneIndex <= 2) {
+        if (laneIndex >= 1 && laneIndex <= 2) {
           positionX = 361 + 186 * (laneIndex - 1)
-        } else if (4 <= laneIndex && laneIndex <= 5) {
+        } else if (laneIndex >= 4 && laneIndex <= 5) {
           positionX = 361 + 186 * (laneIndex - 2)
         }
       } else if (this.playConfig.key == 5) {
-        if (1 <= laneIndex && laneIndex <= 5) {
+        if (laneIndex >= 1 && laneIndex <= 5) {
           positionX = 343 + 148.5 * (laneIndex - 1)
         }
       } else if (this.playConfig.key == 6) {
         if (laneIndex <= 2) {
           positionX = 330 + 124 * laneIndex
-        } else if (4 <= laneIndex) {
+        } else if (laneIndex >= 4) {
           positionX = 330 + 124 * (laneIndex - 1)
         }
       } else if (this.playConfig.key == 7) {
@@ -419,7 +420,7 @@ export class PlayScene extends Phaser.Scene {
       .setScale(0.7)
       .setAlpha(0)
 
-    //this.add.image(80,140,"jacket-test").setOrigin(0.5,0.5).setDepth(10).setDisplaySize(140,140)
+    // this.add.image(80,140,"jacket-test").setOrigin(0.5,0.5).setDepth(10).setDisplaySize(140,140)
 
     this.backButton = this.add
       .image(10, 10, "icon-back")
@@ -464,7 +465,7 @@ export class PlayScene extends Phaser.Scene {
     }
 
     this.load.on("progress", (value: number) => {
-      //console.log(value)
+      // console.log(value)
       this.debugText.setText(`${value}`)
     })
     this.load.on("complete", () => {
@@ -477,7 +478,7 @@ export class PlayScene extends Phaser.Scene {
         scaleX: {
           value: 0.67,
           duration: 600,
-          ease: Phaser.Math.Easing["Cubic"]["Out"],
+          ease: Phaser.Math.Easing.Cubic.Out,
         },
         onComplete: () => {
           this.tweens.add({
@@ -492,7 +493,7 @@ export class PlayScene extends Phaser.Scene {
             scaleX: {
               value: 0.67,
               duration: 400,
-              ease: Phaser.Math.Easing["Cubic"]["Out"],
+              ease: Phaser.Math.Easing.Cubic.Out,
             },
             onComplete: () => {
               this.tweens.add({
@@ -519,17 +520,18 @@ export class PlayScene extends Phaser.Scene {
         scaleX: {
           value: 1,
           duration: 600,
-          ease: Phaser.Math.Easing["Cubic"]["Out"],
+          ease: Phaser.Math.Easing.Cubic.Out,
         },
       })
     })
   }
+
   update(time: number, dt: number) {
     this.laneMainFrameLight.setAlpha(
-      1 - 0.6 * ((this.beat % 1) % 1), //0.95 + 0.6 * (-this.beat - Math.floor(1 - this.beat))
+      1 - 0.6 * ((this.beat % 1) % 1), // 0.95 + 0.6 * (-this.beat - Math.floor(1 - this.beat))
     )
     this.laneBackgroundLight.setAlpha(0.5 + 0.25 * 0.5 * (Math.sin(1 * Math.PI * this.beat) + 1))
-    this.judgeBarLight.setAlpha(0 <= this.beat ? 0.2 + 0.3 * (Math.cos(1 * Math.PI * this.beat) + 1) : 0)
+    this.judgeBarLight.setAlpha(this.beat >= 0 ? 0.2 + 0.3 * (Math.cos(1 * Math.PI * this.beat) + 1) : 0)
     this.judgeBar.setTint(0xbbbbbb)
 
     if (this.hasLoaded && this.loadEndTime !== undefined && this.chartPlayer !== undefined) {
@@ -546,7 +548,7 @@ export class PlayScene extends Phaser.Scene {
         this.judgeText.setTexture(`judge-${this.chartPlayer.latestJudgeIndex}`)
         this.judgeText.setVisible(true)
         this.judgeTween.restart()
-        //this.judgeText.setAlpha(1)
+        // this.judgeText.setAlpha(1)
         this.normalTapSounds[this.chartPlayer.latestJudgeIndex].play()
 
         if (this.chartPlayer.latestJudgeIndex !== 0) {
@@ -628,6 +630,7 @@ export class PlayScene extends Phaser.Scene {
       this.screenMask.setVisible(true)
     }
   }
+
   private judgeKeyDown(laneIndex: number) {
     if (this.chartPlayer !== undefined) {
       if (this.chartPlayer.judgeKeyDown(this, this.playingSec, laneIndex, this.keySoundPlayer)) {
@@ -637,22 +640,23 @@ export class PlayScene extends Phaser.Scene {
       }
     }
   }
+
   private addBomb(laneIndex: number) {
     let positionX = -1200
     if (this.playConfig.key == 4) {
-      if (1 <= laneIndex && laneIndex <= 2) {
+      if (laneIndex >= 1 && laneIndex <= 2) {
         positionX = 361 + 186 * (laneIndex - 1)
-      } else if (4 <= laneIndex && laneIndex <= 5) {
+      } else if (laneIndex >= 4 && laneIndex <= 5) {
         positionX = 361 + 186 * (laneIndex - 2)
       }
     } else if (this.playConfig.key == 5) {
-      if (1 <= laneIndex && laneIndex <= 5) {
+      if (laneIndex >= 1 && laneIndex <= 5) {
         positionX = 343 + 148.5 * (laneIndex - 1)
       }
     } else if (this.playConfig.key == 6) {
       if (laneIndex <= 2) {
         positionX = 330 + 124 * laneIndex
-      } else if (4 <= laneIndex) {
+      } else if (laneIndex >= 4) {
         positionX = 330 + 124 * (laneIndex - 1)
       }
     } else if (this.playConfig.key == 7) {

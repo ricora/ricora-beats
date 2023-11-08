@@ -1,5 +1,5 @@
-import { PlayConfig } from "./PlayConfig"
-import { Music } from "./Music"
+import { type PlayConfig } from "./PlayConfig"
+import { type Music } from "./Music"
 export class PlayResult {
   public music: Music
   public playConfig: PlayConfig

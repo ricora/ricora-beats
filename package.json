@@ -7,16 +7,25 @@
     "build": "webpack --mode=development",
     "dev": "webpack-dev-server --mode=development",
     "format": "prettier --write './**/*.{js,ts,json,yaml,yml,md,html,css,scss}' --ignore-path '.gitignore'",
-    "format:check": "prettier --check './**/*.{js,ts,json,yaml,yml,md,html,css,scss}' --ignore-path '.gitignore'"
+    "format:check": "prettier --check './**/*.{js,ts,json,yaml,yml,md,html,css,scss}' --ignore-path '.gitignore'",
+    "lint": "eslint './src/**/*.ts' --ignore-path '.gitignore'",
+    "lint:fix": "eslint --fix './src/**/*.ts' --ignore-path '.gitignore'"
   },
   "keywords": [],
   "author": "",
   "devDependencies": {
     "@types/webfontloader": "^1.6.34",
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
+    "eslint": "^8.53.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-config-standard-with-typescript": "^39.1.1",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-n": "^16.3.0",
+    "eslint-plugin-promise": "^6.1.1",
     "phaser": "^3.55.2",
     "prettier": "^3.0.3",
-    "ts-loader": "^8.0.11",
-    "typescript": "^4.1.2",
+    "ts-loader": "^9.5.0",
+    "typescript": "^5.2.2",
     "webpack": "^5.0.0-rc.6",
     "webpack-cli": "^4.10.0",
     "webpack-dev-server": "^4.8.1"

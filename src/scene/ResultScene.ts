@@ -1,6 +1,5 @@
 import { DebugGUI } from "../class/DebugGUI"
 import { PlayResult } from "../class/PlayResult"
-import { Music } from "../class/Music"
 
 import { retryFetch } from "../lib/retryFetch"
 
@@ -89,12 +88,12 @@ export class ResultScene extends Phaser.Scene {
         score: 95.21,
         maxCombo: 1234,
       })
-    this.oldPlayResult = JSON.parse(
-      localStorage.getItem(
-        `play_result_${this.playResult.music.folder}_${this.playResult.playConfig.key}_${this.playResult.playConfig.difficulty}`,
-      ) as string,
+    const localStoragePlayResult = localStorage.getItem(
+      `play_result_${this.playResult.music.folder}_${this.playResult.playConfig.key}_${this.playResult.playConfig.difficulty}`,
     )
-    if (this.oldPlayResult === null) {
+    if (localStoragePlayResult !== null) {
+      this.oldPlayResult = JSON.parse(localStoragePlayResult)
+    } else {
       this.oldPlayResult = { ...this.playResult }
       this.oldPlayResult.score = 0
     }
@@ -106,13 +105,17 @@ export class ResultScene extends Phaser.Scene {
     }
     const getRanking = async (userId?: number) => {
       const folder = this.playResult.music.folder
-      const filename = this.playResult.music[
-        `beatmap_${this.playResult.playConfig.key}k_${this.playResult.playConfig.difficulty}`
-      ]?.filename as string
+      const filename =
+        this.playResult.music[`beatmap_${this.playResult.playConfig.key}k_${this.playResult.playConfig.difficulty}`]
+          ?.filename
+      if (filename === undefined) {
+        this.rankText.setText("- / -")
+        return
+      }
       const rankingResponse = await retryFetch(
         new URL(
           `/scores/${encodeURIComponent(folder)}/${encodeURIComponent(filename)}/`,
-          process.env.SERVER_URL as string,
+          process.env.SERVER_URL,
         ).toString(),
         {
           headers: {
@@ -121,6 +124,7 @@ export class ResultScene extends Phaser.Scene {
         },
       )
       if (!rankingResponse.ok) {
+        this.rankText.setText("- / -")
         return
       }
       const ranking: any[] = await rankingResponse.json()
@@ -137,12 +141,11 @@ export class ResultScene extends Phaser.Scene {
         }
         this.rankText.setText(`${rank} / ${ranking.length}`)
       } else {
-        this.rankText.setText("")
+        this.rankText.setText("- / -")
       }
-
       this.ranking = ranking
 
-      const usersResponse = await retryFetch(new URL("/users/", process.env.SERVER_URL as string).toString(), {
+      const usersResponse = await retryFetch(new URL("/users/", process.env.SERVER_URL).toString(), {
         headers: {
           "Content-Type": "application/json",
         },
@@ -151,7 +154,7 @@ export class ResultScene extends Phaser.Scene {
         return
       }
       const users = await usersResponse.json()
-      let userIdToScreenName: { [key: number]: string } = {}
+      const userIdToScreenName: Record<number, string> = {}
       for (const user of users) {
         userIdToScreenName[user.id] = user.screen_name
       }
@@ -176,8 +179,8 @@ export class ResultScene extends Phaser.Scene {
         Authorization: `${token_type} ${access_token}`,
       }
 
-      const userResponse = await retryFetch(new URL("/users/me", process.env.SERVER_URL as string).toString(), {
-        headers: headers,
+      const userResponse = await retryFetch(new URL("/users/me", process.env.SERVER_URL).toString(), {
+        headers,
       })
       if (!userResponse.ok) {
         await getRanking()
@@ -185,15 +188,15 @@ export class ResultScene extends Phaser.Scene {
       }
       const user = await userResponse.json()
       const folder = this.playResult.music.folder
-      const filename = this.playResult.music[
-        `beatmap_${this.playResult.playConfig.key}k_${this.playResult.playConfig.difficulty}`
-      ]?.filename as string
-      const sendScoreResponse = await retryFetch(new URL("/scores/", process.env.SERVER_URL as string).toString(), {
+      const filename =
+        this.playResult.music[`beatmap_${this.playResult.playConfig.key}k_${this.playResult.playConfig.difficulty}`]
+          ?.filename
+      const sendScoreResponse = await retryFetch(new URL("/scores/", process.env.SERVER_URL).toString(), {
         method: "POST",
-        headers: headers,
+        headers,
         body: JSON.stringify({
-          folder: folder,
-          filename: filename,
+          folder,
+          filename,
           level:
             this.playResult.music[`beatmap_${this.playResult.playConfig.key}k_${this.playResult.playConfig.difficulty}`]
               ?.playlevel,
@@ -214,6 +217,7 @@ export class ResultScene extends Phaser.Scene {
     }
     sendScore()
   }
+
   create() {
     const { width, height } = this.game.canvas
 
@@ -452,7 +456,7 @@ export class ResultScene extends Phaser.Scene {
       scaleX: {
         value: 1,
         duration: 300,
-        ease: Phaser.Math.Easing["Cubic"]["Out"],
+        ease: Phaser.Math.Easing.Cubic.Out,
       },
     })
 
@@ -515,7 +519,7 @@ export class ResultScene extends Phaser.Scene {
       scaleY: {
         value: 0.67,
         duration: 400,
-        ease: Phaser.Math.Easing["Cubic"]["Out"],
+        ease: Phaser.Math.Easing.Cubic.Out,
       },
     })
 

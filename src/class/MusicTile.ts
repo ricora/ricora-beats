@@ -1,14 +1,14 @@
-import { Music } from "./Music"
+import { type Music } from "./Music"
 
 export class MusicTile extends Phaser.GameObjects.Container {
-  private frame: Phaser.GameObjects.Image
-  private titleText: Phaser.GameObjects.Text
-  private titleIcon: Phaser.GameObjects.Image
-  private artistText: Phaser.GameObjects.Text
-  private artistIcon: Phaser.GameObjects.Image
-  private noterText: Phaser.GameObjects.Text
-  private noterIcon: Phaser.GameObjects.Image
-  private jacketImage: Phaser.GameObjects.Image
+  private readonly frame: Phaser.GameObjects.Image
+  private readonly titleText: Phaser.GameObjects.Text
+  private readonly titleIcon: Phaser.GameObjects.Image
+  private readonly artistText: Phaser.GameObjects.Text
+  private readonly artistIcon: Phaser.GameObjects.Image
+  private readonly noterText: Phaser.GameObjects.Text
+  private readonly noterIcon: Phaser.GameObjects.Image
+  private readonly jacketImage: Phaser.GameObjects.Image
 
   constructor(public scene: Phaser.Scene) {
     // Phaser.GameObjects.Container
@@ -81,6 +81,7 @@ export class MusicTile extends Phaser.GameObjects.Container {
   public setArtist(artist: string) {
     this.artistText.setText(artist)
   }
+
   public setNoter(noter: string) {
     this.noterText.setText(noter)
   }
