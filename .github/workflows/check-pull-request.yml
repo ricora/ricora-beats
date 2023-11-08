@@ -2,9 +2,8 @@ name: Check Pull Request
 
 on:
   push:
-    branches:
-      - "*"
-      - "!main"
+    branches-ignore:
+      - main
 
 jobs:
   format:
