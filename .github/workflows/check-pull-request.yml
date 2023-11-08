@@ -9,8 +9,6 @@ jobs:
   format:
     name: Check format
     runs-on: ubuntu-latest
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
     steps:
       - uses: actions/checkout@v4
 
@@ -25,8 +23,6 @@ jobs:
   lint:
     name: Check lint
     runs-on: ubuntu-latest
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
     steps:
       - uses: actions/checkout@v4
 
@@ -45,8 +41,6 @@ jobs:
       TZ: "Asia/Tokyo"
       SERVER_URL: ${{ vars.SERVER_URL }}
       CREDITS: ${{ vars.CREDITS }}
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
     steps:
       - uses: actions/checkout@v4
 
