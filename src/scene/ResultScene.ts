@@ -24,7 +24,10 @@ export class ResultScene extends Phaser.Scene {
   private rankText: Phaser.GameObjects.Text
   private rankLabelText: Phaser.GameObjects.Text
 
-  private ranking: any[]
+  private rankingFrame: Phaser.GameObjects.Rectangle
+  private rankingLine: Phaser.GameObjects.Rectangle
+  private rankingScoreLabelText: Phaser.GameObjects.Text
+  private rankingPlayerLabelText: Phaser.GameObjects.Text
   private rankingIndexTexts: Phaser.GameObjects.Text[]
   private rankingScoreTexts: Phaser.GameObjects.Text[]
   private rankingScreenNameTexts: Phaser.GameObjects.Text[]
@@ -32,8 +35,6 @@ export class ResultScene extends Phaser.Scene {
   private titleFrame: Phaser.GameObjects.Image
   private detailFrame: Phaser.GameObjects.Image
   private subDetailFrame: Phaser.GameObjects.Image
-
-  private rankingFrame: Phaser.GameObjects.Rectangle
 
   private musicIcon: Phaser.GameObjects.Image
   private artistIcon: Phaser.GameObjects.Image
@@ -143,7 +144,6 @@ export class ResultScene extends Phaser.Scene {
       } else {
         this.rankText.setText("- / -")
       }
-      this.ranking = ranking
 
       const usersResponse = await retryFetch(new URL("/users/", process.env.SERVER_URL).toString(), {
         headers: {
@@ -160,9 +160,26 @@ export class ResultScene extends Phaser.Scene {
       }
 
       for (const [rankingIndex, score] of ranking.slice(0, 30).entries()) {
-        this.rankingIndexTexts[rankingIndex].setText(`${rankingIndex + 1}`)
-        this.rankingScoreTexts[rankingIndex].setText(`${score.score.toFixed(2)}%`)
-        this.rankingScreenNameTexts[rankingIndex].setText(`${userIdToScreenName[score.player_id]}`)
+        this.rankingIndexTexts[rankingIndex].setText(`${rankingIndex + 1}`).setAlpha(0)
+        this.rankingScoreTexts[rankingIndex].setText(`${score.score.toFixed(2)}%`).setAlpha(0)
+        this.rankingScreenNameTexts[rankingIndex].setText(`${userIdToScreenName[score.player_id]}`).setAlpha(0)
+        this.tweens.add({
+          targets: [
+            this.rankingIndexTexts[rankingIndex],
+            this.rankingScoreTexts[rankingIndex],
+            this.rankingScreenNameTexts[rankingIndex],
+          ],
+          delay: 50 + rankingIndex * 50,
+          x: {
+            value: `-=60`,
+            duration: 400,
+            ease: Phaser.Math.Easing.Cubic.Out,
+          },
+          alpha: {
+            value: 1,
+            duration: 100,
+          },
+        })
       }
     }
     const sendScore = async () => {
@@ -384,16 +401,46 @@ export class ResultScene extends Phaser.Scene {
       .setOrigin(1, 0.5)
       .setAlpha(0)
 
-    this.rankingFrame = this.add.rectangle(1280, 0, 340, 720, 0x000000).setAlpha(0.3).setOrigin(1, 0).setDepth(-2)
+    this.rankingFrame = this.add
+      .rectangle(1280, 0, 340, 720, 0x000000)
+      .setAlpha(0.3)
+      .setOrigin(1, 0)
+      .setDepth(-2)
+      .setScale(1, 0)
 
-    this.add.rectangle(1280, 50, 340, 2, 0x444444).setAlpha(1).setDepth(-1).setOrigin(1, 0)
+    this.tweens.add({
+      targets: [this.rankingFrame],
+      delay: 250,
+      scaleY: {
+        value: 1,
+        duration: 400,
+        ease: Phaser.Math.Easing.Cubic.Out,
+      },
+    })
+
+    this.rankingLine = this.add
+      .rectangle(1110, 50, 340, 2, 0x444444)
+      .setAlpha(1)
+      .setDepth(-1)
+      .setOrigin(0.5, 0)
+      .setScale(0, 1)
+
+    this.tweens.add({
+      targets: [this.rankingLine],
+      delay: 450,
+      scaleX: {
+        value: 1,
+        duration: 300,
+        ease: Phaser.Math.Easing.Cubic.Out,
+      },
+    })
 
     this.rankingIndexTexts = []
     this.rankingScoreTexts = []
     this.rankingScreenNameTexts = []
     const rankingFontSize = "24px"
 
-    this.add
+    this.rankingScoreLabelText = this.add
       .text(1080, 10, "SCORE", {
         fontFamily: "Oswald",
         fontSize: rankingFontSize,
@@ -401,8 +448,9 @@ export class ResultScene extends Phaser.Scene {
         align: "right",
       })
       .setOrigin(1, 0)
+      .setAlpha(0)
 
-    this.add
+    this.rankingPlayerLabelText = this.add
       .text(1100, 10, "PLAYER", {
         fontFamily: "Oswald",
         fontSize: rankingFontSize,
@@ -410,12 +458,13 @@ export class ResultScene extends Phaser.Scene {
         align: "left",
       })
       .setOrigin(0, 0)
+      .setAlpha(0)
 
     for (const rankingIndex of Array(25).keys()) {
       const y = 60 + 30 * rankingIndex
       this.rankingIndexTexts.push(
         this.add
-          .text(950, y, "", {
+          .text(950 + 60, y, "", {
             fontFamily: "Oswald",
             fontSize: rankingFontSize,
             color: "#888888",
@@ -425,7 +474,7 @@ export class ResultScene extends Phaser.Scene {
       )
       this.rankingScoreTexts.push(
         this.add
-          .text(1080, y, "", {
+          .text(1080 + 60, y, "", {
             fontFamily: "Oswald",
             fontSize: rankingFontSize,
             color: "#fafafa",
@@ -436,7 +485,7 @@ export class ResultScene extends Phaser.Scene {
 
       this.rankingScreenNameTexts.push(
         this.add
-          .text(1100, y, "", {
+          .text(1100 + 60, y, "", {
             fontFamily: "Noto Sans JP",
             fontSize: rankingFontSize,
             color: "#fafafa",
@@ -553,6 +602,8 @@ export class ResultScene extends Phaser.Scene {
         this.judgeLabelTexts[2],
         this.judgeLabelTexts[3],
         this.judgeLabelTexts[4],
+        this.rankingScoreLabelText,
+        this.rankingPlayerLabelText,
       ],
       delay: 700,
       alpha: {
