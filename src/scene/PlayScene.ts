@@ -199,6 +199,7 @@ export class PlayScene extends Phaser.Scene {
       .setDepth(8)
 
     this.judgeTween = this.tweens.add({
+      persist: true,
       targets: this.judgeText,
       duration: 1200,
       scale: {
@@ -228,6 +229,7 @@ export class PlayScene extends Phaser.Scene {
       .setDepth(0)
       .setAlpha(0.5)
     this.comboTween = this.tweens.add({
+      persist: true,
       targets: this.comboText,
       y: 210,
       ease: (t: number): number => {
@@ -296,6 +298,7 @@ export class PlayScene extends Phaser.Scene {
 
       this.keyFlashTweens.push(
         this.tweens.add({
+          persist: true,
           targets: this.add
             .image(positionX, 720, "key-flash")
             .setOrigin(0.5, 1)
