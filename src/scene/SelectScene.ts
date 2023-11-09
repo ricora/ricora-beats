@@ -316,6 +316,7 @@ export class SelectScene extends Phaser.Scene {
       .image(830 + 200, 280 + 30, "")
       .setDisplaySize(240, 240)
       .setDepth(2)
+    this.jacketImage.postFX.addShine(0.7, 0.1, 5)
 
     this.selectedKeyIcon = this.add
       .image(830 + 83, 140 + 40, `key-icon-${this.key}`)
