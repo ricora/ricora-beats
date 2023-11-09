@@ -1,14 +1,12 @@
-import bms from "bms"
-import axios, { type AxiosResponse, type AxiosError } from "axios"
-import WebFont from "webfontloader"
+import axios, { type AxiosError, type AxiosResponse } from "axios"
 
 import { Chart } from "../class/Chart"
 import { ChartPlayer } from "../class/ChartPlayer"
-import { KeySoundPlayer } from "../class/KeySoundPlayer"
 import { DebugGUI } from "../class/DebugGUI"
-import { PlayResult } from "../class/PlayResult"
-import { type PlayConfig } from "../class/PlayConfig"
+import { KeySoundPlayer } from "../class/KeySoundPlayer"
 import { type Beatmap, type Music } from "../class/Music"
+import { type PlayConfig } from "../class/PlayConfig"
+import { PlayResult } from "../class/PlayResult"
 export class PlayScene extends Phaser.Scene {
   private debugGUI: DebugGUI
   private beatmap: Beatmap
@@ -21,6 +19,7 @@ export class PlayScene extends Phaser.Scene {
 
   private loadEndTime?: Date
 
+  private isLoading: boolean
   private hasLoaded: boolean
   private hasFadedOut: boolean
 
@@ -35,7 +34,7 @@ export class PlayScene extends Phaser.Scene {
 
   private noteSpeed: number = 100
 
-  private keys: Phaser.Input.Keyboard.Key[]
+  private keys: Phaser.Input.Keyboard.Key[] | null
   private keyLabels: Phaser.GameObjects.Text[]
 
   private screenMask: Phaser.GameObjects.Rectangle
@@ -65,7 +64,7 @@ export class PlayScene extends Phaser.Scene {
   private judgeText: Phaser.GameObjects.Image
   private judgeFSText: Phaser.GameObjects.Image
 
-  private readonly keyFlashes: Phaser.GameObjects.Image[]
+  private keyFlashImages: Phaser.GameObjects.Image[]
 
   private jacketImage: Phaser.GameObjects.Image
 
@@ -82,8 +81,6 @@ export class PlayScene extends Phaser.Scene {
 
   private inputZones: Phaser.GameObjects.Zone[]
 
-  private particleYellow: Phaser.GameObjects.Particles.ParticleEmitterManager
-
   private normalTapSounds: Phaser.Sound.BaseSound[]
 
   private playConfig: PlayConfig
@@ -97,6 +94,8 @@ export class PlayScene extends Phaser.Scene {
 
     this.loadEndTime = undefined
 
+    this.isLoading = false
+
     this.hasLoaded = false
 
     this.hasFadedOut = false
@@ -109,15 +108,19 @@ export class PlayScene extends Phaser.Scene {
 
     this.isTouching = new Array<boolean>(7).fill(false)
 
-    this.keys = [
-      this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
-      this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D),
-      this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F),
-      this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
-      this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J),
-      this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K),
-      this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L),
-    ]
+    if (this.input.keyboard !== null) {
+      this.keys = [
+        this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
+        this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D),
+        this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F),
+        this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
+        this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J),
+        this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K),
+        this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L),
+      ]
+    } else {
+      this.keys = null
+    }
 
     this.input.addPointer(9)
 
@@ -152,6 +155,7 @@ export class PlayScene extends Phaser.Scene {
         this.keySoundPlayer = new KeySoundPlayer(this.chart)
         this.keySoundPlayer.loadKeySounds(this, url)
         this.load.start()
+        this.isLoading = true
       })
       .catch((error: AxiosError) => {
         console.log(error)
@@ -201,6 +205,7 @@ export class PlayScene extends Phaser.Scene {
       .setDepth(8)
 
     this.judgeTween = this.tweens.add({
+      persist: true,
       targets: this.judgeText,
       duration: 1200,
       scale: {
@@ -230,6 +235,7 @@ export class PlayScene extends Phaser.Scene {
       .setDepth(0)
       .setAlpha(0.5)
     this.comboTween = this.tweens.add({
+      persist: true,
       targets: this.comboText,
       y: 210,
       ease: (t: number): number => {
@@ -267,8 +273,7 @@ export class PlayScene extends Phaser.Scene {
       .setAlpha(1)
       .setScale(0.5)
 
-    this.particleYellow = this.add.particles("particle-yellow")
-
+    this.keyFlashImages = []
     this.keyFlashTweens = []
     this.holdParticleEmitters = []
     this.inputZones = []
@@ -297,13 +302,22 @@ export class PlayScene extends Phaser.Scene {
       } else if (this.playConfig.key == 7) {
         positionX = 322 + 106 * laneIndex
       }
+      this.keyFlashImages.push(
+        this.add
+          .image(positionX, 720, "key-flash")
+          .setOrigin(0.5, 1)
+          .setDisplaySize((900 / this.playConfig.key) * 0.81, 720)
+          .setVisible(false)
+          .setDepth(-2),
+      )
 
       this.keyFlashTweens.push(
         this.tweens.add({
+          persist: true,
           targets: this.add
             .image(positionX, 720, "key-flash")
             .setOrigin(0.5, 1)
-            .setDisplaySize((900 / this.playConfig.key) * 1.02, 720)
+            .setDisplaySize((900 / this.playConfig.key) * 0.81, 720)
             .setDepth(-2),
           scaleX: { value: 0, duration: 80, ease: "Linear" },
           ease: "Quintic.Out",
@@ -311,9 +325,9 @@ export class PlayScene extends Phaser.Scene {
         }),
       )
       this.holdParticleEmitters.push(
-        this.particleYellow.createEmitter({
-          x: positionX - widths[this.playConfig.key] / 2,
-          y: 640,
+        this.add.particles(positionX - widths[this.playConfig.key] / 2, 640, "particle-yellow", {
+          x: 0,
+          y: 0,
           angle: { min: 265, max: 275 },
           speed: 400,
           emitZone: {
@@ -327,7 +341,7 @@ export class PlayScene extends Phaser.Scene {
           lifespan: { min: 100, max: 350 },
           quantity: 1.5,
           blendMode: "ADD",
-          on: false,
+          emitting: false,
         }),
       )
 
@@ -344,6 +358,7 @@ export class PlayScene extends Phaser.Scene {
           })
           .on("pointerout", () => {
             this.isTouching[laneIndex] = false
+            this.keyFlashTweens[laneIndex].restart()
           }),
       )
       this.keyLabels.push(
@@ -469,6 +484,9 @@ export class PlayScene extends Phaser.Scene {
       this.debugText.setText(`${value}`)
     })
     this.load.on("complete", () => {
+      if (!this.isLoading || this.hasLoaded) {
+        return
+      }
       this.hasLoaded = true
       this.loadEndTime = new Date()
       this.cameras.main.fadeIn(500)
@@ -564,12 +582,15 @@ export class PlayScene extends Phaser.Scene {
       this.beat = this.chart.secondsToBeat(this.playingSec)
       this.chartPlayer.update(this, this.beat, this.playingSec, this.noteSpeed, this.keySoundPlayer)
 
-      for (const laneIndex of Array(7).keys()) {
-        if (this.keys[laneIndex].isDown || this.isTouching[laneIndex]) {
-          this.keyFlashTweens[laneIndex].restart()
+      if (this.keys !== null) {
+        for (const laneIndex of Array(7).keys()) {
+          if (this.keys[laneIndex].isDown || this.isTouching[laneIndex]) {
+            this.keyFlashImages[laneIndex].setVisible(true)
+          } else {
+            this.keyFlashImages[laneIndex].setVisible(false)
+          }
         }
       }
-
       // change back light
       if (this.chartPlayer.judges[3] == 0 && this.chartPlayer.judges[4] == 0) {
         if (this.chartPlayer.judges[1] == 0 && this.chartPlayer.judges[2] == 0) {
@@ -588,19 +609,29 @@ export class PlayScene extends Phaser.Scene {
         this.hasFadedOut = true
       }
 
-      // key down
-      for (const laneIndex of Array(7).keys()) {
-        if (Phaser.Input.Keyboard.JustDown(this.keys[laneIndex])) {
-          this.judgeKeyDown(laneIndex)
+      if (this.keys !== null) {
+        for (const laneIndex of Array(7).keys()) {
+          // key down
+          if (Phaser.Input.Keyboard.JustDown(this.keys[laneIndex])) {
+            this.judgeKeyDown(laneIndex)
+          }
+          // key up
+          if (Phaser.Input.Keyboard.JustUp(this.keys[laneIndex])) {
+            this.keyFlashTweens[laneIndex].restart()
+          }
         }
       }
 
       // key hold
       for (const laneIndex of Array(7).keys()) {
-        if (this.chartPlayer.isHolds[laneIndex] && !this.keys[laneIndex].isDown && !this.isTouching[laneIndex]) {
+        if (
+          this.chartPlayer.isHolds[laneIndex] &&
+          (this.keys === null || (this.keys !== null && !this.keys[laneIndex].isDown)) &&
+          !this.isTouching[laneIndex]
+        ) {
           this.chartPlayer.judgeKeyHold(this.playingSec, laneIndex)
         }
-        this.holdParticleEmitters[laneIndex].on = this.chartPlayer.isHolds[laneIndex]
+        this.holdParticleEmitters[laneIndex].emitting = this.chartPlayer.isHolds[laneIndex]
         if (this.chartPlayer.isHolds[laneIndex] && time % 130 <= 17) {
           this.addBomb(laneIndex)
         }

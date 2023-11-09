@@ -1,4 +1,4 @@
-import { type Music, Beatmap } from "./Music"
+import { type Music } from "./Music"
 import { MusicTile } from "./MusicTile"
 
 export class MusicTileManager {
@@ -33,6 +33,7 @@ export class MusicTileManager {
       scene.add.existing(this.musicTiles[musicTileIndex])
       this.ascTweens.push(
         scene.tweens.add({
+          persist: true,
           targets: this.musicTiles[musicTileIndex],
           x: {
             value: 70 + 10 * musicTileIndex,
@@ -52,6 +53,7 @@ export class MusicTileManager {
       )
       this.descTweens.push(
         scene.tweens.add({
+          persist: true,
           targets: this.musicTiles[musicTileIndex],
           x: {
             value: 70 + 10 * musicTileIndex,

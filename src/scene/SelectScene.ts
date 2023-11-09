@@ -141,25 +141,25 @@ export class SelectScene extends Phaser.Scene {
       quality: 8,
     })
 
-    const particleYellow = this.add.particles("particle-yellow").setDepth(20)
-
-    this.particleEmitter = particleYellow.createEmitter({
-      x: -1280,
-      y: 0,
-      angle: { min: 0, max: 360 },
-      speed: 60,
-      emitZone: {
-        type: "random",
-        source: new Phaser.Geom.Circle(0, 0, 6),
-        quantity: 12,
-        yoyo: false,
-      },
-      scale: { start: 0.08, end: 0 },
-      lifespan: { min: 300, max: 1000 },
-      quantity: 0.6,
-      blendMode: "ADD",
-      on: true,
-    })
+    this.particleEmitter = this.add
+      .particles(0, 0, "particle-yellow", {
+        x: -1280,
+        y: 0,
+        angle: { min: 0, max: 360 },
+        speed: 60,
+        emitZone: {
+          type: "random",
+          source: new Phaser.Geom.Circle(0, 0, 6),
+          quantity: 12,
+          yoyo: false,
+        },
+        scale: { start: 0.08, end: 0 },
+        lifespan: { min: 300, max: 1000 },
+        quantity: 0.6,
+        blendMode: "ADD",
+        emitting: true,
+      })
+      .setDepth(20)
 
     this.add.image(52, 15, "frame-title").setScale(0.7, 0.45).setOrigin(0, 0)
 
@@ -573,7 +573,8 @@ export class SelectScene extends Phaser.Scene {
   update(time: number, dt: number) {
     this.musicTileManager.update(time)
 
-    this.particleEmitter.setPosition(this.input.x, this.input.y)
+    this.particleEmitter.particleX = this.input.x
+    this.particleEmitter.particleY = this.input.y
 
     this.selectedMusicTitleText.setText(this.musicTileManager.getMusic().title)
 
