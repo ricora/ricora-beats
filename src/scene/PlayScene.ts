@@ -35,7 +35,7 @@ export class PlayScene extends Phaser.Scene {
 
   private noteSpeed: number = 100
 
-  private keys: Phaser.Input.Keyboard.Key[]
+  private keys: Phaser.Input.Keyboard.Key[] | null
   private keyLabels: Phaser.GameObjects.Text[]
 
   private screenMask: Phaser.GameObjects.Rectangle
@@ -107,15 +107,19 @@ export class PlayScene extends Phaser.Scene {
 
     this.isTouching = new Array<boolean>(7).fill(false)
 
-    this.keys = [
-      this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
-      this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D),
-      this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F),
-      this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
-      this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J),
-      this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K),
-      this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L),
-    ]
+    if (this.input.keyboard !== null) {
+      this.keys = [
+        this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
+        this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D),
+        this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F),
+        this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
+        this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J),
+        this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K),
+        this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L),
+      ]
+    } else {
+      this.keys = null
+    }
 
     this.input.addPointer(9)
 
@@ -563,12 +567,13 @@ export class PlayScene extends Phaser.Scene {
       this.beat = this.chart.secondsToBeat(this.playingSec)
       this.chartPlayer.update(this, this.beat, this.playingSec, this.noteSpeed, this.keySoundPlayer)
 
-      for (const laneIndex of Array(7).keys()) {
-        if (this.keys[laneIndex].isDown || this.isTouching[laneIndex]) {
-          this.keyFlashTweens[laneIndex].restart()
+      if (this.keys !== null) {
+        for (const laneIndex of Array(7).keys()) {
+          if (this.keys[laneIndex].isDown || this.isTouching[laneIndex]) {
+            this.keyFlashTweens[laneIndex].restart()
+          }
         }
       }
-
       // change back light
       if (this.chartPlayer.judges[3] == 0 && this.chartPlayer.judges[4] == 0) {
         if (this.chartPlayer.judges[1] == 0 && this.chartPlayer.judges[2] == 0) {
@@ -588,15 +593,21 @@ export class PlayScene extends Phaser.Scene {
       }
 
       // key down
-      for (const laneIndex of Array(7).keys()) {
-        if (Phaser.Input.Keyboard.JustDown(this.keys[laneIndex])) {
-          this.judgeKeyDown(laneIndex)
+      if (this.keys !== null) {
+        for (const laneIndex of Array(7).keys()) {
+          if (Phaser.Input.Keyboard.JustDown(this.keys[laneIndex])) {
+            this.judgeKeyDown(laneIndex)
+          }
         }
       }
 
       // key hold
       for (const laneIndex of Array(7).keys()) {
-        if (this.chartPlayer.isHolds[laneIndex] && !this.keys[laneIndex].isDown && !this.isTouching[laneIndex]) {
+        if (
+          this.chartPlayer.isHolds[laneIndex] &&
+          (this.keys === null || (this.keys !== null && !this.keys[laneIndex].isDown)) &&
+          !this.isTouching[laneIndex]
+        ) {
           this.chartPlayer.judgeKeyHold(this.playingSec, laneIndex)
         }
         this.holdParticleEmitters[laneIndex].emitting = this.chartPlayer.isHolds[laneIndex]
