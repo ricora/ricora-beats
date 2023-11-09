@@ -82,8 +82,6 @@ export class PlayScene extends Phaser.Scene {
 
   private inputZones: Phaser.GameObjects.Zone[]
 
-  private particleYellow: Phaser.GameObjects.Particles.ParticleEmitterManager
-
   private normalTapSounds: Phaser.Sound.BaseSound[]
 
   private playConfig: PlayConfig
@@ -267,8 +265,6 @@ export class PlayScene extends Phaser.Scene {
       .setAlpha(1)
       .setScale(0.5)
 
-    this.particleYellow = this.add.particles("particle-yellow")
-
     this.keyFlashTweens = []
     this.holdParticleEmitters = []
     this.inputZones = []
@@ -311,9 +307,9 @@ export class PlayScene extends Phaser.Scene {
         }),
       )
       this.holdParticleEmitters.push(
-        this.particleYellow.createEmitter({
-          x: positionX - widths[this.playConfig.key] / 2,
-          y: 640,
+        this.add.particles(positionX - widths[this.playConfig.key] / 2, 640, "particle-yellow", {
+          x: 0,
+          y: 0,
           angle: { min: 265, max: 275 },
           speed: 400,
           emitZone: {
@@ -327,7 +323,7 @@ export class PlayScene extends Phaser.Scene {
           lifespan: { min: 100, max: 350 },
           quantity: 1.5,
           blendMode: "ADD",
-          on: false,
+          emitting: false,
         }),
       )
 
@@ -600,7 +596,7 @@ export class PlayScene extends Phaser.Scene {
         if (this.chartPlayer.isHolds[laneIndex] && !this.keys[laneIndex].isDown && !this.isTouching[laneIndex]) {
           this.chartPlayer.judgeKeyHold(this.playingSec, laneIndex)
         }
-        this.holdParticleEmitters[laneIndex].on = this.chartPlayer.isHolds[laneIndex]
+        this.holdParticleEmitters[laneIndex].emitting = this.chartPlayer.isHolds[laneIndex]
         if (this.chartPlayer.isHolds[laneIndex] && time % 130 <= 17) {
           this.addBomb(laneIndex)
         }
