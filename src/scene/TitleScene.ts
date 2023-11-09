@@ -1,4 +1,9 @@
 import { DebugGUI } from "../class/DebugGUI"
+import { retryFetch } from "../lib/retryFetch"
+
+interface User {
+  screen_name: string
+}
 
 export class TitleScene extends Phaser.Scene {
   private debugGUI: DebugGUI
@@ -134,6 +139,7 @@ export class TitleScene extends Phaser.Scene {
       .setAlpha(1)
       .setScale(0.5)
 
+    // 日本語のフォントがうまく読み込まれないので、使う文字を予め強制的に読み込んでおく
     this.add
       .text(1280, 0, "あ難易度使用数変更譜面現在設定企画立案楽曲", {
         fontFamily: "Noto Sans JP",
@@ -142,6 +148,7 @@ export class TitleScene extends Phaser.Scene {
         align: "center",
       })
       .setVisible(false)
+    this.getAllUserNames()
 
     this.add
       .zone(640, 720, 1280, 640)
@@ -173,5 +180,29 @@ export class TitleScene extends Phaser.Scene {
     this.particleEmitter.particleY = this.input.y
 
     this.startText.setAlpha(0.5 + 0.5 * 0.5 * (0.25 * Math.sin((time * 2 * Math.PI) / 1000) + 1))
+  }
+
+  private async getAllUserNames(): Promise<void> {
+    const usersResponse = await retryFetch(new URL("/users/", process.env.SERVER_URL).toString(), {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    if (!usersResponse.ok) {
+      return
+    }
+    const users: User[] = await usersResponse.json()
+    let text = ""
+    for (const user of users) {
+      text += `${user.screen_name} `
+    }
+    this.add
+      .text(0, 0, text, {
+        fontFamily: "Noto Sans JP",
+        fontSize: "40px",
+        color: "#fafafa",
+        align: "center",
+      })
+      .setVisible(false)
   }
 }
