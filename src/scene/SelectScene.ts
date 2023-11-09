@@ -42,6 +42,10 @@ export class SelectScene extends Phaser.Scene {
   private musicList: Music[]
   private musicTileManager: MusicTileManager
 
+  private rankingIndexTexts: Phaser.GameObjects.Text[]
+  private rankingScoreTexts: Phaser.GameObjects.Text[]
+  private rankingScreenNameTexts: Phaser.GameObjects.Text[]
+
   private userScreenNameText: Phaser.GameObjects.Text
   private userStatusText: Phaser.GameObjects.Text
 
@@ -187,12 +191,12 @@ export class SelectScene extends Phaser.Scene {
       .setScale(0.5)
 
     this.add
-      .rectangle(1030, 415 + 15, 120, 40, 0x000000, 40)
+      .rectangle(1030 - 50, 415 + 15, 120, 40, 0x000000, 40)
       .setOrigin(0, 1)
       .setDepth(3)
 
     this.add
-      .text(1045, 415 + 15, "LEVEL", {
+      .text(1045 - 50, 415 + 15, "LEVEL", {
         fontFamily: "Oswald",
         fontSize: "50px",
         color: "#bbbbbb",
@@ -202,7 +206,7 @@ export class SelectScene extends Phaser.Scene {
       .setDepth(4)
 
     this.beatmapLevelText = this.add
-      .text(1139, 418 + 15, "", {
+      .text(1139 - 50, 418 + 15, "", {
         fontFamily: "Oswald",
         fontSize: "75px",
         color: "#fafafa",
@@ -264,6 +268,7 @@ export class SelectScene extends Phaser.Scene {
           for (const diffIndex of Array(4).keys()) {
             this.diffButtons[diffIndex].setAlpha(diffIndex == this.difficulty - 1 ? 1 : 0.3)
           }
+          this.getRanking()
         })
     }
 
@@ -289,6 +294,7 @@ export class SelectScene extends Phaser.Scene {
           for (const keyIndex of Array(4).keys()) {
             this.keyButtons[keyIndex].setAlpha(keyIndex == this.key - 4 ? 1 : 0.3)
           }
+          this.getRanking()
         })
     }
 
@@ -310,25 +316,76 @@ export class SelectScene extends Phaser.Scene {
       .setScale(0.5)
       .setDepth(4)
 
-    this.add.rectangle(830 + 200, 280 + 30, 240, 240, 0x0a0a0a, 140).setDepth(1)
+    this.add.rectangle(830 + 200 - 50, 280 + 30, 240, 240, 0x0a0a0a, 140).setDepth(1)
 
     this.jacketImage = this.add
-      .image(830 + 200, 280 + 30, "")
+      .image(830 + 200 - 50, 280 + 30, "")
       .setDisplaySize(240, 240)
       .setDepth(2)
     this.jacketImage.postFX.addShine(0.7, 0.1, 5)
 
     this.selectedKeyIcon = this.add
-      .image(830 + 83, 140 + 40, `key-icon-${this.key}`)
+      .image(830 + 83 - 50, 140 + 40, `key-icon-${this.key}`)
       .setOrigin(0, 0)
       .setDepth(3)
       .setScale(0.5)
 
     this.selectedDiffIcon = this.add
-      .image(830 + 83 + 87, 140 + 40, `diff-icon-${this.difficulty}`)
+      .image(830 + 83 + 87 - 50, 140 + 40, `diff-icon-${this.difficulty}`)
       .setOrigin(0, 0)
       .setDepth(3)
       .setScale(0.5)
+
+    this.rankingIndexTexts = []
+    this.rankingScoreTexts = []
+    this.rankingScreenNameTexts = []
+    const rankingFontSize = "15px"
+
+    this.add
+      .text(1165, 188, "TOP RANKING", {
+        fontFamily: "Oswald",
+        fontSize: rankingFontSize,
+        color: "#bbbbbb",
+        align: "right",
+      })
+      .setOrigin(0.5, 0)
+
+    for (const rankingIndex of Array(6).keys()) {
+      const y = 213 + 36 * rankingIndex
+      this.rankingIndexTexts.push(
+        this.add
+          .text(1110, y, `${rankingIndex + 1}`, {
+            fontFamily: "Oswald",
+            fontSize: rankingFontSize,
+            color: "#888888",
+            align: "left",
+          })
+          .setOrigin(0, 0),
+      )
+      this.rankingScoreTexts.push(
+        this.add
+          .text(1220, y + 16, "", {
+            fontFamily: "Oswald",
+            fontSize: rankingFontSize,
+            color: "#dddddd",
+            align: "right",
+          })
+          .setOrigin(1, 0),
+      )
+
+      this.rankingScreenNameTexts.push(
+        this.add
+          .text(1127, y, "", {
+            fontFamily: "Noto Sans JP",
+            fontSize: rankingFontSize,
+            color: "#fafafa",
+            align: "right",
+            wordWrap: { width: 80, useAdvancedWrap: true },
+            lineSpacing: 1440,
+          })
+          .setOrigin(0, 0),
+      )
+    }
 
     this.playButton = this.add
       .image(830 + 200, 500 + 30, "play-button-enable")
@@ -474,6 +531,7 @@ export class SelectScene extends Phaser.Scene {
                   ((2 * this.musicTileManager.scrollIndex) / Math.max(this.musicTileManager.musicList.length - 1, 1) -
                     1),
             )
+            this.getRanking()
           },
         })
         this.playPreviewSound()
@@ -507,6 +565,7 @@ export class SelectScene extends Phaser.Scene {
                   ((2 * this.musicTileManager.scrollIndex) / Math.max(this.musicTileManager.musicList.length - 1, 1) -
                     1),
             )
+            this.getRanking()
           },
         })
         this.playPreviewSound()
@@ -569,6 +628,7 @@ export class SelectScene extends Phaser.Scene {
     })
     this.cameras.main.fadeIn(500)
     this.playPreviewSound()
+    this.getRanking()
   }
 
   update(time: number, dt: number) {
@@ -625,6 +685,71 @@ export class SelectScene extends Phaser.Scene {
     const soundKey = `preview-${music.folder}/${music.preview}`
     if (this.cache.audio.exists(soundKey)) {
       this.sound.stopByKey(soundKey)
+    }
+  }
+
+  private async getRanking(): Promise<void> {
+    for (const rankingIndex of Array(6).keys()) {
+      this.rankingScoreTexts[rankingIndex].setText("")
+      this.rankingScreenNameTexts[rankingIndex].setText("-------------")
+    }
+    const music = this.musicTileManager.getMusic()
+    const folder = music.folder
+    const filename = music[`beatmap_${this.key}k_${this.difficulty}`]?.filename
+    if (filename === undefined) {
+      // ランキングなし
+      return
+    }
+
+    const rankingResponse = await retryFetch(
+      new URL(
+        `/scores/${encodeURIComponent(folder)}/${encodeURIComponent(filename)}/`,
+        process.env.SERVER_URL,
+      ).toString(),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    )
+    if (!rankingResponse.ok) {
+      // 取得失敗
+      return
+    }
+    interface rankingScore {
+      score: number
+      player_id: number
+    }
+    const ranking: rankingScore[] = await rankingResponse.json()
+    ranking.sort((a: any, b: any) => {
+      return a.score < b.score ? 1 : -1
+    })
+
+    const usersResponse = await retryFetch(new URL("/users/", process.env.SERVER_URL).toString(), {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    if (!usersResponse.ok) {
+      return
+    }
+    const users = await usersResponse.json()
+    const userIdToScreenName: Record<number, string> = {}
+    for (const user of users) {
+      userIdToScreenName[user.id] = user.screen_name
+    }
+
+    for (const [rankingIndex, score] of ranking.slice(0, 6).entries()) {
+      this.rankingScoreTexts[rankingIndex].setText(`${score.score.toFixed(2)}%`).setAlpha(0)
+      this.rankingScreenNameTexts[rankingIndex].setText(`${userIdToScreenName[score.player_id]}`).setAlpha(0)
+      this.tweens.add({
+        targets: [this.rankingScoreTexts[rankingIndex], this.rankingScreenNameTexts[rankingIndex]],
+        delay: 50 + rankingIndex * 50,
+        alpha: {
+          value: 1,
+          duration: 100,
+        },
+      })
     }
   }
 }
