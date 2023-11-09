@@ -1,14 +1,12 @@
-import bms from "bms"
-import axios, { type AxiosResponse, type AxiosError } from "axios"
-import WebFont from "webfontloader"
+import axios, { type AxiosError, type AxiosResponse } from "axios"
 
 import { Chart } from "../class/Chart"
 import { ChartPlayer } from "../class/ChartPlayer"
-import { KeySoundPlayer } from "../class/KeySoundPlayer"
 import { DebugGUI } from "../class/DebugGUI"
-import { PlayResult } from "../class/PlayResult"
-import { type PlayConfig } from "../class/PlayConfig"
+import { KeySoundPlayer } from "../class/KeySoundPlayer"
 import { type Beatmap, type Music } from "../class/Music"
+import { type PlayConfig } from "../class/PlayConfig"
+import { PlayResult } from "../class/PlayResult"
 export class PlayScene extends Phaser.Scene {
   private debugGUI: DebugGUI
   private beatmap: Beatmap

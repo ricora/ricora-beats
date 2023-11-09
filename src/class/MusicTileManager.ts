@@ -1,4 +1,4 @@
-import { type Music, Beatmap } from "./Music"
+import { type Music } from "./Music"
 import { MusicTile } from "./MusicTile"
 
 export class MusicTileManager {
