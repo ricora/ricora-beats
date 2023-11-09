@@ -21,6 +21,7 @@ export class PlayScene extends Phaser.Scene {
 
   private loadEndTime?: Date
 
+  private isLoading: boolean
   private hasLoaded: boolean
   private hasFadedOut: boolean
 
@@ -95,6 +96,8 @@ export class PlayScene extends Phaser.Scene {
 
     this.loadEndTime = undefined
 
+    this.isLoading = false
+
     this.hasLoaded = false
 
     this.hasFadedOut = false
@@ -154,6 +157,7 @@ export class PlayScene extends Phaser.Scene {
         this.keySoundPlayer = new KeySoundPlayer(this.chart)
         this.keySoundPlayer.loadKeySounds(this, url)
         this.load.start()
+        this.isLoading = true
       })
       .catch((error: AxiosError) => {
         console.log(error)
@@ -472,6 +476,9 @@ export class PlayScene extends Phaser.Scene {
       this.debugText.setText(`${value}`)
     })
     this.load.on("complete", () => {
+      if (!this.isLoading || this.hasLoaded) {
+        return
+      }
       this.hasLoaded = true
       this.loadEndTime = new Date()
       this.cameras.main.fadeIn(500)
