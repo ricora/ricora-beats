@@ -19,8 +19,12 @@ module.exports = {
   },
   resolve: {
     extensions: [".ts", ".js"],
+    fallback: { util: require.resolve("util/") },
   },
   plugins: [
+    new webpack.ProvidePlugin({
+      process: "process/browser",
+    }),
     new webpack.DefinePlugin({
       "process.env.SERVER_URL": JSON.stringify(process.env.SERVER_URL),
       "process.env.BUILD_DATE": JSON.stringify(buildDate),
