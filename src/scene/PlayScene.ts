@@ -66,7 +66,7 @@ export class PlayScene extends Phaser.Scene {
   private judgeText: Phaser.GameObjects.Image
   private judgeFSText: Phaser.GameObjects.Image
 
-  private readonly keyFlashes: Phaser.GameObjects.Image[]
+  private keyFlashImages: Phaser.GameObjects.Image[]
 
   private jacketImage: Phaser.GameObjects.Image
 
@@ -275,6 +275,7 @@ export class PlayScene extends Phaser.Scene {
       .setAlpha(1)
       .setScale(0.5)
 
+    this.keyFlashImages = []
     this.keyFlashTweens = []
     this.holdParticleEmitters = []
     this.inputZones = []
@@ -303,6 +304,14 @@ export class PlayScene extends Phaser.Scene {
       } else if (this.playConfig.key == 7) {
         positionX = 322 + 106 * laneIndex
       }
+      this.keyFlashImages.push(
+        this.add
+          .image(positionX, 720, "key-flash")
+          .setOrigin(0.5, 1)
+          .setDisplaySize((900 / this.playConfig.key) * 0.81, 720)
+          .setVisible(false)
+          .setDepth(-2),
+      )
 
       this.keyFlashTweens.push(
         this.tweens.add({
@@ -310,7 +319,7 @@ export class PlayScene extends Phaser.Scene {
           targets: this.add
             .image(positionX, 720, "key-flash")
             .setOrigin(0.5, 1)
-            .setDisplaySize((900 / this.playConfig.key) * 1.02, 720)
+            .setDisplaySize((900 / this.playConfig.key) * 0.81, 720)
             .setDepth(-2),
           scaleX: { value: 0, duration: 80, ease: "Linear" },
           ease: "Quintic.Out",
@@ -351,6 +360,7 @@ export class PlayScene extends Phaser.Scene {
           })
           .on("pointerout", () => {
             this.isTouching[laneIndex] = false
+            this.keyFlashTweens[laneIndex].restart()
           }),
       )
       this.keyLabels.push(
@@ -577,7 +587,9 @@ export class PlayScene extends Phaser.Scene {
       if (this.keys !== null) {
         for (const laneIndex of Array(7).keys()) {
           if (this.keys[laneIndex].isDown || this.isTouching[laneIndex]) {
-            this.keyFlashTweens[laneIndex].restart()
+            this.keyFlashImages[laneIndex].setVisible(true)
+          } else {
+            this.keyFlashImages[laneIndex].setVisible(false)
           }
         }
       }
@@ -599,11 +611,15 @@ export class PlayScene extends Phaser.Scene {
         this.hasFadedOut = true
       }
 
-      // key down
       if (this.keys !== null) {
         for (const laneIndex of Array(7).keys()) {
+          // key down
           if (Phaser.Input.Keyboard.JustDown(this.keys[laneIndex])) {
             this.judgeKeyDown(laneIndex)
+          }
+          // key up
+          if (Phaser.Input.Keyboard.JustUp(this.keys[laneIndex])) {
+            this.keyFlashTweens[laneIndex].restart()
           }
         }
       }
