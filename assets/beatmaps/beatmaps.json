@@ -1,234 +1,282 @@
 [
-    {
-        "title": "Rainy Rainy Summer",
-        "artist": "udokatsu",
-        "noter": "chiyoda",
-        "folder": "udokatsu - Rainy Rainy Summer",
-        "jacket": "dawn.png",
-        "preview": "preview.wav",
-        "beatmap_4k_1": {
-            "filename": "4k_1.bme",
-            "playlevel": 2
-        },
-        "beatmap_5k_1": {
-            "filename": "5k_1.bme",
-            "playlevel": 2
-        },
-        "beatmap_6k_1": {
-            "filename": "6k_1.bme",
-            "playlevel": 2
-        },
-        "beatmap_7k_1": {
-            "filename": "7k_1.bme",
-            "playlevel": 2
-        },
-        "beatmap_4k_2": {
-            "filename": "4k_2.bme",
-            "playlevel": 4
-        },
-        "beatmap_5k_2": {
-            "filename": "5k_2.bme",
-            "playlevel": 4
-        },
-        "beatmap_6k_2": {
-            "filename": "6k_2.bme",
-            "playlevel": 4
-        },
-        "beatmap_7k_2": {
-            "filename": "7k_2.bme",
-            "playlevel": 4
-        },
-        "beatmap_4k_3": {
-            "filename": "4k_3.bme",
-            "playlevel": 5
-        },
-        "beatmap_5k_3": {
-            "filename": "5k_3.bme",
-            "playlevel": 5
-        },
-        "beatmap_6k_3": {
-            "filename": "6k_3.bme",
-            "playlevel": 5
-        },
-        "beatmap_7k_3": {
-            "filename": "7k_3.bme",
-            "playlevel": 5
-        }
+  {
+    "title": "Rainy Rainy Summer",
+    "artist": "udokatsu",
+    "noter": "chiyoda",
+    "folder": "udokatsu - Rainy Rainy Summer",
+    "jacket": "dawn.png",
+    "preview": "preview.wav",
+    "beatmap_4k_1": {
+      "filename": "4k_1.bme",
+      "playlevel": 2
     },
-    {
-        "title": "LOVE☆TUNE",
-        "artist": "ODAMAKI",
-        "noter": "ODAMAKI",
-        "folder": "ODAMAKI - LOVE☆TUNE",
-        "jacket": "jacket.png",
-        "preview": "LOVETUNEshort.wav",
-        "beatmap_4k_1": {
-            "filename": "easyKey4LOVETUNE.bme",
-            "playlevel": 1
-        },
-        "beatmap_5k_1": {
-            "filename": "easyKey4LOVETUNE.bme",
-            "playlevel": 1
-        },
-        "beatmap_6k_1": {
-            "filename": "easyKey4LOVETUNE.bme",
-            "playlevel": 1
-        },
-        "beatmap_7k_1": {
-            "filename": "easyKey4LOVETUNE.bme",
-            "playlevel": 1
-        },
-        "beatmap_4k_2": {
-            "filename": "normalKey4LOVETUNE.bme",
-            "playlevel": 3
-        },
-        "beatmap_5k_2": {
-            "filename": "normalKey5LOVETUNE.bme",
-            "playlevel": 3
-        },
-        "beatmap_6k_2": {
-            "filename": "normalKey6LOVETUNE.bme",
-            "playlevel": 3
-        },
-        "beatmap_7k_2": {
-            "filename": "normalKey7LOVETUNE.bme",
-            "playlevel": 3
-        },
-        "beatmap_4k_3": {
-            "filename": "4k_3.bme",
-            "playlevel": 6
-        },
-        "beatmap_5k_3": {
-            "filename": "5k_3.bme",
-            "playlevel": 6
-        },
-        "beatmap_6k_3": {
-            "filename": "6k_3.bme",
-            "playlevel": 6
-        },
-        "beatmap_7k_3": {
-            "filename": "7k_3.bme",
-            "playlevel": 6
-        }
+    "beatmap_5k_1": {
+      "filename": "5k_1.bme",
+      "playlevel": 2
     },
-    {
-        "title": "てんてこまいまい",
-        "artist": "ODAMAKI",
-        "noter": "ODAMAKI",
-        "folder": "ODAMAKI - てんてこまいまい",
-        "jacket": "jacket.png",
-        "preview": "tentekomaimaiShort.wav",
-        "beatmap_4k_1": {
-            "filename": "easyKey4tentekomaimai.bme",
-            "playlevel": 1
-        },
-        "beatmap_5k_1": {
-            "filename": "easyKey4tentekomaimai.bme",
-            "playlevel": 1
-        },
-        "beatmap_6k_1": {
-            "filename": "easyKey4tentekomaimai.bme",
-            "playlevel": 1
-        },
-        "beatmap_7k_1": {
-            "filename": "easyKey4tentekomaimai.bme",
-            "playlevel": 1
-        },
-        "beatmap_4k_2": {
-            "filename": "normalKey4tentekomaimai.bme",
-            "playlevel": 3
-        },
-        "beatmap_5k_2": {
-            "filename": "normalKey5tentekomaimai.bme",
-            "playlevel": 3
-        },
-        "beatmap_6k_2": {
-            "filename": "normalKey6tentekomaimai.bme",
-            "playlevel": 3
-        },
-        "beatmap_7k_2": {
-            "filename": "normalKey7tentekomaimai.bme",
-            "playlevel": 3
-        }
+    "beatmap_6k_1": {
+      "filename": "6k_1.bme",
+      "playlevel": 2
     },
-    {
-        "title": "Lost Artifact",
-        "artist": "YurA",
-        "noter": "YurA",
-        "folder": "YurA - Lost Artifact",
-        "jacket": "LostArtifactCover.png",
-        "preview": "LostArtifact_shichou.wav",
-        "beatmap_4k_1": {
-            "filename": "4k_1.bme",
-            "playlevel": 2
-        },
-        "beatmap_5k_1": {
-            "filename": "5k_1.bme",
-            "playlevel": 2
-        },
-        "beatmap_6k_1": {
-            "filename": "6k_1.bme",
-            "playlevel": 2
-        },
-        "beatmap_7k_1": {
-            "filename": "7k_1.bme",
-            "playlevel": 2
-        },
-        "beatmap_4k_2": {
-            "filename": "4k_2.bme",
-            "playlevel": 4
-        },
-        "beatmap_5k_2": {
-            "filename": "5k_2.bme",
-            "playlevel": 4
-        },
-        "beatmap_6k_2": {
-            "filename": "6k_2.bme",
-            "playlevel": 4
-        },
-        "beatmap_7k_2": {
-            "filename": "7k_2.bme",
-            "playlevel": 4
-        },
-        "beatmap_4k_3": {
-            "filename": "4k_3.bme",
-            "playlevel": 6
-        },
-        "beatmap_5k_3": {
-            "filename": "5k_3.bme",
-            "playlevel": 6
-        },
-        "beatmap_6k_3": {
-            "filename": "6k_3.bme",
-            "playlevel": 6
-        },
-        "beatmap_7k_3": {
-            "filename": "7k_3.bme",
-            "playlevel": 6
-        }
+    "beatmap_7k_1": {
+      "filename": "7k_1.bme",
+      "playlevel": 2
     },
-    {
-        "title": "Talent Show",
-        "artist": "YurA",
-        "noter": "",
-        "folder": "YurA - Talent Show",
-        "jacket": "TalentShowCover.png",
-        "preview": "TalentShowShort_shichou.wav"
+    "beatmap_4k_2": {
+      "filename": "4k_2.bme",
+      "playlevel": 4
     },
-    {
-        "title": "誰そ見しか楽園",
-        "artist": "まいはね",
-        "noter": "",
-        "folder": "まいはね - 誰そ見しか楽園",
-        "jacket": "ta.png",
-        "preview": "preview.wav"
+    "beatmap_5k_2": {
+      "filename": "5k_2.bme",
+      "playlevel": 4
     },
-    {
-        "title": "Daylight Fantasy",
-        "artist": "ろんぽう/うどかつ",
-        "noter": "",
-        "folder": "ろんぽう&うどかつ - Daylight Fantasy",
-        "jacket": "hakuchu.png",
-        "preview": "preview.wav"
+    "beatmap_6k_2": {
+      "filename": "6k_2.bme",
+      "playlevel": 4
+    },
+    "beatmap_7k_2": {
+      "filename": "7k_2.bme",
+      "playlevel": 4
+    },
+    "beatmap_4k_3": {
+      "filename": "4k_3.bme",
+      "playlevel": 5
+    },
+    "beatmap_5k_3": {
+      "filename": "5k_3.bme",
+      "playlevel": 5
+    },
+    "beatmap_6k_3": {
+      "filename": "6k_3.bme",
+      "playlevel": 5
+    },
+    "beatmap_7k_3": {
+      "filename": "7k_3.bme",
+      "playlevel": 5
     }
+  },
+  {
+    "title": "LOVE☆TUNE",
+    "artist": "ODAMAKI",
+    "noter": "ODAMAKI",
+    "folder": "ODAMAKI - LOVE☆TUNE",
+    "jacket": "jacket.png",
+    "preview": "LOVETUNEshort.wav",
+    "beatmap_4k_1": {
+      "filename": "easyKey4LOVETUNE.bme",
+      "playlevel": 1
+    },
+    "beatmap_5k_1": {
+      "filename": "easyKey4LOVETUNE.bme",
+      "playlevel": 1
+    },
+    "beatmap_6k_1": {
+      "filename": "easyKey4LOVETUNE.bme",
+      "playlevel": 1
+    },
+    "beatmap_7k_1": {
+      "filename": "easyKey4LOVETUNE.bme",
+      "playlevel": 1
+    },
+    "beatmap_4k_2": {
+      "filename": "normalKey4LOVETUNE.bme",
+      "playlevel": 3
+    },
+    "beatmap_5k_2": {
+      "filename": "normalKey5LOVETUNE.bme",
+      "playlevel": 3
+    },
+    "beatmap_6k_2": {
+      "filename": "normalKey6LOVETUNE.bme",
+      "playlevel": 3
+    },
+    "beatmap_7k_2": {
+      "filename": "normalKey7LOVETUNE.bme",
+      "playlevel": 3
+    },
+    "beatmap_4k_3": {
+      "filename": "4k_3.bme",
+      "playlevel": 6
+    },
+    "beatmap_5k_3": {
+      "filename": "5k_3.bme",
+      "playlevel": 6
+    },
+    "beatmap_6k_3": {
+      "filename": "6k_3.bme",
+      "playlevel": 6
+    },
+    "beatmap_7k_3": {
+      "filename": "7k_3.bme",
+      "playlevel": 6
+    }
+  },
+  {
+    "title": "てんてこまいまい",
+    "artist": "ODAMAKI",
+    "noter": "ODAMAKI",
+    "folder": "ODAMAKI - てんてこまいまい",
+    "jacket": "jacket.png",
+    "preview": "tentekomaimaiShort.wav",
+    "beatmap_4k_1": {
+      "filename": "easyKey4tentekomaimai.bme",
+      "playlevel": 1
+    },
+    "beatmap_5k_1": {
+      "filename": "easyKey4tentekomaimai.bme",
+      "playlevel": 1
+    },
+    "beatmap_6k_1": {
+      "filename": "easyKey4tentekomaimai.bme",
+      "playlevel": 1
+    },
+    "beatmap_7k_1": {
+      "filename": "easyKey4tentekomaimai.bme",
+      "playlevel": 1
+    },
+    "beatmap_4k_2": {
+      "filename": "normalKey4tentekomaimai.bme",
+      "playlevel": 3
+    },
+    "beatmap_5k_2": {
+      "filename": "normalKey5tentekomaimai.bme",
+      "playlevel": 3
+    },
+    "beatmap_6k_2": {
+      "filename": "normalKey6tentekomaimai.bme",
+      "playlevel": 3
+    },
+    "beatmap_7k_2": {
+      "filename": "normalKey7tentekomaimai.bme",
+      "playlevel": 3
+    }
+  },
+  {
+    "title": "Lost Artifact",
+    "artist": "YurA",
+    "noter": "YurA",
+    "folder": "YurA - Lost Artifact",
+    "jacket": "LostArtifactCover.png",
+    "preview": "LostArtifact_shichou.wav",
+    "beatmap_4k_1": {
+      "filename": "4k_1.bme",
+      "playlevel": 2
+    },
+    "beatmap_5k_1": {
+      "filename": "5k_1.bme",
+      "playlevel": 2
+    },
+    "beatmap_6k_1": {
+      "filename": "6k_1.bme",
+      "playlevel": 2
+    },
+    "beatmap_7k_1": {
+      "filename": "7k_1.bme",
+      "playlevel": 2
+    },
+    "beatmap_4k_2": {
+      "filename": "4k_2.bme",
+      "playlevel": 4
+    },
+    "beatmap_5k_2": {
+      "filename": "5k_2.bme",
+      "playlevel": 4
+    },
+    "beatmap_6k_2": {
+      "filename": "6k_2.bme",
+      "playlevel": 4
+    },
+    "beatmap_7k_2": {
+      "filename": "7k_2.bme",
+      "playlevel": 4
+    },
+    "beatmap_4k_3": {
+      "filename": "4k_3.bme",
+      "playlevel": 6
+    },
+    "beatmap_5k_3": {
+      "filename": "5k_3.bme",
+      "playlevel": 6
+    },
+    "beatmap_6k_3": {
+      "filename": "6k_3.bme",
+      "playlevel": 6
+    },
+    "beatmap_7k_3": {
+      "filename": "7k_3.bme",
+      "playlevel": 6
+    }
+  },
+  {
+    "title": "Talent Show",
+    "artist": "YurA",
+    "noter": "",
+    "folder": "YurA - Talent Show",
+    "jacket": "TalentShowCover.png",
+    "preview": "TalentShowShort_shichou.wav"
+  },
+  {
+    "title": "誰そ見しか楽園",
+    "artist": "まいはね",
+    "noter": "chiyoda",
+    "folder": "まいはね - 誰そ見しか楽園",
+    "jacket": "ta.png",
+    "preview": "preview.wav",
+    "beatmap_4k_1": {
+      "filename": "4k_1.bme",
+      "playlevel": 2
+    },
+    "beatmap_5k_1": {
+      "filename": "5k_1.bme",
+      "playlevel": 2
+    },
+    "beatmap_6k_1": {
+      "filename": "6k_1.bme",
+      "playlevel": 2
+    },
+    "beatmap_7k_1": {
+      "filename": "7k_1.bme",
+      "playlevel": 2
+    },
+    "beatmap_4k_2": {
+      "filename": "4k_2.bme",
+      "playlevel": 4
+    },
+    "beatmap_5k_2": {
+      "filename": "5k_2.bme",
+      "playlevel": 4
+    },
+    "beatmap_6k_2": {
+      "filename": "6k_2.bme",
+      "playlevel": 4
+    },
+    "beatmap_7k_2": {
+      "filename": "7k_2.bme",
+      "playlevel": 4
+    },
+    "beatmap_4k_3": {
+      "filename": "4k_3.bme",
+      "playlevel": 5
+    },
+    "beatmap_5k_3": {
+      "filename": "5k_3.bme",
+      "playlevel": 5
+    },
+    "beatmap_6k_3": {
+      "filename": "6k_3.bme",
+      "playlevel": 5
+    },
+    "beatmap_7k_3": {
+      "filename": "7k_3.bme",
+      "playlevel": 5
+    }
+  },
+  {
+    "title": "Daylight Fantasy",
+    "artist": "ろんぽう/うどかつ",
+    "noter": "",
+    "folder": "ろんぽう&うどかつ - Daylight Fantasy",
+    "jacket": "hakuchu.png",
+    "preview": "preview.wav"
+  }
 ]
