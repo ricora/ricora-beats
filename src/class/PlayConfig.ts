@@ -1,4 +1,4 @@
-export type NoteType = "circle" | "rectangle"
+export type NoteType = "circle" | "rectangle" | "line"
 type Key = 4 | 5 | 6 | 7
 type Difficulty = 1 | 2 | 3 | 4
 
