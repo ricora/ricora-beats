@@ -88,9 +88,11 @@ export class ChartPlayer {
       }
 
       let noteImage: string = ""
+      let noteLightImage: string | null = null
       let longNoteImage: string = ""
       let displaySizeX: number = 0
       let displaySizeY: number = 0
+      let bandDisplaySizeX: number = 0
       let positionX: number = 0
       let visible: boolean = true
       if (key == 4) {
@@ -118,6 +120,7 @@ export class ChartPlayer {
 
         displaySizeX = { 4: 214, 5: 170, 6: 139, 7: 119 }[key]
         displaySizeY = 40
+        bandDisplaySizeX = displaySizeX
 
         if (laneIndex == 1 || laneIndex == 5) {
           noteImage = "note-rectangle-2"
@@ -139,7 +142,20 @@ export class ChartPlayer {
         longNoteImage = "longnote-circle"
         displaySizeX = 100
         displaySizeY = 100
+        bandDisplaySizeX = 100
         visible = true
+      } else if (playConfig.noteType === "line") {
+        if (isLongNoteEnd || isLongNoteStart) {
+          noteImage = "note-line-3"
+          noteLightImage = "note-line-light-3"
+        } else {
+          noteImage = "note-line-1"
+          noteLightImage = "note-line-light-1"
+        }
+        longNoteImage = "longnote-line"
+        displaySizeX = { 4: 246, 5: 195, 6: 160, 7: 137 }[key]
+        displaySizeY = 60
+        bandDisplaySizeX = { 4: 185, 5: 147, 6: 120, 7: 103 }[key]
       }
 
       if (isLongNoteEnd && isLatestEndLongNote[laneIndex] && beatLatestEndLongNote[laneIndex] != beat) {
@@ -150,7 +166,7 @@ export class ChartPlayer {
           beat,
           scene.add
             .image(positionX, -100, longNoteImage)
-            .setDisplaySize(displaySizeX, 0)
+            .setDisplaySize(bandDisplaySizeX, 0)
             .setOrigin(0.5, 0)
             .setDepth(-1)
             .setAlpha(1),
@@ -169,6 +185,9 @@ export class ChartPlayer {
           .setDisplaySize(displaySizeX, displaySizeY)
           .setDepth(1)
           .setVisible(visible),
+        noteLightImage !== null
+          ? scene.add.image(positionX, -100, noteLightImage).setDisplaySize(displaySizeX, displaySizeY).setDepth(2)
+          : null,
         isBGM,
         false,
         isLongNoteStart,
@@ -237,6 +256,7 @@ export class ChartPlayer {
 
       for (const [noteIndex, note] of this.lanes[laneIndex].entries()) {
         note.image.y = 640 + Math.min((beat - note.beat) * noteSpeed, 0)
+
         if (
           !note.isJudged &&
           ((!note.isLongEnd && note.sec + this.judgeRanges.slice(-1)[0] / 1000 < playingSec) ||
@@ -277,6 +297,11 @@ export class ChartPlayer {
             this.maxCombo = Math.max(this.combo, this.maxCombo)
             this.combo = 0
           }
+        }
+        if (note.lightImage !== null) {
+          note.lightImage.setVisible(note.image.visible)
+          note.lightImage.y = note.image.y
+          note.lightImage.setAlpha(1 - 0.6 * ((beat % 1) % 1))
         }
       }
     }

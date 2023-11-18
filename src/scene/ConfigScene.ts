@@ -94,7 +94,7 @@ export class ConfigScene extends Phaser.Scene {
       .setScale(0.5)
       .setDepth(1)
 
-    const noteTypeList: NoteType[] = ["circle", "rectangle"]
+    const noteTypeList: NoteType[] = ["circle", "rectangle", "line"]
     this.noteTypeIndex = noteTypeList.indexOf(this.playConfig.noteType)
     const noteTypeToggleButton = new ToggleButton(this, `${this.playConfig.noteType}`)
       .setPosition(width / 2 + 260 - 95.5, height / 2 - 180 + 360 * 0.2)
@@ -143,6 +143,8 @@ export class ConfigScene extends Phaser.Scene {
       this.previewNote.setTexture("note-circle-1").setDisplaySize(100, 100)
     } else if (this.playConfig.noteType === "rectangle") {
       this.previewNote.setTexture("note-rectangle-2").setDisplaySize(120, 40)
+    } else if (this.playConfig.noteType === "line") {
+      this.previewNote.setTexture("note-line-1").setDisplaySize(138, 60)
     }
     const previewTime = new Date().getTime() - this.previewTimer.getTime()
     this.previewNote.setY(
