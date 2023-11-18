@@ -1,9 +1,10 @@
-import { type Chart } from "./Chart"
-import { type KeySoundPlayer } from "./KeySoundPlayer"
-import { Note } from "./Note"
 import { Band } from "./Band"
-import { Measure } from "./Measure"
+import { type Chart } from "./Chart"
+import { EachLine } from "./EachLine"
 import { JudgeMeter } from "./JudgeMeter"
+import { type KeySoundPlayer } from "./KeySoundPlayer"
+import { Measure } from "./Measure"
+import { Note } from "./Note"
 
 import { type PlayConfig } from "./PlayConfig"
 
@@ -14,6 +15,7 @@ export class ChartPlayer {
   public lanes: Note[][] = []
   public bgmLane: Note[] = []
   public measures: Measure[] = []
+  public eachLines: EachLine[] = []
   public longNoteBands: Band[][] = []
 
   public isHolds = new Array<boolean>(7).fill(false)
@@ -62,6 +64,8 @@ export class ChartPlayer {
 
     const isLatestEndLongNote: boolean[] = new Array<boolean>(7).fill(false)
     const beatLatestEndLongNote: number[] = new Array<number>(7).fill(-1)
+
+    const eachLinePositions: Record<number, [number, number]> = {}
 
     for (const object of chart.bmsChart.objects._objects) {
       let laneIndex: number = replacementNormalNote[parseInt(object.channel)]
@@ -200,7 +204,29 @@ export class ChartPlayer {
         this.lanes[laneIndex].push(note)
         this.lastBeat = Math.max(this.lastBeat, beat)
       }
+
+      if (laneIndex >= 0 && laneIndex <= 7) {
+        if (!eachLinePositions.hasOwnProperty(beat)) {
+          eachLinePositions[beat] = [positionX, positionX]
+        }
+        eachLinePositions[beat][0] = Math.min(eachLinePositions[beat][0], positionX)
+        eachLinePositions[beat][1] = Math.max(eachLinePositions[beat][1], positionX)
+      }
     }
+
+    // each line
+    for (const [beat, [leftPosition, rightPosition]] of Object.entries(eachLinePositions)) {
+      const eachLine: EachLine = new EachLine(
+        parseFloat(beat),
+        scene.add
+          .rectangle(leftPosition, -100, rightPosition - leftPosition, 4, 0xffffff)
+          .setOrigin(0, 0.5)
+          .setDepth(-2)
+          .setVisible(playConfig.noteType !== "rectangle"),
+      )
+      this.eachLines.push(eachLine)
+    }
+
     for (const laneIndex of Array(7).keys()) {
       this.lanes[laneIndex].sort((a, b) => a.beat - b.beat)
     }
@@ -242,6 +268,13 @@ export class ChartPlayer {
       measure.rectangle.y = 640 + (beat - measure.beat) * noteSpeed
       if (measure.rectangle.y >= 640) {
         measure.rectangle.setVisible(false)
+      }
+    }
+
+    for (const eachLine of this.eachLines) {
+      eachLine.rectangle.y = 640 + (beat - eachLine.beat) * noteSpeed
+      if (eachLine.rectangle.y >= 640) {
+        eachLine.rectangle.setVisible(false)
       }
     }
 
