@@ -15,8 +15,6 @@ export class LoginScene extends Phaser.Scene {
   create() {
     const { width, height } = this.game.canvas
 
-    this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 128).setDepth(-10)
-
     this.add
       .zone(width / 2, height / 2, width, height)
       .setInteractive({
@@ -24,14 +22,21 @@ export class LoginScene extends Phaser.Scene {
       })
       .on("pointerdown", () => {})
 
-    this.add
+    const frame = this.add
       .image(width / 2, height / 2, "frame-detail")
       .setOrigin(0.5, 0.5)
       .setDepth(-9)
+      .setScale(1, 0)
 
-    this.loginForm = this.add.dom(width / 2 - 150, 320).createFromCache("login-form")
+    this.loginForm = this.add
+      .dom(width / 2 - 150, 320)
+      .createFromCache("login-form")
+      .setAlpha(0)
 
-    this.registerForm = this.add.dom(width / 2 + 150, 320).createFromCache("register-form")
+    this.registerForm = this.add
+      .dom(width / 2 + 150, 320)
+      .createFromCache("register-form")
+      .setAlpha(0)
 
     const loginFormElement = document.getElementById("login-form")?.getElementsByTagName("form")[0]
     if (loginFormElement) {
@@ -98,13 +103,14 @@ export class LoginScene extends Phaser.Scene {
       })
     }
 
-    this.add
+    const icon = this.add
       .image(width / 2 - 260, height / 2 - 225, "icon-ir")
       .setOrigin(0, 1)
       .setDepth(1)
       .setScale(0.8)
+      .setAlpha(0)
 
-    this.add
+    const titleLabel = this.add
       .text(width / 2 - 260 + 60, height / 2 - 230, "インターネットランキング", {
         fontFamily: "Noto Sans JP",
         fontSize: "55px",
@@ -113,10 +119,14 @@ export class LoginScene extends Phaser.Scene {
       .setOrigin(0, 1)
       .setScale(0.5)
       .setDepth(1)
+      .setAlpha(0)
 
-    this.add.rectangle(width / 2, height / 2 - 220, 530, 3, 0xeeeeee).setDepth(2)
+    const line = this.add
+      .rectangle(width / 2, height / 2 - 220, 530, 3, 0xeeeeee)
+      .setDepth(2)
+      .setScale(0, 1)
 
-    this.add
+    const loginLabel = this.add
       .text(width / 2 - 150, height / 2 - 180, "ログイン", {
         fontFamily: "Noto Sans JP",
         fontSize: "35px",
@@ -125,8 +135,9 @@ export class LoginScene extends Phaser.Scene {
       .setOrigin(0.5, 0.5)
       .setScale(0.5)
       .setDepth(1)
+      .setAlpha(0)
 
-    this.add
+    const registerLabel = this.add
       .text(width / 2 + 150, height / 2 - 180, "アカウントを新規作成", {
         fontFamily: "Noto Sans JP",
         fontSize: "35px",
@@ -135,8 +146,9 @@ export class LoginScene extends Phaser.Scene {
       .setOrigin(0.5, 0.5)
       .setScale(0.5)
       .setDepth(1)
+      .setAlpha(0)
 
-    this.add
+    const text = this.add
       .text(
         width / 2 - 260,
         height / 2 - 180 + 330,
@@ -150,8 +162,9 @@ export class LoginScene extends Phaser.Scene {
       .setOrigin(0, 0.5)
       .setScale(0.5)
       .setDepth(1)
+      .setAlpha(0)
 
-    this.add
+    const closeLabel = this.add
       .text(width / 2, height / 2 - 180 + 360 * 1.15, "閉じる", {
         fontFamily: "Noto Sans JP",
         fontSize: "35px",
@@ -160,19 +173,102 @@ export class LoginScene extends Phaser.Scene {
       .setOrigin(0.5, 0.5)
       .setScale(0.5)
       .setDepth(2)
+      .setAlpha(0)
 
-    this.add
+    const closeButton = this.add
       .image(width / 2, height / 2 - 180 + 360 * 1.15, "frame-button")
       .setOrigin(0.5, 0.5)
       .setDepth(1)
+      .setAlpha(0)
       .setInteractive({
         useHandCursor: true,
       })
-      .on("pointerdown", () => {
+      .once("pointerdown", () => {
         this.sound.play("cancel")
-        this.scene.stop()
-        this.scene.resume("select")
+        this.tweens.add({
+          targets: [
+            icon,
+            titleLabel,
+            loginLabel,
+            this.loginForm,
+            registerLabel,
+            this.registerForm,
+            text,
+            closeLabel,
+            closeButton,
+          ],
+          delay: 0,
+          alpha: {
+            value: 0,
+            duration: 150,
+          },
+        })
+
+        this.tweens.add({
+          targets: [line],
+          delay: 100,
+          scaleX: {
+            value: 0,
+            duration: 200,
+            ease: Phaser.Math.Easing.Cubic.Out,
+          },
+        })
+        this.tweens.add({
+          targets: [frame],
+          delay: 200,
+          scaleY: {
+            value: 0,
+            duration: 200,
+            ease: Phaser.Math.Easing.Cubic.Out,
+          },
+          alpha: {
+            value: 0,
+            duration: 200,
+          },
+          onComplete: () => {
+            this.scene.stop()
+            this.scene.resume("select")
+          },
+        })
       })
+    this.tweens.add({
+      targets: [frame],
+      delay: 0,
+      scaleY: {
+        value: 1,
+        duration: 200,
+        ease: Phaser.Math.Easing.Cubic.Out,
+      },
+    })
+
+    this.tweens.add({
+      targets: [line],
+      delay: 100,
+      scaleX: {
+        value: 1,
+        duration: 200,
+        ease: Phaser.Math.Easing.Cubic.Out,
+      },
+    })
+
+    this.tweens.add({
+      targets: [
+        icon,
+        titleLabel,
+        loginLabel,
+        this.loginForm,
+        registerLabel,
+        this.registerForm,
+        text,
+        closeLabel,
+        closeButton,
+      ],
+      delay: 200,
+      alpha: {
+        value: 1,
+        duration: 150,
+      },
+    })
   }
 
   update(time: number, dt: number) {
