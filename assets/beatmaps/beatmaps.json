@@ -226,10 +226,58 @@
   {
     "title": "Talent Show",
     "artist": "YurA",
-    "noter": "",
+    "noter": "chiyoda",
     "folder": "YurA - Talent Show",
     "jacket": "TalentShowCover.png",
-    "preview": "TalentShowShort_shichou.wav"
+    "preview": "TalentShowShort_shichou.wav",
+    "beatmap_4k_1": {
+      "filename": "4k_1.bme",
+      "playlevel": 1
+    },
+    "beatmap_5k_1": {
+      "filename": "5k_1.bme",
+      "playlevel": 1
+    },
+    "beatmap_6k_1": {
+      "filename": "6k_1.bme",
+      "playlevel": 1
+    },
+    "beatmap_7k_1": {
+      "filename": "7k_1.bme",
+      "playlevel": 1
+    },
+    "beatmap_4k_2": {
+      "filename": "4k_2.bme",
+      "playlevel": 3
+    },
+    "beatmap_5k_2": {
+      "filename": "5k_2.bme",
+      "playlevel": 3
+    },
+    "beatmap_6k_2": {
+      "filename": "6k_2.bme",
+      "playlevel": 3
+    },
+    "beatmap_7k_2": {
+      "filename": "7k_2.bme",
+      "playlevel": 3
+    },
+    "beatmap_4k_3": {
+      "filename": "4k_3.bme",
+      "playlevel": 5
+    },
+    "beatmap_5k_3": {
+      "filename": "5k_3.bme",
+      "playlevel": 5
+    },
+    "beatmap_6k_3": {
+      "filename": "6k_3.bme",
+      "playlevel": 5
+    },
+    "beatmap_7k_3": {
+      "filename": "7k_3.bme",
+      "playlevel": 5
+    }
   },
   {
     "title": "誰そ見しか楽園",
@@ -342,5 +390,20 @@
       "filename": "7k_3.bme",
       "playlevel": 7
     }
+  },
+  {
+    "title": "Revive Your Spirits!",
+    "artist": "ODAMAKI",
+    "noter": "WIP",
+    "folder": "ODAMAKI - Revive Your Spirits!",
+    "jacket": "riJacket.png",
+    "preview": "ReviveYourSpiritsShort.wav"
+  },
+  {
+    "title": "Castra",
+    "artist": "tsuki",
+    "noter": "WIP",
+    "folder": "tsuki - Castra",
+    "preview": "23_castra_demo.wav"
   }
 ]
