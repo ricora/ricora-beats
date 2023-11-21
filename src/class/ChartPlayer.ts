@@ -77,7 +77,7 @@ export class ChartPlayer {
 
       if (parseInt(object.channel) in replacementLongNote) {
         laneIndex = replacementLongNote[parseInt(object.channel)]
-
+        laneIndex = playConfig.isMirror ? 6 - laneIndex : laneIndex
         if (!isLatestEndLongNote[laneIndex]) {
           beatLatestEndLongNote[laneIndex] = beat
           isLongNoteStart = true
@@ -85,6 +85,8 @@ export class ChartPlayer {
           isLongNoteEnd = true
         }
         isLatestEndLongNote[laneIndex] = true
+      } else {
+        laneIndex = playConfig.isMirror ? 6 - laneIndex : laneIndex
       }
 
       if (parseInt(object.channel) === 1) {

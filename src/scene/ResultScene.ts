@@ -82,6 +82,7 @@ export class ResultScene extends Phaser.Scene {
         playConfig: {
           noteSpeed: 6.5,
           noteType: "rectangle",
+          isMirror: false,
           key: 7,
           difficulty: 3,
         },

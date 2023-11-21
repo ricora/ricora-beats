@@ -7,20 +7,24 @@ export class PlayConfig {
   public noteType: NoteType
   public key: Key
   public difficulty: Difficulty
+  public isMirror: boolean
 
   constructor({
     noteSpeed,
     noteType,
+    isMirror,
     key,
     difficulty,
   }: {
     noteSpeed: number
     noteType: NoteType
+    isMirror: boolean
     key: Key
     difficulty: Difficulty
   }) {
     this.noteSpeed = noteSpeed
     this.noteType = noteType
+    this.isMirror = isMirror
     this.key = key
     this.difficulty = difficulty
   }
