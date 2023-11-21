@@ -216,10 +216,14 @@ export class ChartPlayer {
 
     // each line
     for (const [beat, [leftPosition, rightPosition]] of Object.entries(eachLinePositions)) {
+      if (rightPosition === leftPosition) {
+        continue
+      }
       const eachLine: EachLine = new EachLine(
         parseFloat(beat),
         scene.add
-          .rectangle(leftPosition, -100, rightPosition - leftPosition, 4, 0xffffff)
+          .image(leftPosition, -100, "each-line")
+          .setDisplaySize(rightPosition - leftPosition, 10)
           .setOrigin(0, 0.5)
           .setDepth(-2)
           .setVisible(playConfig.noteType !== "rectangle"),

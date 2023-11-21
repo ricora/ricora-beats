@@ -83,6 +83,8 @@ export class LoadingScene extends Phaser.Scene {
 
     this.load.image("longnote-line", "./assets/skin/longnote_line.png")
 
+    this.load.image("each-line", "./assets/skin/each_line.png")
+
     this.load.image("judge-0", "./assets/skin/judge_0.png")
     this.load.image("judge-1", "./assets/skin/judge_1.png")
     this.load.image("judge-2", "./assets/skin/judge_2.png")
