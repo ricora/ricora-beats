@@ -83,6 +83,7 @@ export class SelectScene extends Phaser.Scene {
       new PlayConfig({
         noteSpeed: 3.0,
         noteType: "circle",
+        isMirror: false,
         key: 4,
         difficulty: 1,
       })

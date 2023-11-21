@@ -141,7 +141,7 @@ export class TitleScene extends Phaser.Scene {
 
     // 日本語のフォントがうまく読み込まれないので、使う文字を予め強制的に読み込んでおく
     this.add
-      .text(1280, 0, "あ難易度使用数変更譜面現在設定企画立案楽曲", {
+      .text(1280, 0, "あ難易度使用数変更速見目配置譜面現在設定企画立案楽曲", {
         fontFamily: "Noto Sans JP",
         fontSize: "40px",
         color: "#fafafa",

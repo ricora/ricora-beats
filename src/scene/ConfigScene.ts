@@ -1,6 +1,8 @@
 import { type NoteType, type PlayConfig } from "../class/PlayConfig"
 import { ToggleButton } from "../class/ToggleButton"
 
+type LaneType = "normal" | "mirror"
+
 export class ConfigScene extends Phaser.Scene {
   private playConfig: PlayConfig
 
@@ -8,6 +10,7 @@ export class ConfigScene extends Phaser.Scene {
   private previewTimer: Date
 
   private noteTypeIndex: number
+  private laneTypeIndex: number
 
   constructor() {
     super("config")
@@ -125,6 +128,37 @@ export class ConfigScene extends Phaser.Scene {
     })
     this.add.existing(noteTypeToggleButton)
 
+    const laneTypeLabel = this.add
+      .text(width / 2 - 260, height / 2 - 180 + 360 * 0.4, "レーンの配置", {
+        fontFamily: "Noto Sans JP",
+        fontSize: "35px",
+        color: "#f0f0f0",
+      })
+      .setOrigin(0, 0.5)
+      .setScale(0.5)
+      .setDepth(1)
+      .setAlpha(0)
+
+    const laneTypeList: LaneType[] = ["normal", "mirror"]
+    this.laneTypeIndex = Number(this.playConfig.isMirror)
+    const laneTypeToggleButton = new ToggleButton(this, `${laneTypeList[this.laneTypeIndex]}`)
+      .setPosition(width / 2 + 260 - 95.5, height / 2 - 180 + 360 * 0.4)
+      .setDepth(2)
+      .setAlpha(0)
+    laneTypeToggleButton.leftZone.on("pointerdown", () => {
+      this.sound.play("cursor")
+      this.laneTypeIndex ^= 1
+      this.playConfig.isMirror = Boolean(this.laneTypeIndex)
+      laneTypeToggleButton.setText(`${laneTypeList[this.laneTypeIndex]}`)
+    })
+    laneTypeToggleButton.rightZone.on("pointerdown", () => {
+      this.sound.play("cursor")
+      this.laneTypeIndex ^= 1
+      this.playConfig.isMirror = Boolean(this.laneTypeIndex)
+      laneTypeToggleButton.setText(`${laneTypeList[this.laneTypeIndex]}`)
+    })
+    this.add.existing(laneTypeToggleButton)
+
     const closeLabel = this.add
       .text(width / 2, height / 2 - 180 + 360 * 1.15, "閉じる", {
         fontFamily: "Noto Sans JP",
@@ -156,6 +190,8 @@ export class ConfigScene extends Phaser.Scene {
             noteSpeedToggleButton,
             noteTypeLabel,
             noteTypeToggleButton,
+            laneTypeLabel,
+            laneTypeToggleButton,
             closeLabel,
             closeButton,
             this.previewNote,
@@ -232,6 +268,8 @@ export class ConfigScene extends Phaser.Scene {
         noteSpeedToggleButton,
         noteTypeLabel,
         noteTypeToggleButton,
+        laneTypeLabel,
+        laneTypeToggleButton,
         closeLabel,
         closeButton,
         this.previewNote,
