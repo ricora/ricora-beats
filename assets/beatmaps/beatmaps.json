@@ -394,10 +394,42 @@
   {
     "title": "Revive Your Spirits!",
     "artist": "ODAMAKI",
-    "noter": "WIP",
+    "noter": "chiyoda",
     "folder": "ODAMAKI - Revive Your Spirits!",
     "jacket": "riJacket.png",
-    "preview": "ReviveYourSpiritsShort.wav"
+    "preview": "ReviveYourSpiritsShort.wav",
+    "beatmap_4k_1": {
+      "filename": "4k_1.bme",
+      "playlevel": 2
+    },
+    "beatmap_5k_1": {
+      "filename": "5k_1.bme",
+      "playlevel": 2
+    },
+    "beatmap_6k_1": {
+      "filename": "6k_1.bme",
+      "playlevel": 2
+    },
+    "beatmap_7k_1": {
+      "filename": "7k_1.bme",
+      "playlevel": 2
+    },
+    "beatmap_4k_2": {
+      "filename": "4k_2.bme",
+      "playlevel": 4
+    },
+    "beatmap_5k_2": {
+      "filename": "5k_2.bme",
+      "playlevel": 4
+    },
+    "beatmap_6k_2": {
+      "filename": "6k_2.bme",
+      "playlevel": 4
+    },
+    "beatmap_7k_2": {
+      "filename": "7k_2.bme",
+      "playlevel": 4
+    }
   },
   {
     "title": "Castra",
