@@ -434,8 +434,20 @@
   {
     "title": "Castra",
     "artist": "tsuki",
-    "noter": "WIP",
+    "noter": "chiyoda",
     "folder": "tsuki - Castra",
-    "preview": "23_castra_demo.wav"
+    "preview": "23_castra_demo.wav",
+    "beatmap_7k_1": {
+      "filename": "7k_1.bme",
+      "playlevel": 3
+    },
+    "beatmap_7k_2": {
+      "filename": "7k_2.bme",
+      "playlevel": 6
+    },
+    "beatmap_7k_3": {
+      "filename": "7k_3.bme",
+      "playlevel": 8
+    }
   }
 ]
