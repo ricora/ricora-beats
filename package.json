@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --mode=development",
-    "dev": "webpack-dev-server --mode=development",
+    "build": "rspack build --mode=production",
+    "dev": "rspack serve",
     "format": "prettier --write './**/*.{js,ts,json,yaml,yml,md,html,css,scss}' --ignore-path '.gitignore'",
     "format:check": "prettier --check './**/*.{js,ts,json,yaml,yml,md,html,css,scss}' --ignore-path '.gitignore'",
     "lint": "eslint './src/**/*.ts' --ignore-path '.gitignore'",
