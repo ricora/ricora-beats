@@ -20,8 +20,8 @@
     <a href="https://phaser.io/" alt="Phaser">
     <img src="https://img.shields.io/badge/-Phaser-b61bf2" />
     </a>
-    <a href="https://webpack.js.org/" alt="Webpack">
-    <img src="https://img.shields.io/badge/-Webpack-222222?logo=webpack&logoColor=8dd6f9" />
+    <a href="https://www.rspack.dev/" alt="Rspack">
+    <img src="https://img.shields.io/badge/-Rspack-f28773" />
     </a>
     <a href="https://pages.github.com/" alt="GitHub Pages">
     <img src="https://img.shields.io/badge/-GitHub_Pages-222222?logo=GitHub+Pages&logoColor=ffffff" />
