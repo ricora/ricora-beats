@@ -14,6 +14,7 @@
   "keywords": [],
   "author": "",
   "devDependencies": {
+    "@rspack/cli": "^0.4.3",
     "@types/webfontloader": "^1.6.34",
     "@typescript-eslint/eslint-plugin": "^6.10.0",
     "eslint": "^8.53.0",
