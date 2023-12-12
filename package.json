@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --mode=development",
-    "dev": "webpack-dev-server --mode=development",
+    "build": "rspack build --mode=production",
+    "dev": "rspack serve",
     "format": "prettier --write './**/*.{js,ts,json,yaml,yml,md,html,css,scss}' --ignore-path '.gitignore'",
     "format:check": "prettier --check './**/*.{js,ts,json,yaml,yml,md,html,css,scss}' --ignore-path '.gitignore'",
     "lint": "eslint './src/**/*.ts' --ignore-path '.gitignore'",
@@ -14,6 +14,7 @@
   "keywords": [],
   "author": "",
   "devDependencies": {
+    "@rspack/cli": "^0.4.3",
     "@types/webfontloader": "^1.6.34",
     "@typescript-eslint/eslint-plugin": "^6.10.0",
     "eslint": "^8.53.0",
@@ -24,12 +25,8 @@
     "eslint-plugin-promise": "^6.1.1",
     "prettier": "^3.0.3",
     "process": "^0.11.10",
-    "ts-loader": "^9.5.0",
     "typescript": "^5.2.2",
-    "util": "^0.12.5",
-    "webpack": "^5.0.0-rc.6",
-    "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^4.8.1"
+    "util": "^0.12.5"
   },
   "dependencies": {
     "axios": "^0.26.1",
