@@ -28,14 +28,12 @@ const config = {
     ],
   },
   devServer: { static: { directory: "./dist/" } },
-  builtins: {
-    define: {
+  plugins: [
+    new rspack.DefinePlugin({
       "process.env.SERVER_URL": JSON.stringify(process.env.SERVER_URL),
       "process.env.BUILD_DATE": JSON.stringify(buildDate),
       "process.env.CREDITS": JSON.stringify(process.env.CREDITS),
-    },
-  },
-  plugins: [
+    }),
     new rspack.ProvidePlugin({
       process: [require.resolve("process/browser")],
     }),
