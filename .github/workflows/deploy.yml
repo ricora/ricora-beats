@@ -21,7 +21,7 @@ jobs:
         uses: oven-sh/setup-bun@v1
 
       - name: Install Dependencies
-        run: bun install
+        run: bun install --frozen-lockfile
 
       - name: Fetch beatmap repository
         run: bunx degit RICORA/ricora-beats-beatmap ./dist/assets/beatmaps
