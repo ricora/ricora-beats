@@ -101,23 +101,23 @@ export class ChartPlayer {
       let bandDisplaySizeX: number = 0
       let positionX: number = 0
       let visible: boolean = true
-      if (key == 4) {
+      if (key === 4) {
         if (laneIndex >= 1 && laneIndex <= 2) {
           positionX = 361 + 186 * (laneIndex - 1)
         } else if (laneIndex >= 4 && laneIndex <= 5) {
           positionX = 361 + 186 * (laneIndex - 2)
         }
-      } else if (key == 5) {
+      } else if (key === 5) {
         if (laneIndex >= 1 && laneIndex <= 5) {
           positionX = 343 + 148.5 * (laneIndex - 1)
         }
-      } else if (key == 6) {
+      } else if (key === 6) {
         if (laneIndex <= 2) {
           positionX = 330 + 124 * laneIndex
         } else if (laneIndex >= 4) {
           positionX = 330 + 124 * (laneIndex - 1)
         }
-      } else if (key == 7) {
+      } else if (key === 7) {
         positionX = 322 + 106 * laneIndex
       }
       if (playConfig.noteType === "rectangle") {
@@ -128,10 +128,10 @@ export class ChartPlayer {
         displaySizeY = 40
         bandDisplaySizeX = displaySizeX
 
-        if (laneIndex == 1 || laneIndex == 5) {
+        if (laneIndex === 1 || laneIndex === 5) {
           noteImage = "note-rectangle-2"
           longNoteImage = "longnote-2"
-        } else if (laneIndex == 3) {
+        } else if (laneIndex === 3) {
           noteImage = "note-rectangle-3"
           longNoteImage = "longnote-3"
         } else {
@@ -164,7 +164,7 @@ export class ChartPlayer {
         bandDisplaySizeX = { 4: 185, 5: 147, 6: 120, 7: 103 }[key]
       }
 
-      if (isLongNoteEnd && isLatestEndLongNote[laneIndex] && beatLatestEndLongNote[laneIndex] != beat) {
+      if (isLongNoteEnd && isLatestEndLongNote[laneIndex] && beatLatestEndLongNote[laneIndex] !== beat) {
         isLatestEndLongNote[laneIndex] = false
 
         const band = new Band(
@@ -208,7 +208,7 @@ export class ChartPlayer {
       }
 
       if (laneIndex >= 0 && laneIndex <= 7) {
-        if (!eachLinePositions.hasOwnProperty(beat)) {
+        if (!Object.prototype.hasOwnProperty.call(eachLinePositions, beat)) {
           eachLinePositions[beat] = [positionX, positionX]
         }
         eachLinePositions[beat][0] = Math.min(eachLinePositions[beat][0], positionX)
@@ -259,7 +259,7 @@ export class ChartPlayer {
     playingSec: number,
     noteSpeed: number,
     keySoundPlayer: KeySoundPlayer,
-  ) {
+  ): void {
     for (const note of this.bgmLane) {
       if (note.sec < playingSec) {
         if (!note.isJudged) {
@@ -324,7 +324,7 @@ export class ChartPlayer {
             this.judges[judgeIndex]++
             this.combo++
             for (const band of this.longNoteBands[laneIndex]) {
-              if (band.startBeat == note.beat) {
+              if (band.startBeat === note.beat) {
                 band.image.visible = false
                 break
               }
@@ -390,7 +390,7 @@ export class ChartPlayer {
     return false
   }
 
-  public judgeKeyHold = (playingSec: number, laneIndex: number) => {
+  public judgeKeyHold = (playingSec: number, laneIndex: number): void => {
     this.isHolds[laneIndex] = false
     for (const note of this.lanes[laneIndex]) {
       if (!note.isJudged && note.isLongEnd) {
@@ -415,7 +415,7 @@ export class ChartPlayer {
         this.latestJudgeSec = playingSec
         this.latestJudgeDiff = note.sec - playingSec
         for (const band of this.longNoteBands[laneIndex]) {
-          if (band.endBeat == note.beat) {
+          if (band.endBeat === note.beat) {
             band.image.visible = false
             break
           }

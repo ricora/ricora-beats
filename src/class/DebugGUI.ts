@@ -28,12 +28,12 @@ export class DebugGUI {
     sceneFolder.add(this.params, "result")
   }
 
-  public changeScene(key: string) {
+  public changeScene(key: string): void {
     this.destroy()
     this.scene.scene.start(key)
   }
 
-  public destroy() {
+  public destroy(): void {
     this.gui.destroy()
   }
 }

@@ -89,7 +89,7 @@ export class PlayScene extends Phaser.Scene {
     super("play")
   }
 
-  init(data: any) {
+  init(data: any): void {
     this.debugGUI = new DebugGUI(this)
 
     this.loadEndTime = undefined
@@ -130,10 +130,9 @@ export class PlayScene extends Phaser.Scene {
     this.playConfig = data.playConfig
   }
 
-  preload() {}
+  preload(): void {}
 
-  create() {
-    const urlParams = new URLSearchParams(document.location.search.substring(1))
+  create(): void {
     const url = `./assets/beatmaps/${this.music.folder}/${this.beatmap.filename}`
 
     const { width, height } = this.game.canvas
@@ -283,23 +282,23 @@ export class PlayScene extends Phaser.Scene {
       let positionX = -1280
       const widths = { 4: 186, 5: 148.5, 6: 124, 7: 106 }
 
-      if (this.playConfig.key == 4) {
+      if (this.playConfig.key === 4) {
         if (laneIndex >= 1 && laneIndex <= 2) {
           positionX = 361 + 186 * (laneIndex - 1)
         } else if (laneIndex >= 4 && laneIndex <= 5) {
           positionX = 361 + 186 * (laneIndex - 2)
         }
-      } else if (this.playConfig.key == 5) {
+      } else if (this.playConfig.key === 5) {
         if (laneIndex >= 1 && laneIndex <= 5) {
           positionX = 343 + 148.5 * (laneIndex - 1)
         }
-      } else if (this.playConfig.key == 6) {
+      } else if (this.playConfig.key === 6) {
         if (laneIndex <= 2) {
           positionX = 330 + 124 * laneIndex
         } else if (laneIndex >= 4) {
           positionX = 330 + 124 * (laneIndex - 1)
         }
-      } else if (this.playConfig.key == 7) {
+      } else if (this.playConfig.key === 7) {
         positionX = 322 + 106 * laneIndex
       }
       this.keyFlashImages.push(
@@ -544,7 +543,7 @@ export class PlayScene extends Phaser.Scene {
     })
   }
 
-  update(time: number, dt: number) {
+  update(time: number, dt: number): void {
     this.laneMainFrameLight.setAlpha(
       1 - 0.6 * ((this.beat % 1) % 1), // 0.95 + 0.6 * (-this.beat - Math.floor(1 - this.beat))
     )
@@ -592,8 +591,8 @@ export class PlayScene extends Phaser.Scene {
         }
       }
       // change back light
-      if (this.chartPlayer.judges[3] == 0 && this.chartPlayer.judges[4] == 0) {
-        if (this.chartPlayer.judges[1] == 0 && this.chartPlayer.judges[2] == 0) {
+      if (this.chartPlayer.judges[3] === 0 && this.chartPlayer.judges[4] === 0) {
+        if (this.chartPlayer.judges[1] === 0 && this.chartPlayer.judges[2] === 0) {
           this.laneBackgroundLight.setTexture("frame-back-light-yellow")
         } else {
           this.laneBackgroundLight.setTexture("frame-back-light-blue")
@@ -662,7 +661,7 @@ export class PlayScene extends Phaser.Scene {
     }
   }
 
-  private judgeKeyDown(laneIndex: number) {
+  private judgeKeyDown(laneIndex: number): void {
     if (this.chartPlayer !== undefined) {
       if (this.chartPlayer.judgeKeyDown(this, this.playingSec, laneIndex, this.keySoundPlayer)) {
         if (this.chartPlayer.latestJudgeIndex <= 2) {
@@ -672,25 +671,25 @@ export class PlayScene extends Phaser.Scene {
     }
   }
 
-  private addBomb(laneIndex: number) {
+  private addBomb(laneIndex: number): void {
     let positionX = -1200
-    if (this.playConfig.key == 4) {
+    if (this.playConfig.key === 4) {
       if (laneIndex >= 1 && laneIndex <= 2) {
         positionX = 361 + 186 * (laneIndex - 1)
       } else if (laneIndex >= 4 && laneIndex <= 5) {
         positionX = 361 + 186 * (laneIndex - 2)
       }
-    } else if (this.playConfig.key == 5) {
+    } else if (this.playConfig.key === 5) {
       if (laneIndex >= 1 && laneIndex <= 5) {
         positionX = 343 + 148.5 * (laneIndex - 1)
       }
-    } else if (this.playConfig.key == 6) {
+    } else if (this.playConfig.key === 6) {
       if (laneIndex <= 2) {
         positionX = 330 + 124 * laneIndex
       } else if (laneIndex >= 4) {
         positionX = 330 + 124 * (laneIndex - 1)
       }
-    } else if (this.playConfig.key == 7) {
+    } else if (this.playConfig.key === 7) {
       positionX = 322 + 106 * laneIndex
     }
     this.tweens.add({

@@ -1,4 +1,4 @@
-import { type Music } from "./Music"
+import { type Beatmap, type Music } from "./Music"
 import { MusicTile } from "./MusicTile"
 
 export class MusicTileManager {
@@ -74,7 +74,7 @@ export class MusicTileManager {
     }
   }
 
-  public update(time: number) {
+  public update(time: number): void {
     for (const musicTileIndex of Array(7).keys()) {
       const musicTile = this.musicTiles[musicTileIndex]
       this.musicTiles[musicTileIndex].setAlpha(1 - (0.8 * Math.abs(musicTile.y - 315)) / 315)
@@ -82,7 +82,7 @@ export class MusicTileManager {
     this.selectedMusicTile.setAlpha(0.5 + 0.5 * Math.abs(Math.sin((time * 2 * Math.PI * 0.25) / 1000)))
   }
 
-  public scroll(asc: boolean) {
+  public scroll(asc: boolean): void {
     if (asc) {
       this.scrollIndex = (this.scrollIndex + 1) % this.musicList.length
       for (const musicTileIndex of Array(7).keys()) {
@@ -102,19 +102,19 @@ export class MusicTileManager {
     }
   }
 
-  public isPlayable(key: number, difficulty: number) {
-    return this.musicList[this.scrollIndex].hasOwnProperty(`beatmap_${key}k_${difficulty}`)
+  public isPlayable(key: number, difficulty: number): boolean {
+    return Object.prototype.hasOwnProperty.call(this.musicList[this.scrollIndex], `beatmap_${key}k_${difficulty}`)
   }
 
-  public getMusic() {
+  public getMusic(): Music {
     return this.musicList[this.scrollIndex]
   }
 
-  public getBeatmap(key: number, difficulty: number) {
+  public getBeatmap(key: number, difficulty: number): Beatmap {
     return this.musicList[this.scrollIndex][`beatmap_${key}k_${difficulty}`]
   }
 
-  public getJacketImageKey() {
+  public getJacketImageKey(): string {
     const selectedMusic = this.musicList[this.scrollIndex]
 
     return `jacket-${selectedMusic.folder}/${selectedMusic.jacket}`

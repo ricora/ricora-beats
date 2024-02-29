@@ -16,12 +16,12 @@ export class ConfigScene extends Phaser.Scene {
     super("config")
   }
 
-  init(data: any) {
+  init(data: any): void {
     this.playConfig = data.playConfig
     this.previewTimer = new Date()
   }
 
-  create() {
+  create(): void {
     const { width, height } = this.game.canvas
 
     this.add
@@ -297,7 +297,7 @@ export class ConfigScene extends Phaser.Scene {
     })
   }
 
-  update(time: number, dt: number) {
+  update(time: number, dt: number): void {
     if (this.playConfig.noteType === "circle") {
       this.previewNote.setTexture("note-circle-1").setDisplaySize(100, 100)
     } else if (this.playConfig.noteType === "rectangle") {

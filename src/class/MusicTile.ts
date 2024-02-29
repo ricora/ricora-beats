@@ -74,19 +74,19 @@ export class MusicTile extends Phaser.GameObjects.Container {
     this.add(this.jacketImage)
   }
 
-  public setTitle(title: string) {
+  public setTitle(title: string): void {
     this.titleText.setText(title)
   }
 
-  public setArtist(artist: string) {
+  public setArtist(artist: string): void {
     this.artistText.setText(artist)
   }
 
-  public setNoter(noter: string) {
+  public setNoter(noter: string): void {
     this.noterText.setText(noter)
   }
 
-  public setMusic(music: Music) {
+  public setMusic(music: Music): void {
     this.titleText.setText(music.title)
     this.artistText.setText(music.artist)
     this.noterText.setText(music.noter)

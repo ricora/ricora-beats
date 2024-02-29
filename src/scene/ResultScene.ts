@@ -60,14 +60,14 @@ export class ResultScene extends Phaser.Scene {
     super("result")
   }
 
-  init(data: any) {
+  init(data: any): void {
     this.debugGUI = new DebugGUI(this)
     this.events.on(Phaser.Scenes.Events.TRANSITION_OUT, () => {
       this.debugGUI.destroy()
     })
 
     this.playResult =
-      data.playResult ||
+      data.playResult ??
       new PlayResult({
         music: {
           title: "test",
@@ -105,7 +105,7 @@ export class ResultScene extends Phaser.Scene {
         JSON.stringify(this.playResult),
       )
     }
-    const getRanking = async (userId?: number) => {
+    const getRanking = async (userId?: number): Promise<void> => {
       const folder = this.playResult.music.folder
       const filename =
         this.playResult.music[`beatmap_${this.playResult.playConfig.key}k_${this.playResult.playConfig.difficulty}`]
@@ -133,7 +133,7 @@ export class ResultScene extends Phaser.Scene {
       ranking.sort((a: any, b: any) => {
         return a.score < b.score ? 1 : -1
       })
-      if (userId) {
+      if (userId !== undefined) {
         let rank: number | undefined
         for (const [rankingIndex, score] of ranking.entries()) {
           if (score.player_id === userId) {
@@ -183,18 +183,18 @@ export class ResultScene extends Phaser.Scene {
         })
       }
     }
-    const sendScore = async () => {
-      const token_type = localStorage.getItem("token_type")
-      const access_token = localStorage.getItem("access_token")
+    const sendScore = async (): Promise<void> => {
+      const tokenType = localStorage.getItem("token_type")
+      const accessToken = localStorage.getItem("access_token")
 
-      if (!token_type || !access_token) {
+      if (tokenType === null || accessToken === null) {
         await getRanking()
         return
       }
 
       const headers = {
         "Content-Type": "application/json",
-        Authorization: `${token_type} ${access_token}`,
+        Authorization: `${tokenType} ${accessToken}`,
       }
 
       const userResponse = await retryFetch(new URL("/users/me", process.env.SERVER_URL).toString(), {
@@ -233,10 +233,10 @@ export class ResultScene extends Phaser.Scene {
       }
       await getRanking(user.id)
     }
-    sendScore()
+    void sendScore()
   }
 
-  create() {
+  create(): void {
     const { width, height } = this.game.canvas
 
     this.backgroundCamera = this.cameras.add(0, 0, 1280, 720)
@@ -244,7 +244,7 @@ export class ResultScene extends Phaser.Scene {
     this.cameras.add(0, 0, 1280, 720, true)
     this.add.shader("background", width / 2 + 1280, height / 2 + 720, 1280, 720).setDepth(-5)
 
-    // @ts-expect-error
+    // @ts-expect-error: 型が不明なため
     this.plugins.get("rexKawaseBlurPipeline").add(this.backgroundCamera, {
       blur: 8,
       quality: 8,
@@ -643,7 +643,7 @@ export class ResultScene extends Phaser.Scene {
         useHandCursor: true,
       })
       .on("pointerdown", () => {
-        ;(async () => {
+        void (async () => {
           this.sound.play("decide")
           this.tweetButton.setAlpha(0.5)
           this.copySnapshot()
@@ -703,7 +703,7 @@ export class ResultScene extends Phaser.Scene {
     this.cameras.main.fadeIn(500)
   }
 
-  update(time: number, dt: number) {
+  update(time: number, dt: number): void {
     this.particleEmitter.particleX = this.input.x
     this.particleEmitter.particleY = this.input.y
     switch (Math.floor(time / 40) % 4) {
@@ -722,7 +722,7 @@ export class ResultScene extends Phaser.Scene {
     }
   }
 
-  private copySnapshot() {
+  private copySnapshot(): void {
     this.renderer.snapshot((image: HTMLImageElement | Phaser.Display.Color) => {
       if (image instanceof HTMLImageElement) {
         const base64ToBlob = (base64Data: string): Blob => {
@@ -742,7 +742,7 @@ export class ResultScene extends Phaser.Scene {
           return new Blob(byteArrays, { type: contentType })
         }
 
-        navigator.clipboard.write([
+        void navigator.clipboard.write([
           new ClipboardItem({
             "image/png": base64ToBlob(image.src.replace("data:image/png;base64,", "")),
           } as any),

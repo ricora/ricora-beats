@@ -43,7 +43,7 @@ export class ToggleButton extends Phaser.GameObjects.Container {
     this.add(this.rightZone)
   }
 
-  public setText(text: string) {
+  public setText(text: string): void {
     this.text.setText(text)
   }
 }

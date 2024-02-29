@@ -17,14 +17,14 @@ export class TitleScene extends Phaser.Scene {
     super("title")
   }
 
-  init() {
+  init(): void {
     this.debugGUI = new DebugGUI(this)
     this.events.on(Phaser.Scenes.Events.TRANSITION_OUT, () => {
       this.debugGUI.destroy()
     })
   }
 
-  preload() {
+  preload(): void {
     const musicList = this.cache.json.get("music-list")
 
     for (const music of musicList) {
@@ -40,7 +40,7 @@ export class TitleScene extends Phaser.Scene {
     }
   }
 
-  create() {
+  create(): void {
     const { width, height } = this.game.canvas
 
     this.backgroundCamera = this.cameras.add(0, 0, 1280, 720)
@@ -48,7 +48,7 @@ export class TitleScene extends Phaser.Scene {
     this.cameras.add(0, 0, 1280, 720, true)
     this.add.shader("background", width / 2 + 1280, height / 2 + 720, 1280, 720).setDepth(-5)
 
-    // @ts-expect-error
+    // @ts-expect-error: 型が不明なため
     this.plugins.get("rexKawaseBlurPipeline").add(this.backgroundCamera, {
       blur: 8,
       quality: 8,
@@ -148,7 +148,7 @@ export class TitleScene extends Phaser.Scene {
         align: "center",
       })
       .setVisible(false)
-    this.getAllUserNames()
+    void this.getAllUserNames()
 
     this.add
       .zone(640, 720, 1280, 640)
@@ -166,7 +166,7 @@ export class TitleScene extends Phaser.Scene {
     this.cameras.main.fadeIn(500)
 
     if (
-      navigator.userAgent.match(/iPhone|Android.+Mobile/) &&
+      navigator.userAgent.match(/iPhone|Android.+Mobile/) !== null &&
       !window.matchMedia("(display-mode: fullscreen)").matches
     ) {
       alert(
@@ -175,7 +175,7 @@ export class TitleScene extends Phaser.Scene {
     }
   }
 
-  update(time: number, dt: number) {
+  update(time: number, dt: number): void {
     this.particleEmitter.particleX = this.input.x
     this.particleEmitter.particleY = this.input.y
 
