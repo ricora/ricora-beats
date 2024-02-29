@@ -1,3 +1,5 @@
+import { isExhibitionMode } from "../lib/exhibitionMode"
+
 export class CreditScene extends Phaser.Scene {
   constructor() {
     super("credit")
@@ -113,14 +115,18 @@ export class CreditScene extends Phaser.Scene {
       .setScale(0.5)
       .setDepth(1)
       .setAlpha(0)
-      .setInteractive({
-        useHandCursor: true,
-      })
-      .on("pointerdown", () => {
-        if (window.open("https://tus-ricora.com/", "_blank") == null) {
-          location.href = "https://tus-ricora.com/"
-        }
-      })
+
+    if (!isExhibitionMode()) {
+      link1
+        .setInteractive({
+          useHandCursor: true,
+        })
+        .on("pointerdown", () => {
+          if (window.open("https://tus-ricora.com/", "_blank") == null) {
+            location.href = "https://tus-ricora.com/"
+          }
+        })
+    }
 
     const linkLabel2 = this.add
       .text(width / 2 - 260, height / 2 - 180 + 330, "View on GitHub", {
@@ -142,14 +148,18 @@ export class CreditScene extends Phaser.Scene {
       .setScale(0.5)
       .setDepth(1)
       .setAlpha(0)
-      .setInteractive({
-        useHandCursor: true,
-      })
-      .on("pointerdown", () => {
-        if (window.open("https://github.com/RICORA/ricora-beats/", "_blank") == null) {
-          location.href = "https://github.com/RICORA/ricora-beats/"
-        }
-      })
+
+    if (!isExhibitionMode()) {
+      link2
+        .setInteractive({
+          useHandCursor: true,
+        })
+        .on("pointerdown", () => {
+          if (window.open("https://github.com/RICORA/ricora-beats/", "_blank") == null) {
+            location.href = "https://github.com/RICORA/ricora-beats/"
+          }
+        })
+    }
 
     const closeLabel = this.add
       .text(width / 2, height / 2 - 180 + 360 * 1.15, "閉じる", {

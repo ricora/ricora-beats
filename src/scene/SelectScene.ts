@@ -8,6 +8,8 @@ import { User } from "../class/User"
 
 import { retryFetch } from "../lib/retryFetch"
 
+import { isExhibitionMode } from "../lib/exhibitionMode"
+
 type DIFFICULTY = 1 | 2 | 3 | 4
 type KEY = 4 | 5 | 6 | 7
 
@@ -431,13 +433,21 @@ export class SelectScene extends Phaser.Scene {
       .image(830 + 400 * 0.5, 640, "icon-ir")
       .setOrigin(0.5, 0.5)
       .setDepth(1)
-      .setInteractive({
-        useHandCursor: true,
-      })
-      .on("pointerdown", () => {
-        this.sound.play("select")
-        this.scene.run("login")
-      })
+
+    if (isExhibitionMode()) {
+      this.loginIcon.setAlpha(0.5)
+      this.loginLabel.setAlpha(0.5)
+    } else {
+      this.loginIcon
+        .setInteractive({
+          useHandCursor: true,
+        })
+        .on("pointerdown", () => {
+          this.sound.play("select")
+          this.scene.run("login")
+        })
+    }
+
     this.add
       .text(830 + 400 * 0.8, 680, "クレジット", {
         fontFamily: "Noto Sans JP",
@@ -463,6 +473,7 @@ export class SelectScene extends Phaser.Scene {
       .setOrigin(0, 0)
       .setAlpha(0.5)
       .setDepth(1)
+      .setVisible(!isExhibitionMode())
       .setInteractive({
         useHandCursor: true,
       })
@@ -483,6 +494,7 @@ export class SelectScene extends Phaser.Scene {
       .setOrigin(1, 0)
       .setAlpha(0.5)
       .setDepth(1)
+      .setVisible(!isExhibitionMode())
       .setInteractive({
         useHandCursor: true,
       })
