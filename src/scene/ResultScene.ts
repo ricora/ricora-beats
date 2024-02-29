@@ -1,6 +1,7 @@
 import { DebugGUI } from "../class/DebugGUI"
 import { PlayResult } from "../class/PlayResult"
 
+import { isExhibitionMode } from "../lib/exhibitionMode"
 import { retryFetch } from "../lib/retryFetch"
 
 export class ResultScene extends Phaser.Scene {
@@ -639,6 +640,7 @@ export class ResultScene extends Phaser.Scene {
       .setDepth(10)
       .setScale(0.8)
       .setAlpha(0.5)
+      .setVisible(!isExhibitionMode())
       .setInteractive({
         useHandCursor: true,
       })
@@ -681,6 +683,7 @@ export class ResultScene extends Phaser.Scene {
       .setDepth(10)
       .setScale(0.8)
       .setAlpha(0.5)
+      .setVisible(!isExhibitionMode())
       .setInteractive({
         useHandCursor: true,
       })
