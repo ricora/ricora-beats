@@ -8,7 +8,7 @@ export class LoadingScene extends Phaser.Scene {
     super("loading")
   }
 
-  preload() {
+  preload(): void {
     this.load.image("logo", "./assets/skin/logo.png")
 
     this.load.image("frame-title", "./assets/skin/frame_title.png")
@@ -144,13 +144,11 @@ export class LoadingScene extends Phaser.Scene {
     })
   }
 
-  create() {
-    const { width, height } = this.game.canvas
-
+  create(): void {
     this.add.text(0, 0, "Loading...").setDepth(1)
 
     // Web Font Loaderのロード完了判定がうまく動かないので選曲シーンで使用する文字を予め強制的に読み込む
-    new MusicTileManager(this, 0)
+    const musicTileManager = new MusicTileManager(this, 0) // eslint-disable-line @typescript-eslint/no-unused-vars
     this.add.rectangle(640, 360, 1280, 720, 0x000000).setDepth(0)
 
     this.load.on("complete", () => {
@@ -160,7 +158,7 @@ export class LoadingScene extends Phaser.Scene {
     this.load.start()
   }
 
-  update() {
+  update(): void {
     if (this.hasLoadedFont && this.hasLoadedPhaser) {
       this.scene.start("title")
     }

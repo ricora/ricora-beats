@@ -1,24 +1,24 @@
 export class User {
-  public screen_name: string
+  public screenName: string
   public id: number
   public rank: number
-  public performance_point: number
+  public performancePoint: number
 
   constructor({
-    screen_name,
+    screenName,
     id,
     rank,
-    performance_point,
+    performancePoint,
   }: {
-    screen_name: string
+    screenName: string
     id: number
     rank: number
-    performance_point: number
+    performancePoint: number
   }) {
-    this.screen_name = screen_name
+    this.screenName = screenName
     this.id = id
     this.rank = rank
-    this.performance_point = performance_point
+    this.performancePoint = performancePoint
   }
 
   get ordinalRank(): string {

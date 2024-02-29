@@ -14,7 +14,7 @@ export class JudgeMeter {
     this.rectangle = scene.add.rectangle(640 - deltaTime * 1200, 360, 1, 30, color).setDepth(20)
   }
 
-  public update() {
+  public update(): void {
     this.rectangle.setAlpha(1 - (new Date().getTime() - this.judgedTime) / 5000)
   }
 }

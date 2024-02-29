@@ -62,7 +62,7 @@ export class SelectScene extends Phaser.Scene {
     this.scrollIndex = 0
   }
 
-  init(data: any) {
+  init(data: any): void {
     this.debugGUI = new DebugGUI(this)
     this.events.on(Phaser.Scenes.Events.TRANSITION_OUT, () => {
       this.debugGUI.destroy()
@@ -78,8 +78,8 @@ export class SelectScene extends Phaser.Scene {
       localStoragePlayConfigJSON = JSON.parse(localStoragePlayConfig)
     }
     this.playConfig =
-      data.playConfig ||
-      localStoragePlayConfigJSON ||
+      data.playConfig ??
+      localStoragePlayConfigJSON ??
       new PlayConfig({
         noteSpeed: 3.0,
         noteType: "circle",
@@ -91,19 +91,19 @@ export class SelectScene extends Phaser.Scene {
 
     this.user = new User({
       id: 0,
-      screen_name: "Guest",
+      screenName: "Guest",
       rank: 0,
-      performance_point: 0,
+      performancePoint: 0,
     })
 
-    const checkAuthorization = async () => {
-      const token_type = localStorage.getItem("token_type")
-      const access_token = localStorage.getItem("access_token")
+    const checkAuthorization = async (): Promise<void> => {
+      const tokenType = localStorage.getItem("token_type")
+      const accessToken = localStorage.getItem("access_token")
 
-      if (token_type && access_token) {
+      if (tokenType !== null && accessToken !== null) {
         const headers = {
           "Content-Type": "application/json",
-          Authorization: `${token_type} ${access_token}`,
+          Authorization: `${tokenType} ${accessToken}`,
         }
         const userResponse = await retryFetch(new URL("/users/me", process.env.SERVER_URL).toString(), {
           headers,
@@ -112,9 +112,9 @@ export class SelectScene extends Phaser.Scene {
           const user = await userResponse.json()
           this.user = new User({
             id: user.id,
-            screen_name: user.screen_name,
+            screenName: user.screen_name,
             rank: user.rank,
-            performance_point: user.performance_point,
+            performancePoint: user.performance_point,
           })
 
           localStorage.setItem("user", JSON.stringify(user))
@@ -124,15 +124,15 @@ export class SelectScene extends Phaser.Scene {
             }
           })
           this.loginLabel.setText("IRサイトを開く")
-          this.userScreenNameText.setText(`${this.user.screen_name}`)
-          this.userStatusText.setText(`${this.user.ordinalRank} / ${this.user.performance_point}pts.`)
+          this.userScreenNameText.setText(`${this.user.screenName}`)
+          this.userStatusText.setText(`${this.user.ordinalRank} / ${this.user.performancePoint}pts.`)
         }
       }
     }
-    checkAuthorization()
+    void checkAuthorization()
   }
 
-  create() {
+  create(): void {
     const { width, height } = this.game.canvas
 
     this.backgroundCamera = this.cameras.add(0, 0, 1280, 720)
@@ -140,7 +140,7 @@ export class SelectScene extends Phaser.Scene {
     this.cameras.add(0, 0, 1280, 720, true)
     this.add.shader("background", width / 2 + 1280, height / 2 + 720, 1280, 720).setDepth(-5)
 
-    // @ts-expect-error
+    // @ts-expect-error: 型が不明なため
     this.plugins.get("rexKawaseBlurPipeline").add(this.backgroundCamera, {
       blur: 8,
       quality: 8,
@@ -253,7 +253,7 @@ export class SelectScene extends Phaser.Scene {
         this.add
           .image(80 + 180 * diffIndex, 50, `diff-icon-${diffIndex + 1}`)
           .setOrigin(0, 0)
-          .setAlpha(diffIndex == this.difficulty - 1 ? 1 : 0.3)
+          .setAlpha(diffIndex === this.difficulty - 1 ? 1 : 0.3)
           .setDepth(10),
       )
     }
@@ -267,9 +267,9 @@ export class SelectScene extends Phaser.Scene {
           this.difficulty = (diffIndex + 1) as DIFFICULTY
           this.selectedDiffIcon.setTexture(`diff-icon-${diffIndex + 1}`)
           for (const diffIndex of Array(4).keys()) {
-            this.diffButtons[diffIndex].setAlpha(diffIndex == this.difficulty - 1 ? 1 : 0.3)
+            this.diffButtons[diffIndex].setAlpha(diffIndex === this.difficulty - 1 ? 1 : 0.3)
           }
-          this.getRanking()
+          void this.getRanking()
         })
     }
 
@@ -279,7 +279,7 @@ export class SelectScene extends Phaser.Scene {
         this.add
           .image(80 + 180 * keyIndex, 670, `key-icon-${keyIndex + 4}`)
           .setOrigin(0, 0)
-          .setAlpha(keyIndex == this.key - 4 ? 1 : 0.3)
+          .setAlpha(keyIndex === this.key - 4 ? 1 : 0.3)
           .setDepth(10),
       )
     }
@@ -293,9 +293,9 @@ export class SelectScene extends Phaser.Scene {
           this.key = (keyIndex + 4) as KEY
           this.selectedKeyIcon.setTexture(`key-icon-${keyIndex + 4}`)
           for (const keyIndex of Array(4).keys()) {
-            this.keyButtons[keyIndex].setAlpha(keyIndex == this.key - 4 ? 1 : 0.3)
+            this.keyButtons[keyIndex].setAlpha(keyIndex === this.key - 4 ? 1 : 0.3)
           }
-          this.getRanking()
+          void this.getRanking()
         })
     }
 
@@ -503,7 +503,7 @@ export class SelectScene extends Phaser.Scene {
         fullScreenButton.setAlpha(0.5)
       })
 
-    const ascScrollZone = this.add
+    this.add
       .zone(100, 100, 570, 200)
       .setOrigin(0, 0)
       .setInteractive({
@@ -532,12 +532,12 @@ export class SelectScene extends Phaser.Scene {
                   ((2 * this.musicTileManager.scrollIndex) / Math.max(this.musicTileManager.musicList.length - 1, 1) -
                     1),
             )
-            this.getRanking()
+            void this.getRanking()
           },
         })
         this.playPreviewSound()
       })
-    const descScrollZone = this.add
+    this.add
       .zone(100, 620, 570, 200)
       .setOrigin(0, 1)
       .setInteractive({
@@ -566,7 +566,7 @@ export class SelectScene extends Phaser.Scene {
                   ((2 * this.musicTileManager.scrollIndex) / Math.max(this.musicTileManager.musicList.length - 1, 1) -
                     1),
             )
-            this.getRanking()
+            void this.getRanking()
           },
         })
         this.playPreviewSound()
@@ -629,10 +629,10 @@ export class SelectScene extends Phaser.Scene {
     })
     this.cameras.main.fadeIn(500)
     this.playPreviewSound()
-    this.getRanking()
+    void this.getRanking()
   }
 
-  update(time: number, dt: number) {
+  update(time: number, dt: number): void {
     this.musicTileManager.update(time)
 
     this.particleEmitter.particleX = this.input.x
@@ -642,12 +642,12 @@ export class SelectScene extends Phaser.Scene {
 
     this.isPlayable = this.musicTileManager.isPlayable(this.key, this.difficulty)
     if (this.isPlayable) {
-      if (this.playButton.alpha == 0.3) {
+      if (this.playButton.alpha === 0.3) {
         this.playButton.setAlpha(0.8)
       }
       this.playButton.setTexture("play-button-enable")
       this.nonPlayableText.setVisible(false)
-      this.beatmapLevelText.setText(this.musicTileManager.getBeatmap(this.key, this.difficulty).playlevel)
+      this.beatmapLevelText.setText(`${this.musicTileManager.getBeatmap(this.key, this.difficulty).playlevel}`)
       this.playButtonLight.setAlpha(0.2 + 0.8 * Math.abs(Math.sin((time * 2 * Math.PI * 0.25) / 1000)))
     } else {
       this.playButton.setTexture("play-button-disable").setAlpha(0.3)
@@ -673,7 +673,7 @@ export class SelectScene extends Phaser.Scene {
     }
   }
 
-  private playPreviewSound() {
+  private playPreviewSound(): void {
     const music = this.musicList[this.musicTileManager.scrollIndex]
     const soundKey = `preview-${music.folder}/${music.preview}`
     if (this.cache.audio.exists(soundKey)) {
@@ -681,7 +681,7 @@ export class SelectScene extends Phaser.Scene {
     }
   }
 
-  private stopPreviewSound() {
+  private stopPreviewSound(): void {
     const music = this.musicList[this.musicTileManager.scrollIndex]
     const soundKey = `preview-${music.folder}/${music.preview}`
     if (this.cache.audio.exists(soundKey)) {

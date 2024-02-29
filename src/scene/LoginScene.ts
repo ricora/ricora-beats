@@ -10,9 +10,9 @@ export class LoginScene extends Phaser.Scene {
     super("login")
   }
 
-  init() {}
+  init(): void {}
 
-  create() {
+  create(): void {
     const { width, height } = this.game.canvas
 
     this.add
@@ -39,68 +39,74 @@ export class LoginScene extends Phaser.Scene {
       .setAlpha(0)
 
     const loginFormElement = document.getElementById("login-form")?.getElementsByTagName("form")[0]
-    if (loginFormElement) {
-      loginFormElement.addEventListener("submit", async (event) => {
+    if (loginFormElement !== undefined) {
+      loginFormElement.addEventListener("submit", (event) => {
         event.preventDefault()
-        const formData = new FormData(loginFormElement)
-        const tokenResponse = await retryFetch(new URL("/token", process.env.SERVER_URL).toString(), {
-          method: "POST",
-          body: formData,
-        })
-        if (tokenResponse.ok) {
-          const tokenResponseJSON = await tokenResponse.json()
-          localStorage.setItem("access_token", tokenResponseJSON.access_token)
-          localStorage.setItem("token_type", tokenResponseJSON.token_type)
-
-          const userResponse = await retryFetch(new URL("/users/me", process.env.SERVER_URL).toString(), {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `${tokenResponseJSON.token_type} ${tokenResponseJSON.access_token}`,
-            },
-          })
-          if (userResponse.ok) {
-            const userResponseJSON = await userResponse.json()
-            const user = new User({
-              id: userResponseJSON.id,
-              screen_name: userResponseJSON.screen_name,
-              rank: userResponseJSON.rank,
-              performance_point: userResponseJSON.performance_point,
-            })
-            localStorage.setItem("user", JSON.stringify(user))
-            this.sound.play("decide")
-            window.setTimeout(() => {
-              this.scene.start("select")
-            }, 400)
-          }
-        } else if (tokenResponse.status === 401) {
-          const tokenResponseJSON = await tokenResponse.json()
-          alert(tokenResponseJSON.detail)
-        }
+        void submitLoginForm(event)
       })
+    }
+    const submitLoginForm = async (event: SubmitEvent): Promise<void> => {
+      const formData = new FormData(loginFormElement)
+      const tokenResponse = await retryFetch(new URL("/token", process.env.SERVER_URL).toString(), {
+        method: "POST",
+        body: formData,
+      })
+      if (tokenResponse.ok) {
+        const tokenResponseJSON = await tokenResponse.json()
+        localStorage.setItem("access_token", tokenResponseJSON.access_token)
+        localStorage.setItem("token_type", tokenResponseJSON.token_type)
+
+        const userResponse = await retryFetch(new URL("/users/me", process.env.SERVER_URL).toString(), {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${tokenResponseJSON.token_type} ${tokenResponseJSON.access_token}`,
+          },
+        })
+        if (userResponse.ok) {
+          const userResponseJSON = await userResponse.json()
+          const user = new User({
+            id: userResponseJSON.id,
+            screenName: userResponseJSON.screen_name,
+            rank: userResponseJSON.rank,
+            performancePoint: userResponseJSON.performance_point,
+          })
+          localStorage.setItem("user", JSON.stringify(user))
+          this.sound.play("decide")
+          window.setTimeout(() => {
+            this.scene.start("select")
+          }, 400)
+        }
+      } else if (tokenResponse.status === 401) {
+        const tokenResponseJSON = await tokenResponse.json()
+        alert(tokenResponseJSON.detail)
+      }
     }
 
     const registerFormElement = document.getElementById("register-form")?.getElementsByTagName("form")[0]
-    if (registerFormElement) {
-      registerFormElement.addEventListener("submit", async (event) => {
+    if (registerFormElement !== undefined) {
+      registerFormElement.addEventListener("submit", (event) => {
         event.preventDefault()
-        const formData = new FormData(registerFormElement)
-        const registerResponse = await retryFetch(new URL("/users/", process.env.SERVER_URL).toString(), {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(Object.fromEntries(formData)),
-        })
-        if (registerResponse.ok) {
-          const registerResponseJSON = await registerResponse.json()
-          alert(
-            `アカウントを作成しました。\nuser id: ${registerResponseJSON.id}\nscreen name: ${registerResponseJSON.screen_name}`,
-          )
-        } else if (registerResponse.status === 400) {
-          const registerResponseJSON = await registerResponse.json()
-          alert(registerResponseJSON.detail)
-        }
+        void submitRegistrationForm(event)
       })
+    }
+    const submitRegistrationForm = async (event: SubmitEvent): Promise<void> => {
+      const formData = new FormData(registerFormElement)
+      const registerResponse = await retryFetch(new URL("/users/", process.env.SERVER_URL).toString(), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(Object.fromEntries(formData)),
+      })
+      if (registerResponse.ok) {
+        const registerResponseJSON = await registerResponse.json()
+        alert(
+          `アカウントを作成しました。\nuser id: ${registerResponseJSON.id}\nscreen name: ${registerResponseJSON.screen_name}`,
+        )
+      } else if (registerResponse.status === 400) {
+        const registerResponseJSON = await registerResponse.json()
+        alert(registerResponseJSON.detail)
+      }
     }
 
     const icon = this.add
@@ -271,9 +277,9 @@ export class LoginScene extends Phaser.Scene {
     })
   }
 
-  update(time: number, dt: number) {
+  update(time: number, dt: number): void {
     const loginFormElement = document.getElementById("login-form")?.parentElement?.parentElement
-    if (loginFormElement && loginFormElement.style.transformOrigin !== "") {
+    if (loginFormElement !== null && loginFormElement !== undefined && loginFormElement.style.transformOrigin !== "") {
       loginFormElement.style.transformOrigin = ""
     }
   }

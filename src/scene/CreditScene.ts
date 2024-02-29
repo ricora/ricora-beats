@@ -3,9 +3,9 @@ export class CreditScene extends Phaser.Scene {
     super("credit")
   }
 
-  init() {}
+  init(): void {}
 
-  create() {
+  create(): void {
     const { width, height } = this.game.canvas
 
     this.add
@@ -56,7 +56,8 @@ export class CreditScene extends Phaser.Scene {
       "",
     ]
 
-    const rightCredits = (process.env.CREDITS || "").split(/\\r\\n|\\n|\\r/)
+    const credits = process.env.CREDITS
+    const rightCredits = credits !== undefined && credits !== "" ? credits.split(/\\r\\n|\\n|\\r/) : []
 
     const headerText = this.add
       .text(width / 2 - 260, height / 2 - 200 - 5, "RICORA Beats", {

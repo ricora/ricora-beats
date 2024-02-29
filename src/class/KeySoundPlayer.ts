@@ -9,7 +9,7 @@ export class KeySoundPlayer {
     this.keySoundMap = bms.Keysounds.fromBMSChart(chart.bmsChart)._map
   }
 
-  public loadKeySounds(scene: Phaser.Scene, url: string) {
+  public loadKeySounds(scene: Phaser.Scene, url: string): void {
     Object.keys(this.keySoundMap).forEach((noteValue) => {
       const soundFileName = this.keySoundMap[noteValue]
       if (typeof soundFileName === "string") {
@@ -29,7 +29,7 @@ export class KeySoundPlayer {
     })
   }
 
-  public playKeySound(scene: Phaser.Scene, noteValue: string) {
+  public playKeySound(scene: Phaser.Scene, noteValue: string): void {
     if (this.keySoundSet.has(noteValue)) {
       scene.sound.play(noteValue)
     }

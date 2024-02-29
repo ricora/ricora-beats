@@ -1,5 +1,3 @@
-import bms from "bms"
-
 export class Band {
   public startBeat: number
   public endBeat: number
